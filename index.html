@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang=ko><head><meta charset=utf-8>
+<meta name="robots" content="noindex, nofollow">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>주식 차트 스캔 리포트</title>
+<meta property="og:title" content="주식 차트 스캔 리포트">
+<meta property="og:description" content="코스피·코스닥 전종목 TGB 지표 스캔 · 기준일 2026-08-07">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0f1115;color:#e6e8ec;
+font-family:'Malgun Gothic','맑은 고딕',-apple-system,'Segoe UI',sans-serif;line-height:1.65}
+.w{max-width:1100px;margin:0 auto;padding:44px 20px 80px}
+
+.nav{position:sticky;top:0;z-index:99;background:#12161d;border-bottom:1px solid #262a33;
+margin:-44px -20px 26px;padding:11px 20px;display:flex;gap:6px;flex-wrap:wrap}
+.nav a{color:#9aa3b2;text-decoration:none;font-size:13px;padding:5px 13px;border-radius:7px;
+border:1px solid transparent}
+.nav a:hover{background:#1e2531;color:#e6e8ec;border-color:#2f3745}
+
+h1{font-size:32px;margin:0 0 8px;letter-spacing:-.6px}
+.sub{color:#8b93a3;font-size:14px;margin-bottom:34px}
+h2{font-size:19px;margin:44px 0 10px;padding-left:11px;border-left:3px solid #4a8fe7}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:26px 0}
+.card{background:#161a21;border:1px solid #262a33;border-radius:13px;padding:24px;
+text-decoration:none;color:inherit;display:block;transition:.15s}
+.card:hover{border-color:#3d5a7d;background:#1a1f28;transform:translateY(-2px)}
+.card h3{margin:0 0 6px;font-size:19px}
+.card .n{font-size:34px;font-weight:600;margin:10px 0 4px}
+.card p{margin:8px 0 0;font-size:13px;color:#9aa3b2;line-height:1.6}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;margin-bottom:10px}
+.t-e{background:#101d2b;color:#7cc0f5;border:1px solid #1d3a55}
+.t-t{background:#123326;color:#4ade80;border:1px solid #1d4d3a}
+.t-s{background:#2b2410;color:#fbbf24;border:1px solid #4a3d16}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th{background:#1a1f28;color:#9aa3b2;padding:9px 8px;text-align:left;font-size:11.5px;
+border-bottom:1px solid #2c313b}
+th.r{text-align:right}
+td{padding:8px;border-bottom:1px solid #1e222a}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.nm{font-weight:600}
+.sc{color:#7cc0f5;font-weight:600}.gb{color:#ff7b7b;font-weight:600}.cool{color:#7cc0f5}
+.note{background:#161a21;border:1px solid #262a33;border-radius:10px;padding:16px 18px;
+font-size:12.5px;color:#9aa3b2;margin:22px 0}.note b{color:#c9d1de}
+.warn{background:#2b1a10;border-color:#4a3016}
+ul{margin:10px 0;padding-left:19px;color:#c4ccd8;font-size:13.5px}li{margin-bottom:7px}
+code{background:#1e2531;padding:1px 6px;border-radius:4px;font-size:12px;color:#9ec5f0}
+.dl{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dl a{background:#1e2531;border:1px solid #2f3745;color:#c4ccd8;padding:6px 14px;
+border-radius:7px;font-size:12.5px;text-decoration:none}
+.dl a:hover{background:#273040}
+footer{margin-top:50px;padding-top:22px;border-top:1px solid #262a33;color:#6f7889;font-size:12px}
+</style></head><body><div class=w>
+<div class=nav><a href="index.html">홈</a><a href="early.html">초입 30</a><a href="tgb.html">TGB 108</a><a href="sim.html">유사 1부</a><a href="sim2.html">유사 2부</a><a href="sim3.html">유사 3부</a></div>
+
+<h1>주식 차트 스캔 리포트</h1>
+<div class=sub>코스피·코스닥 전종목 2,555개 · TGB 지표 기준 · 데이터 기준일 2026-08-07 · 작성 2026-08-10</div>
+
+<div class=cards>
+<a class=card href="early.html">
+  <span class="tag t-e">진입 임박</span>
+  <h3>초입 종목</h3>
+  <div class=n>30</div>
+  <p>지표는 위로 돌아섰는데 <b>가격은 아직 안 움직인</b> 종목.
+  적선 40 초과·20일 20% 초과 상승은 전부 제외했습니다.</p>
+</a>
+<a class=card href="tgb.html">
+  <span class="tag t-t">매수 조건 충족</span>
+  <h3>TGB 전략</h3>
+  <div class=n>108</div>
+  <p>홈런 11 · 강력 25 · 권고 20 · 주의 50.
+  G·T·B·U 네 지표와 적색 그물망 조건을 등급별로 판정했습니다.</p>
+</a>
+<a class=card href="sim.html">
+  <span class="tag t-s">패턴 일치</span>
+  <h3>유사 종목</h3>
+  <div class=n>254</div>
+  <p>기준 21종목과 같은 지표 흐름을 보이는 종목.
+  하락 후 반등이 시작되는 국면입니다.</p>
+</a>
+</div>
+
+<h2>초입 종목 상위 5</h2>
+<table><thead><tr><th>종목</th><th class=r>현재가</th><th class=r>임박도</th>
+<th class=r>G적선</th><th class=r>20일상승</th></tr></thead><tbody><tr><td class='nm'>신한지주</td><td class='r'>110,000</td><td class='r sc'>79</td><td class='r'>20.1</td><td class='r cool'>+4.8%</td></tr><tr><td class='nm'>LX하우시스</td><td class='r'>34,450</td><td class='r sc'>79</td><td class='r'>16.8</td><td class='r cool'>+10.8%</td></tr><tr><td class='nm'>동서</td><td class='r'>26,500</td><td class='r sc'>78</td><td class='r'>15.5</td><td class='r cool'>+1.0%</td></tr><tr><td class='nm'>JB금융지주</td><td class='r'>28,850</td><td class='r sc'>77</td><td class='r'>26.3</td><td class='r cool'>+15.9%</td></tr><tr><td class='nm'>코웨이</td><td class='r'>95,700</td><td class='r sc'>76</td><td class='r'>12.6</td><td class='r cool'>+12.6%</td></tr></tbody></table>
+
+<h2>TGB 홈런 등급 상위 5</h2>
+<table><thead><tr><th>종목</th><th class=r>현재가</th><th class=r>G적선</th>
+<th class=r>T</th><th class=r>능선</th></tr></thead><tbody><tr><td class='nm'>지어소프트</td><td class='r'>11,220</td><td class='r gb'>72.4</td><td class='r'>56.9</td><td class='r'>16일</td></tr><tr><td class='nm'>슈프리마</td><td class='r'>62,700</td><td class='r gb'>58.7</td><td class='r'>32.8</td><td class='r'>25일</td></tr><tr><td class='nm'>GS</td><td class='r'>98,900</td><td class='r gb'>58.2</td><td class='r'>23.9</td><td class='r'>17일</td></tr><tr><td class='nm'>LG생활건강</td><td class='r'>333,500</td><td class='r gb'>55.1</td><td class='r'>40.8</td><td class='r'>12일</td></tr><tr><td class='nm'>코스메카코리아</td><td class='r'>95,900</td><td class='r gb'>50.1</td><td class='r'>14.5</td><td class='r'>29일</td></tr></tbody></table>
+
+<h2>지표 설명</h2>
+<ul>
+<li><b>G (Golden)</b> — 적선 = (종가 ÷ 25일 최저 − 1)×100, 청선 = (25일 최고 ÷ 종가 − 1)×100.
+적선이 높고 청선이 낮을수록 매수 우위입니다.</li>
+<li><b>T (TSI)</b> — True Strength Index(10,30) + 시그널 8. 0선 위가 상승 우위.</li>
+<li><b>B (BPDI Hilo)</b> — RSI(35) 형태로 근사. 52·55선이 기준입니다.</li>
+<li><b>U (Ultimate)</b> — Ultimate Oscillator(7,14,28). 50선 위가 상승 우위.</li>
+<li><b>그물망</b> — MA 10·15·20·25·30·35 다발. 최단기가 최장기 위면 <b>적색</b>(상승 배열), 아래면 청색.</li>
+</ul>
+
+<h2>데이터 내려받기</h2>
+<div class=dl>
+<a href="early.csv" download>초입 30종목 CSV</a>
+<a href="tgb.csv" download>TGB 108종목 CSV</a>
+<a href="sim.csv" download>유사 254종목 CSV</a>
+</div>
+
+<div class=note><b>지표 재현 방식</b> — 대신증권 HTS 차트 이미지에서 각 지표선의 픽셀을 추출해
+역추정했습니다. Golden은 상관 0.85~0.91, BPDI Hilo는 0.856 수준으로 일치합니다.
+TSI는 차트 범례 파라미터를 그대로 썼고, Ultimate Oscillator는 표준 공식입니다.
+매수·매도 화살표, 자동추세선, 월봉 확인, 다이버전스는 구현하지 못했습니다.</div>
+
+<div class="note warn"><b>투자 판단에 대한 안내</b><br>
+이 리포트는 기술적 지표 조건에 맞는 종목을 기계적으로 나열한 자료입니다.
+재무·수급·뉴스는 전혀 반영되어 있지 않으며, 특정 종목의 매수·매도를 권유하지 않습니다.
+지표가 상승으로 돌아섰다고 해서 반드시 주가 상승으로 이어지지 않습니다.
+투자 판단과 그 결과는 투자자 본인에게 귀속됩니다.</div>
+
+<footer>시세 출처: KRX · 차트는 대신증권 스타일로 재현 · 종목당 6단 차트(가격+그물망 / 거래량 / U / T / B / G)<br>
+각 리포트에서 종목명을 클릭하면 해당 종목 차트가 펼쳐집니다.</footer>
+</div></body></html>
