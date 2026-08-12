@@ -1,4 +1,4 @@
-/* 지표 계산 + 캔버스 차트 — scan/indi.py를 그대로 옮긴 것입니다 */
+/* 지표 계산 + 대신증권식 캔버스 차트 — 지표는 scan/indi.py를 그대로 옮긴 것입니다 */
 (function (g) {
 'use strict';
 
@@ -98,13 +98,21 @@ function mesh(c, start, step, cnt) {
 g.IND = { sma: sma, ema: ema, tsi: tsi, rsi: rsi, ultimate: ultimate,
           golden: golden, mesh: mesh };
 
-/* ── 차트 ─────────────────────────────────────── */
+/* ── 대신증권 색 ──────────────────────────────── */
 var C = {
-  bg: '#0f1115', grid: '#1e222a', axis: '#39404d', text: '#8b93a3',
-  up: '#e8544f', dn: '#3f7fd6', vol: '#39404d',
-  gb: '#e8544f', gs: '#4a8fe7', t: '#e0b341', b: '#a06fd8', u: '#42b883',
-  meshUp: 'rgba(232,84,79,.16)', meshDn: 'rgba(63,127,214,.16)',
-  ma: ['#e8b04a', '#5aa9e6', '#c77dd6', '#5fce9e', '#dd6a6a']
+  bg: '#C0FFFF',            // 연한 하늘색 배경
+  grid: '#A8A8A8',          // 회색 격자
+  frame: '#808080',
+  text: '#404040',
+  up: '#FF0000',            // 양봉 빨강
+  dn: '#0000FF',            // 음봉 파랑
+  fillUp: '#FFC8CF',        // 상승 영역 분홍
+  fillDn: '#40E0D0',        // 하락 영역 청록
+  ref: '#0000FF',           // 기준선 파랑
+  dash: '#000000',          // 점선 검정
+  zero: '#000000',
+  // 이동평균 (대신증권 기본 팔레트)
+  ma: ['#FF0000', '#0000C0', '#008000', '#C000C0', '#C08000', '#008080']
 };
 
 function ext(arrs) {
@@ -128,119 +136,179 @@ function drawChart(cv, d, title) {
 
   var G = golden(d.c, 32), T = tsi(d.c), B = rsi(d.c, 35),
       U = ultimate(d.h, d.l, d.c), M = mesh(d.c);
-  var L = 52, R = 10, TOP = 20, GAP = 7;
-  // 6단: 가격 / 거래량 / U / T / B / G
-  var hs = [0.40, 0.10, 0.115, 0.115, 0.115, 0.155];
-  var avail = H - TOP - 16 - GAP * 5, ys = [], acc = TOP;
+  var L = 56, R = 8, TOP = 6, GAP = 3;
+  var hs = [0.42, 0.10, 0.11, 0.115, 0.115, 0.14];   // 가격/거래량/U/T/B/G
+  var avail = H - TOP - 15 - GAP * 5, ys = [], acc = TOP;
   hs.forEach(function (r) { ys.push([acc, avail * r]); acc += avail * r + GAP; });
-  var PW = W - L - R, bw = PW / n, cw = Math.max(1, Math.min(bw * 0.7, 9));
+  var PW = W - L - R, bw = PW / n, cw = Math.max(1, Math.min(bw * 0.62, 8));
 
   function panel(i) { return { y: ys[i][0], h: ys[i][1] }; }
   function px(i) { return L + bw * (i + 0.5); }
-
-  function frame(p, label) {
-    x.strokeStyle = C.axis; x.lineWidth = 1;
-    x.strokeRect(L + .5, p.y + .5, PW, p.h);
-    x.fillStyle = C.text; x.font = '10px sans-serif'; x.textAlign = 'left';
-    x.fillText(label, L + 5, p.y + 11);
-  }
-  function scaler(p, lo, hi) {
+  function sc(p, lo, hi) {
     return function (v) { return p.y + p.h - (v - lo) / (hi - lo) * p.h; };
   }
-  function gridline(p, lo, hi, vals) {
-    var Y = scaler(p, lo, hi);
-    x.strokeStyle = C.grid; x.setLineDash([2, 3]); x.lineWidth = 1;
-    x.fillStyle = C.text; x.font = '9px sans-serif'; x.textAlign = 'right';
-    vals.forEach(function (v) {
-      if (v < lo || v > hi) return;
-      var yy = Math.round(Y(v)) + .5;
-      x.beginPath(); x.moveTo(L, yy); x.lineTo(L + PW, yy); x.stroke();
-      x.fillText(String(v), L - 4, yy + 3);
-    });
+
+  function frame(p, label) {
+    x.strokeStyle = C.frame; x.lineWidth = 1;
+    x.strokeRect(L + .5, p.y + .5, PW, p.h);
+    if (label) {
+      x.fillStyle = C.text; x.font = '10px "Malgun Gothic",sans-serif'; x.textAlign = 'left';
+      x.fillText(label, L + 4, p.y + 11);
+    }
+  }
+  // 월 구분 세로선
+  function months(p) {
+    x.strokeStyle = C.grid; x.lineWidth = 1; x.setLineDash([]);
+    for (var i = 1; i < n; i++) {
+      var a = String(d.t[i - 1]), b = String(d.t[i]);
+      var ma = a.length > 7 ? a.slice(0, 7) : a.slice(0, 5);
+      var mb = b.length > 7 ? b.slice(0, 7) : b.slice(0, 5);
+      if (ma !== mb) {
+        var xx = Math.round(px(i) - bw / 2) + .5;
+        x.beginPath(); x.moveTo(xx, p.y); x.lineTo(xx, p.y + p.h); x.stroke();
+      }
+    }
+  }
+  function hline(p, lo, hi, v, col, dash, wd) {
+    if (v < lo || v > hi) return;
+    var yy = Math.round(sc(p, lo, hi)(v)) + .5;
+    x.strokeStyle = col; x.lineWidth = wd || 1; x.setLineDash(dash || []);
+    x.beginPath(); x.moveTo(L, yy); x.lineTo(L + PW, yy); x.stroke();
     x.setLineDash([]);
   }
+  function ylab(p, lo, hi, v, txt) {
+    if (v < lo || v > hi) return;
+    x.fillStyle = C.text; x.font = '10px sans-serif'; x.textAlign = 'right';
+    x.fillText(txt, L - 4, sc(p, lo, hi)(v) + 3);
+  }
   function line(p, arr, lo, hi, col, wd) {
-    var Y = scaler(p, lo, hi), started = false;
-    x.strokeStyle = col; x.lineWidth = wd || 1.2; x.beginPath();
+    var Y = sc(p, lo, hi), on = false;
+    x.strokeStyle = col; x.lineWidth = wd || 1.1; x.beginPath();
     for (var i = 0; i < n; i++) {
       var v = arr[i];
-      if (v === null || v === undefined || isNaN(v)) { started = false; continue; }
+      if (v === null || v === undefined || isNaN(v)) { on = false; continue; }
       var xx = px(i), yy = Y(v);
-      if (!started) { x.moveTo(xx, yy); started = true; } else x.lineTo(xx, yy);
+      if (!on) { x.moveTo(xx, yy); on = true; } else x.lineTo(xx, yy);
     }
     x.stroke();
+  }
+  // 기준선 대비 위/아래를 색으로 채움 (대신증권 지표창 스타일)
+  function area(p, arr, lo, hi, base) {
+    var Y = sc(p, lo, hi), yb = Y(base), i, seg = [];
+    for (i = 0; i < n; i++) {
+      var v = arr[i];
+      if (v === null || v === undefined || isNaN(v)) { flush(); continue; }
+      seg.push([px(i), Y(v), v >= base]);
+      if (seg.length > 1 && seg[seg.length - 1][2] !== seg[seg.length - 2][2]) {
+        var tail = seg.pop(); flush(); seg = [tail];
+      }
+    }
+    flush();
+    function flush() {
+      if (seg.length < 2) { seg = []; return; }
+      x.fillStyle = seg[0][2] ? C.fillUp : C.fillDn;
+      x.beginPath(); x.moveTo(seg[0][0], yb);
+      seg.forEach(function (s) { x.lineTo(s[0], s[1]); });
+      x.lineTo(seg[seg.length - 1][0], yb); x.closePath(); x.fill();
+      seg = [];
+    }
   }
 
   /* 1단 — 가격 + 그물망 */
   var p0 = panel(0);
   var pr = ext([d.h, d.l, M[0], M[1]]);
-  var lo = pr[0] - (pr[1] - pr[0]) * 0.04, hi = pr[1] + (pr[1] - pr[0]) * 0.06;
-  var Y0 = scaler(p0, lo, hi);
-  frame(p0, title);
-  // 그물망 띠
+  var lo = pr[0] - (pr[1] - pr[0]) * 0.05, hi = pr[1] + (pr[1] - pr[0]) * 0.07;
+  var Y0 = sc(p0, lo, hi);
+  months(p0);
   for (var i = 1; i < n; i++) {
     if (M[0][i] === null || M[0][i - 1] === null) continue;
-    x.fillStyle = M[2][i] ? C.meshUp : C.meshDn;
+    x.fillStyle = M[2][i] ? C.fillUp : C.fillDn;
     x.beginPath();
     x.moveTo(px(i - 1), Y0(M[0][i - 1])); x.lineTo(px(i), Y0(M[0][i]));
     x.lineTo(px(i), Y0(M[1][i])); x.lineTo(px(i - 1), Y0(M[1][i - 1]));
     x.closePath(); x.fill();
   }
   M[3].forEach(function (m, k) { line(p0, m, lo, hi, C.ma[k % C.ma.length], 0.9); });
-  // 캔들
   for (i = 0; i < n; i++) {
-    var up = d.c[i] >= d.o[i], col = up ? C.up : C.dn, cx = px(i);
+    var up = d.c[i] >= d.o[i], col = up ? C.up : C.dn, cx = Math.round(px(i)) + .5;
     x.strokeStyle = col; x.fillStyle = col; x.lineWidth = 1;
     x.beginPath(); x.moveTo(cx, Y0(d.h[i])); x.lineTo(cx, Y0(d.l[i])); x.stroke();
     var a = Y0(d.o[i]), b2 = Y0(d.c[i]);
-    var top = Math.min(a, b2), hgt = Math.max(Math.abs(a - b2), 1);
-    if (up) x.fillRect(cx - cw / 2, top, cw, hgt);
-    else x.strokeRect(cx - cw / 2, top, cw, hgt);
+    x.fillRect(cx - cw / 2, Math.min(a, b2), cw, Math.max(Math.abs(a - b2), 1));
   }
-  // 현재가
-  x.fillStyle = C.text; x.font = '10px sans-serif'; x.textAlign = 'right';
-  x.fillText(d.c[n - 1].toLocaleString(), L - 4, Y0(d.c[n - 1]) + 3);
+  frame(p0, '');
+  // 가격 눈금 5개
+  for (i = 0; i <= 4; i++) {
+    var v = lo + (hi - lo) * i / 4;
+    ylab(p0, lo, hi, v, Math.round(v).toLocaleString());
+  }
+  x.fillStyle = '#000'; x.font = 'bold 10px "Malgun Gothic",sans-serif'; x.textAlign = 'left';
+  x.fillText(title, L + 4, p0.y + 11);
 
   /* 2단 — 거래량 */
   var p1 = panel(1), vh = ext([d.v])[1];
-  frame(p1, '거래량');
+  months(p1);
   for (i = 0; i < n; i++) {
-    var hh = (d.v[i] / vh) * (p1.h - 14);
+    var hh = (d.v[i] / vh) * (p1.h - 3);
     x.fillStyle = d.c[i] >= d.o[i] ? C.up : C.dn;
-    x.globalAlpha = .65;
-    x.fillRect(px(i) - cw / 2, p1.y + p1.h - hh, cw, hh);
-    x.globalAlpha = 1;
+    x.fillRect(Math.round(px(i)) + .5 - cw / 2, p1.y + p1.h - hh, cw, hh);
   }
+  frame(p1, '거래량');
 
   /* 3단 — U */
-  var p2 = panel(2);
-  frame(p2, 'U (Ultimate 7,14,28)');
-  gridline(p2, 0, 100, [30, 50, 70]);
-  line(p2, U[0], 0, 100, C.u, 1.3); line(p2, U[1], 0, 100, '#6b7686', 1);
+  var p2 = panel(2), ue = ext([U[0], U[1]]);
+  months(p2);
+  area(p2, U[0], ue[0], ue[1], 50);
+  hline(p2, ue[0], ue[1], 50, C.dash, [4, 2]);
+  line(p2, U[0], ue[0], ue[1], C.up, 1.2);
+  line(p2, U[1], ue[0], ue[1], C.dn, 1);
+  frame(p2, 'Ultimate_7,14,28  Signal_8');
+  ylab(p2, ue[0], ue[1], 50, '50');
 
   /* 4단 — T */
-  var p3 = panel(3), te = ext([T[0], T[1]]);
-  frame(p3, 'T (TSI 10,30)  기준 10');
-  gridline(p3, te[0], te[1], [0, 10]);
-  line(p3, T[0], te[0], te[1], C.t, 1.3); line(p3, T[1], te[0], te[1], '#6b7686', 1);
+  var p3 = panel(3), te = ext([T[0], T[1], [-12, 12]]);
+  months(p3);
+  area(p3, T[0], te[0], te[1], 0);
+  hline(p3, te[0], te[1], 0, C.zero, [], 1);
+  hline(p3, te[0], te[1], 10, C.ref, [], 1.4);
+  hline(p3, te[0], te[1], 10, C.dash, [5, 2, 1, 2]);
+  line(p3, T[0], te[0], te[1], C.up, 1.2);
+  line(p3, T[1], te[0], te[1], C.dn, 1);
+  frame(p3, 'TSI_10,30  Signal_8   기준 10');
+  ylab(p3, te[0], te[1], 0, '0'); ylab(p3, te[0], te[1], 10, '10');
 
   /* 5단 — B */
-  var p4 = panel(4), be = ext([B]);
-  frame(p4, 'B (BPDI Hilo)  기준 55');
-  gridline(p4, be[0], be[1], [50, 55]);
-  line(p4, B, be[0], be[1], C.b, 1.3);
+  var p4 = panel(4), be = ext([B, [48, 58]]);
+  months(p4);
+  area(p4, B, be[0], be[1], 55);
+  hline(p4, be[0], be[1], 50, C.zero, [], 1);
+  hline(p4, be[0], be[1], 55, C.ref, [], 1.4);
+  hline(p4, be[0], be[1], 55, C.dash, [5, 2, 1, 2]);
+  line(p4, B, be[0], be[1], C.up, 1.2);
+  frame(p4, 'BPDI Hilo Index   기준 55');
+  ylab(p4, be[0], be[1], 50, '50'); ylab(p4, be[0], be[1], 55, '55');
 
   /* 6단 — G */
-  var p5 = panel(5), ge = ext([G[0], G[1]]);
-  frame(p5, 'G  적선=Buy · 청선=Sell  기준 5');
-  gridline(p5, ge[0], ge[1], [0, 5]);
-  line(p5, G[0], ge[0], ge[1], C.gb, 1.3);
-  line(p5, G[1], ge[0], ge[1], C.gs, 1.3);
+  var p5 = panel(5), ge = ext([G[0], G[1], [0, 6]]);
+  months(p5);
+  hline(p5, ge[0], ge[1], 5, C.ref, [], 1.2);
+  hline(p5, ge[0], ge[1], 0, C.zero, [], 1);
+  line(p5, G[0], ge[0], ge[1], C.up, 1.3);
+  line(p5, G[1], ge[0], ge[1], C.dn, 1.3);
+  frame(p5, 'Golden Buy(적) · Golden Sell(청)   기준 5');
+  ylab(p5, ge[0], ge[1], 0, '0'); ylab(p5, ge[0], ge[1], 5, '5');
 
   /* 날짜축 */
   x.fillStyle = C.text; x.font = '9px sans-serif'; x.textAlign = 'center';
-  var step = Math.max(1, Math.floor(n / 8));
-  for (i = 0; i < n; i += step) x.fillText(d.t[i], px(i), H - 4);
+  var last = null;
+  for (i = 0; i < n; i++) {
+    var s = String(d.t[i]);
+    var key = s.length > 7 ? s.slice(0, 7) : s.slice(0, 5);
+    if (key !== last) {
+      if (last !== null) x.fillText(key, px(i), H - 3);
+      last = key;
+    }
+  }
 }
 
 g.drawChart = drawChart;
