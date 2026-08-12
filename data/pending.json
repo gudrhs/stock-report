@@ -1,0 +1,48 @@
+{
+"buy": [
+{
+"code": "323280",
+"name": "태성",
+"market": "코스닥150",
+"score": 85.2,
+"rank": 1,
+"signal_date": "2026-08-12"
+},
+{
+"code": "035760",
+"name": "CJ ENM",
+"market": "코스닥150",
+"score": 78.5,
+"rank": 2,
+"signal_date": "2026-08-12"
+},
+{
+"code": "010130",
+"name": "고려아연",
+"market": "코스피200",
+"score": 78.4,
+"rank": 3,
+"signal_date": "2026-08-12"
+}
+],
+"sell": [
+{
+"code": "008930",
+"reason": "적선 5일 기울기 -5.5 — 상승탄력 꺾임",
+"severity": "청산",
+"signal_date": "2026-08-12"
+},
+{
+"code": "089860",
+"reason": "장대음봉 -5.2%",
+"severity": "청산",
+"signal_date": "2026-08-12"
+},
+{
+"code": "009540",
+"reason": "장대음봉 -4.2%",
+"severity": "청산",
+"signal_date": "2026-08-12"
+}
+]
+}

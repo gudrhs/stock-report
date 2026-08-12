@@ -1,0 +1,71 @@
+name: 매일 신호 갱신
+
+on:
+  schedule:
+    # 22:00 UTC = 07:00 KST (한국 시간 아침 7시)
+    - cron: "0 22 * * 0-4"   # 일~목 22시 UTC = 월~금 07시 KST
+  workflow_dispatch:          # 수동 실행 버튼
+    inputs:
+      backfill:
+        description: "소급 실행할 영업일 수 (0이면 최신 하루만)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 패키지 설치
+        run: pip install finance-datareader pandas requests-cache
+
+      - name: 휴장일 확인
+        id: check
+        run: |
+          python - <<'PY' >> $GITHUB_OUTPUT
+          import datetime, zoneinfo
+          kst = datetime.datetime.now(zoneinfo.ZoneInfo("Asia/Seoul"))
+          # 토·일 아침에는 새 종가가 없으므로 건너뜁니다
+          print(f"run={'false' if kst.weekday() >= 5 else 'true'}")
+          print(f"kst={kst:%Y-%m-%d %H:%M}")
+          PY
+
+      - name: 스캔 실행
+        if: steps.check.outputs.run == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: scan
+        run: |
+          BF="${{ github.event.inputs.backfill }}"
+          if [ -n "$BF" ] && [ "$BF" != "0" ]; then
+            python -u daily.py --backfill "$BF"
+          else
+            python -u daily.py
+          fi
+
+      - name: 결과 커밋
+        if: steps.check.outputs.run == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            D=$(python -c "import json;print(json.load(open('data/latest.json',encoding='utf-8'))['date'])")
+            git commit -m "신호 갱신 $D"
+            git push
+          fi
