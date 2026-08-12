@@ -298,14 +298,17 @@ function drawChart(cv, d, title) {
   frame(p5, 'Golden Buy(적) · Golden Sell(청)   기준 5');
   ylab(p5, ge[0], ge[1], 0, '0'); ylab(p5, ge[0], ge[1], 5, '5');
 
-  /* 날짜축 */
+  /* 날짜축 — 겹치지 않도록 최소 간격을 둡니다 */
   x.fillStyle = C.text; x.font = '9px sans-serif'; x.textAlign = 'center';
-  var last = null;
+  var last = null, lastX = -1e9, MINGAP = 44;
   for (i = 0; i < n; i++) {
     var s = String(d.t[i]);
     var key = s.length > 7 ? s.slice(0, 7) : s.slice(0, 5);
     if (key !== last) {
-      if (last !== null) x.fillText(key, px(i), H - 3);
+      var xx = px(i);
+      if (last !== null && xx - lastX >= MINGAP && xx < L + PW - 18) {
+        x.fillText(key, xx, H - 3); lastX = xx;
+      }
       last = key;
     }
   }
