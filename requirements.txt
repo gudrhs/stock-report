@@ -1,0 +1,4 @@
+# 일일 스캔 엔진 의존성
+finance-datareader
+pandas
+requests-cache

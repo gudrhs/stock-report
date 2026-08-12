@@ -30,9 +30,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: 패키지 설치
-        run: pip install finance-datareader pandas requests-cache
+        run: pip install -r requirements.txt
 
       - name: 휴장일 확인
         id: check
