@@ -116,6 +116,27 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
   <h2>T·B 보유 현황 <small>T·B 규칙 가상 포지션</small></h2>
   <div class=wrap id=tbholdbox></div>
 
+  <h2>청산 내역 <small>매도가 끝난 거래 · 최근순</small></h2>
+  <div class=bar>
+    <select id=fstrat>
+      <option value="">전체 규칙</option>
+      <option value="기존">기존 규칙</option>
+      <option value="TB">T·B 규칙</option>
+    </select>
+    <select id=fres>
+      <option value="">이익·손실 전체</option>
+      <option value="win">이익만</option>
+      <option value="loss">손실만</option>
+    </select>
+    <select id=fgrade>
+      <option value="">등급 전체</option>
+      <option value="홈런">홈런만</option>
+    </select>
+    <span id=fsum style="font-size:12.5px;color:#98a2b2"></span>
+  </div>
+  <div id=eqbox></div>
+  <div class=wrap id=tradebox></div>
+
   <h2>누적 성과 <small>기록 시작 이후 청산된 거래 전체</small></h2>
   <div id=perfbox></div>
 
@@ -408,6 +429,73 @@ function perf(p, by){
   $('perfbox').innerHTML=h;
 }
 
+/* ── 청산 내역 ─────────────────────────────── */
+var TRADES=[];
+var TRADE=[
+ {t:'청산일',a:'c',f:function(r){return r.exit_date}},
+ {t:'규칙',a:'c',f:function(r){return r.strategy==='TB'
+   ?'<span class="pill p-blue">T·B</span>':'<span class="pill p-nm">기존</span>'}},
+ {t:'등급',a:'c',f:function(r){return grade(r.grade)}},
+ {t:'종목',cl:' nm',f:nm},
+ {t:'진입일',a:'c',f:function(r){return r.entry_date}},
+ {t:'보유',a:'r',f:function(r){return r.days+'일'}},
+ {t:'진입가',a:'r',f:function(r){return num(r.entry)}},
+ {t:'청산가',a:'r',f:function(r){return num(r.exit)}},
+ {t:'손익',a:'r',f:function(r){return pc(r.pnl)}},
+ {t:'누적',a:'r',f:function(r){return pc(r.cum)}},
+ {t:'구분',a:'c',f:function(r){return sev(r.severity)}},
+ {t:'청산 사유',f:function(r){return r.reason}}
+];
+
+function eqCurve(rows){
+  var box=$('eqbox');
+  if(!rows.length){box.innerHTML='';return}
+  var W=980,H=150,P=34;
+  var eq=1, pts=[];
+  rows.slice().reverse().forEach(function(t){       // 시간순
+    eq*=(1+t.pnl/100/10); pts.push((eq-1)*100);
+  });
+  var lo=Math.min.apply(null,pts.concat([0])), hi=Math.max.apply(null,pts.concat([0]));
+  if(hi-lo<1){hi+=1;lo-=1}
+  var X=function(i){return P+(W-P-8)*(pts.length<2?0:i/(pts.length-1))};
+  var Y=function(v){return 12+(H-30)*(1-(v-lo)/(hi-lo))};
+  var d='', i;
+  for(i=0;i<pts.length;i++) d+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(pts[i]).toFixed(1);
+  var last=pts[pts.length-1];
+  box.innerHTML='<div class=wrap style="padding:8px 4px"><svg width="100%" viewBox="0 0 '+W+' '+H+'">'
+   +'<line x1="'+P+'" y1="'+Y(0)+'" x2="'+(W-8)+'" y2="'+Y(0)+'" stroke="#39404d" stroke-dasharray="3 3"/>'
+   +'<path d="'+d+'" fill="none" stroke="'+(last>=0?'#ff7b7b':'#6fa8ff')+'" stroke-width="1.8"/>'
+   +'<text x="4" y="'+(Y(hi)+4)+'" fill="#6b7686" font-size="10">'+hi.toFixed(1)+'%</text>'
+   +'<text x="4" y="'+(Y(lo)+4)+'" fill="#6b7686" font-size="10">'+lo.toFixed(1)+'%</text>'
+   +'<text x="4" y="'+(Y(0)+4)+'" fill="#6b7686" font-size="10">0%</text>'
+   +'</svg><div style="font-size:11.5px;color:#5d6675;padding:0 8px 4px">'
+   +'10분할 운용 가정 누적 손익 곡선 · 수수료·세금 제외</div></div>';
+}
+
+function renderTrades(){
+  var s=$('fstrat').value, w=$('fres').value, g=$('fgrade').value;
+  var rows=TRADES.filter(function(t){
+    if(s && t.strategy!==s) return false;
+    if(w==='win' && t.pnl<=0) return false;
+    if(w==='loss' && t.pnl>0) return false;
+    if(g && t.grade!==g) return false;
+    return true;
+  }).slice().reverse();                              // 최근순
+  var p=rows.map(function(t){return t.pnl});
+  if(p.length){
+    var win=p.filter(function(x){return x>0}).length;
+    var eq=1; p.slice().reverse().forEach(function(x){eq*=(1+x/100/10)});
+    $('fsum').innerHTML=rows.length+'건 · 평균 '
+      +pc(p.reduce(function(a,b){return a+b},0)/p.length)
+      +' · 승률 '+(win/p.length*100).toFixed(0)+'% ('+win+'승 '+(p.length-win)+'패)'
+      +' · 누적 '+pc((eq-1)*100)
+      +' · 최고 '+pc(Math.max.apply(null,p))+' · 최저 '+pc(Math.min.apply(null,p));
+  } else $('fsum').textContent='';
+  eqCurve(rows);
+  tbl($('tradebox'), TRADE, rows, '조건에 맞는 청산 거래가 없습니다');
+}
+['fstrat','fres','fgrade'].forEach(function(i){ $(i).onchange=renderTrades; });
+
 var HIST={};
 function load(d){
   if(HIST[d]) render(HIST[d]);
@@ -425,6 +513,10 @@ $('day').onchange=function(){load(this.value)};
 
 fetch('data/charts.json?v='+Date.now()).then(function(r){return r.json()})
   .then(function(j){CHARTS=j}).catch(function(){CHARTS={}});
+
+fetch('data/trades.json?v='+Date.now()).then(function(r){return r.json()})
+  .then(function(j){TRADES=j||[]; renderTrades();})
+  .catch(function(){$('tradebox').innerHTML='<div class=empty>청산 내역을 불러오지 못했습니다</div>'});
 
 Promise.all([
   fetch('data/latest.json?v='+Date.now()).then(function(r){return r.json()}),

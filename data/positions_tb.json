@@ -5,29 +5,18 @@
 "entry": 36750,
 "entry_date": "2026-07-20",
 "peak": 45000,
-"days": 18,
+"days": 19,
 "score": 82.0,
 "grade": "홈런",
 "signal_date": "2026-07-16"
-},
-"111770": {
-"name": "영원무역",
-"market": "코스피200",
-"entry": 84500,
-"entry_date": "2026-07-23",
-"peak": 95000,
-"days": 15,
-"score": 48.4,
-"grade": "홈런",
-"signal_date": "2026-07-22"
 },
 "251970": {
 "name": "펌텍코리아",
 "market": "코스닥150",
 "entry": 46400,
 "entry_date": "2026-07-31",
-"peak": 57900,
-"days": 9,
+"peak": 58800,
+"days": 10,
 "score": 34.3,
 "grade": "일반",
 "signal_date": "2026-07-30"
@@ -38,7 +27,7 @@
 "entry": 289000,
 "entry_date": "2026-08-05",
 "peak": 333500,
-"days": 6,
+"days": 7,
 "score": 82.8,
 "grade": "홈런",
 "signal_date": "2026-08-04"
@@ -49,7 +38,7 @@
 "entry": 38850,
 "entry_date": "2026-08-05",
 "peak": 46200,
-"days": 6,
+"days": 7,
 "score": 82.1,
 "grade": "홈런",
 "signal_date": "2026-08-04"
@@ -59,8 +48,8 @@
 "market": "코스피200",
 "entry": 193000,
 "entry_date": "2026-08-05",
-"peak": 244000,
-"days": 6,
+"peak": 247000,
+"days": 7,
 "score": 67.7,
 "grade": "홈런",
 "signal_date": "2026-08-04"
@@ -71,7 +60,7 @@
 "entry": 131200,
 "entry_date": "2026-08-05",
 "peak": 141800,
-"days": 6,
+"days": 7,
 "score": 56.3,
 "grade": "홈런",
 "signal_date": "2026-08-04"
@@ -82,7 +71,7 @@
 "entry": 377500,
 "entry_date": "2026-08-05",
 "peak": 405000,
-"days": 6,
+"days": 7,
 "score": 44.8,
 "grade": "홈런",
 "signal_date": "2026-08-04"
@@ -93,7 +82,7 @@
 "entry": 50000,
 "entry_date": "2026-08-06",
 "peak": 52800,
-"days": 5,
+"days": 6,
 "score": 65.3,
 "grade": "홈런",
 "signal_date": "2026-08-05"
@@ -104,9 +93,20 @@
 "entry": 33450,
 "entry_date": "2026-08-06",
 "peak": 34800,
-"days": 5,
+"days": 6,
 "score": 62.9,
 "grade": "홈런",
 "signal_date": "2026-08-05"
+},
+"241710": {
+"name": "코스메카코리아",
+"market": "코스닥150",
+"entry": 108400,
+"entry_date": "2026-08-12",
+"peak": 122800,
+"days": 1,
+"score": 92.2,
+"grade": "홈런",
+"signal_date": "2026-08-12"
 }
 }

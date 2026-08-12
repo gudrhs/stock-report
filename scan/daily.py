@@ -138,6 +138,45 @@ def build_stats(strategy=None):
     )
 
 
+def build_trades():
+    """
+    청산이 끝난 거래 목록 (data/trades.json).
+    SELL 행에 진입 정보가 함께 들어 있어 그대로 한 건씩 만듭니다.
+    """
+    path = os.path.join(DATA, "signals.csv")
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return []
+    out = []
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        if r["action"] != "SELL" or not r["pnl_pct"]:
+            continue
+        try:
+            entry = int(float(r["entry_price"] or 0))
+            exit_ = int(float(r["price"] or 0))
+            pnl = float(r["pnl_pct"])
+        except ValueError:
+            continue
+        out.append(dict(
+            strategy=r.get("strategy", ""), grade=r.get("grade", ""),
+            code=r["code"], name=r["name"], market=r.get("market", ""),
+            entry_date=r.get("entry_date", ""), exit_date=r["date"],
+            entry=entry, exit=exit_, pnl=round(pnl, 2),
+            days=int(r["days_held"] or 0),
+            reason=r["reason"].split(" → ")[0],
+            severity=r.get("severity", ""),
+        ))
+    out.sort(key=lambda x: (x["exit_date"], x["code"]))
+
+    # 전략별 누적 손익 곡선 (10분할 운용 가정)
+    eq = {}
+    for t in out:
+        k = t["strategy"] or "기타"
+        eq.setdefault(k, 1.0)
+        eq[k] *= (1 + t["pnl"] / 100 / CFG["MAX_POS"])
+        t["cum"] = round((eq[k] - 1) * 100, 2)
+    return out
+
+
 def log_row(date, code, name, market, action, severity, reason, s,
             score="", rank="", pos=None, pnl="", strategy=""):
     r = dict(date=date, strategy=strategy, code=code, name=name, market=market,
@@ -358,6 +397,7 @@ def main():
                 open(p, "w", encoding="utf-8").close()
         for f in ("signals.csv", "positions.json", "pending.json",
                   "positions_tb.json", "pending_tb.json", "charts.json",
+                  "trades.json",
                   "dates.json", "latest.json", "history.json", "stats.json"):
             wipe(os.path.join(DATA, f))
         print("기존 기록을 지웠습니다")
@@ -436,6 +476,12 @@ def main():
     save_json(os.path.join(DATA, "m60.json"), m60)
     got = sum(1 for v in ch.values() if "m60" in v)
     print(f"  {len(ch)}종목 (60분봉 {got}종목)")
+
+    trades = build_trades()
+    save_json(os.path.join(DATA, "trades.json"), trades)
+    if trades:
+        w = [t for t in trades if t["pnl"] > 0]
+        print(f"  청산 내역 {len(trades)}건 저장 · 이익 {len(w)} · 손실 {len(trades)-len(w)}")
 
     st = build_stats()
     if st:
