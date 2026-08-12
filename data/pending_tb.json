@@ -1,4 +1,21 @@
 {
-"buy": [],
-"sell": []
+"buy": [
+{
+"code": "078930",
+"name": "GS",
+"market": "코스피200",
+"score": 80.2,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-08-12"
+}
+],
+"sell": [
+{
+"code": "316140",
+"reason": "B 54.2 < 55 이탈",
+"severity": "이탈",
+"signal_date": "2026-08-12"
+}
+]
 }

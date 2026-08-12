@@ -5,7 +5,7 @@
 "entry": 182100,
 "entry_date": "2026-08-04",
 "peak": 210500,
-"days": 8,
+"days": 9,
 "score": 55.6,
 "grade": "",
 "signal_date": "2026-08-03"
@@ -16,7 +16,7 @@
 "entry": 38650,
 "entry_date": "2026-08-07",
 "peak": 40900,
-"days": 5,
+"days": 6,
 "score": 37.8,
 "grade": "",
 "signal_date": "2026-08-06"
@@ -27,7 +27,7 @@
 "entry": 82400,
 "entry_date": "2026-08-11",
 "peak": 85600,
-"days": 3,
+"days": 4,
 "score": 83.3,
 "grade": "",
 "signal_date": "2026-08-10"
@@ -38,7 +38,7 @@
 "entry": 35950,
 "entry_date": "2026-08-11",
 "peak": 36350,
-"days": 3,
+"days": 4,
 "score": 74.3,
 "grade": "",
 "signal_date": "2026-08-10"
@@ -49,7 +49,7 @@
 "entry": 44750,
 "entry_date": "2026-08-11",
 "peak": 46100,
-"days": 3,
+"days": 4,
 "score": 73.1,
 "grade": "",
 "signal_date": "2026-08-10"
@@ -60,7 +60,7 @@
 "entry": 40700,
 "entry_date": "2026-08-12",
 "peak": 40700,
-"days": 2,
+"days": 3,
 "score": 81.8,
 "grade": "",
 "signal_date": "2026-08-11"
@@ -71,7 +71,7 @@
 "entry": 50200,
 "entry_date": "2026-08-12",
 "peak": 51600,
-"days": 1,
+"days": 2,
 "score": 85.0,
 "grade": "",
 "signal_date": "2026-08-12"
@@ -82,7 +82,7 @@
 "entry": 1238000,
 "entry_date": "2026-08-12",
 "peak": 1238000,
-"days": 1,
+"days": 2,
 "score": 80.2,
 "grade": "",
 "signal_date": "2026-08-12"
@@ -92,8 +92,8 @@
 "market": "코스닥150",
 "entry": 38100,
 "entry_date": "2026-08-12",
-"peak": 39400,
-"days": 1,
+"peak": 39600,
+"days": 2,
 "score": 77.0,
 "grade": "",
 "signal_date": "2026-08-12"
@@ -104,7 +104,7 @@
 "entry": 36750,
 "entry_date": "2026-08-12",
 "peak": 36750,
-"days": 1,
+"days": 2,
 "score": 75.1,
 "grade": "",
 "signal_date": "2026-08-12"
