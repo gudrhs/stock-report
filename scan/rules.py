@@ -8,6 +8,19 @@
 """
 import indi
 
+# ── T·B 규칙 (일봉)
+#    매수: T ≥ 10 이고 B ≥ 55 인 상태가 4일 이상 유지될 때
+#    매도: 둘 중 하나라도 이탈할 때
+#    홈런: 위 조건에 더해 G(청선) ≤ 5 — 여기서 큰 게 나옵니다
+TB = dict(
+    T_MIN=10.0,
+    B_MIN=55.0,
+    HOLD_MIN=4,       # 최소 유지일 (이 날부터 매수)
+    HOLD_MAX=7,       # 이 날까지가 적기 — 넘으면 '지연' 표시만 하고 매수는 계속 허용
+    HR_GS_MAX=5.0,    # 홈런 판정 청선 상한
+    STOP_LOSS=-10.0,   # 손절선 (장중)
+)
+
 # ── 매도 규칙 파라미터
 SELL = dict(
     GS_EXIT=5.0,       # 청선이 5선을 위로 이탈하면 추세 훼손
@@ -105,3 +118,39 @@ def sell_check(s, pos):
 def buy_check(o, h, l, c, v):
     """매수 판정 — 통과하면 evaluate() 결과, 아니면 None"""
     return indi.evaluate(o, h, l, c, v, strict=True)
+
+
+# ══════════ T·B 규칙 ══════════
+def tb_ok(t, b):
+    return t is not None and b is not None and t >= TB["T_MIN"] and b >= TB["B_MIN"]
+
+
+def tb_grade(gs, tb_hold):
+    """
+    등급 판정.
+      홈런  — 청선 5 이하 (매수 집중 구간)
+      일반  — 조건은 맞지만 청선이 높음
+    """
+    if gs <= TB["HR_GS_MAX"]:
+        return "홈런"
+    return "일반"
+
+
+def tb_sell_check(s, pos):
+    """T·B 규칙 보유 종목의 청산 판정"""
+    if not tb_ok(s["t"], s["b"]):
+        broke = []
+        if s["t"] < TB["T_MIN"]:
+            broke.append(f"T {s['t']} < {TB['T_MIN']:.0f}")
+        if s["b"] < TB["B_MIN"]:
+            broke.append(f"B {s['b']} < {TB['B_MIN']:.0f}")
+        return "SELL", " · ".join(broke) + " 이탈", "이탈"
+
+    warn = []
+    if s["t"] < TB["T_MIN"] + 5:
+        warn.append(f"T {s['t']} 기준선 근접")
+    if s["b"] < TB["B_MIN"] + 3:
+        warn.append(f"B {s['b']} 기준선 근접")
+    if s["gsell"] > TB["HR_GS_MAX"]:
+        warn.append(f"청선 {s['gsell']}")
+    return "HOLD", (" · ".join(warn) if warn else "T·B 유지"), ("주의" if warn else "정상")

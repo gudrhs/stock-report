@@ -65,6 +65,61 @@ def snapshot_at(S, i):
     )
 
 
+def tb_hold_at(S, i, limit=60):
+    """i일 기준 T·B 조건이 며칠 연속 유지됐는지"""
+    n = 0
+    for j in range(i, max(i - limit, -1), -1):
+        if rules_tb_ok(S["T"][j], S["B"][j]):
+            n += 1
+        else:
+            break
+    return n
+
+
+def rules_tb_ok(t, b):
+    from rules import TB
+    return t is not None and b is not None and t >= TB["T_MIN"] and b >= TB["B_MIN"]
+
+
+def tb_buy_at(S, i):
+    """
+    T·B 규칙 매수 판정.
+    T ≥ 10 · B ≥ 55 가 4일 이상 유지되면 신호. 통과 시 dict, 아니면 None.
+    """
+    from rules import TB
+    if i < 120 or i >= S["n"]:
+        return None
+    if not rules_tb_ok(S["T"][i], S["B"][i]):
+        return None
+    hold = tb_hold_at(S, i)
+    if hold < TB["HOLD_MIN"]:
+        return None
+
+    c, gb, gs = S["c"], S["gb"], S["gs"]
+    grade = "홈런" if gs[i] <= TB["HR_GS_MAX"] else "일반"
+    timely = hold <= TB["HOLD_MAX"]
+
+    # 점수 — 홈런 조건에 얼마나 부합하는지
+    score = 0.0
+    score += 34 * max(0.0, (TB["HR_GS_MAX"] - min(gs[i], TB["HR_GS_MAX"])) / TB["HR_GS_MAX"])
+    score += 22 * min(1.0, (S["T"][i] - TB["T_MIN"]) / 30.0)
+    score += 18 * min(1.0, (S["B"][i] - TB["B_MIN"]) / 20.0)
+    score += 14 if timely else 4              # 4~7일이 적기
+    score += 6 if S["red"][i] else 0
+    score += 6 if c[i] >= S["ma30"][i] else 0
+
+    return dict(
+        grade=grade, homerun=(grade == "홈런"), timely=timely,
+        score=round(min(100, max(0, score)), 1),
+        tb_hold=hold,
+        t=round(S["T"][i], 1), b=round(S["B"][i], 1), u=round(S["U"][i], 1),
+        gsell=round(gs[i], 1), gbuy=round(gb[i], 1),
+        red=bool(S["red"][i]), ma30=int(S["ma30"][i]),
+        above_ma30=bool(c[i] >= S["ma30"][i]),
+        r20=round((c[i] / c[i - 20] - 1) * 100, 1) if i >= 20 else 0,
+    )
+
+
 def buy_at(S, i):
     """i일 기준 매수 판정 — indi.evaluate()와 같은 규칙, 인덱스 기반"""
     if i < 120 or i >= S["n"]:

@@ -1,0 +1,36 @@
+{
+"buy": [
+{
+"code": "241710",
+"name": "코스메카코리아",
+"market": "코스닥150",
+"score": 91.6,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-08-12"
+},
+{
+"code": "078930",
+"name": "GS",
+"market": "코스피200",
+"score": 78.5,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-08-12"
+}
+],
+"sell": [
+{
+"code": "111770",
+"reason": "B 50.2 < 55 이탈",
+"severity": "이탈",
+"signal_date": "2026-08-12"
+},
+{
+"code": "316140",
+"reason": "B 54.9 < 55 이탈",
+"severity": "이탈",
+"signal_date": "2026-08-12"
+}
+]
+}
