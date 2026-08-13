@@ -1,25 +1,49 @@
 {
 "buy": [
 {
+"code": "102710",
+"name": "이엔에프테크놀로지",
+"market": "코스닥150",
+"score": 85.0,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-08-12"
+},
+{
+"code": "037460",
+"name": "삼지전자",
+"market": "코스닥150",
+"score": 77.1,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-08-12"
+},
+{
 "code": "036830",
 "name": "솔브레인홀딩스",
 "market": "코스닥150",
 "score": 72.6,
-"rank": 4,
+"rank": 3,
 "grade": "",
 "signal_date": "2026-08-12"
 }
 ],
 "sell": [
 {
-"code": "068270",
-"reason": "장대음봉 -4.0%",
+"code": "008930",
+"reason": "장대음봉 -5.3%",
 "severity": "청산",
 "signal_date": "2026-08-12"
 },
 {
-"code": "035760",
-"reason": "장대음봉 -4.2%",
+"code": "009540",
+"reason": "장대음봉 -4.4%",
+"severity": "청산",
+"signal_date": "2026-08-12"
+},
+{
+"code": "068270",
+"reason": "장대음봉 -4.0%",
 "severity": "청산",
 "signal_date": "2026-08-12"
 }

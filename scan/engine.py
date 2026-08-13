@@ -111,8 +111,11 @@ def tb_buy_at(S, i):
     hold = tb_hold_at(S, i)
     if hold < TB["HOLD_MIN"]:
         return None
-
     c, gb, gs = S["c"], S["gb"], S["gs"]
+    # 청선이 높은 자리는 매수하지 않습니다 — G 10 이상 구간은 승률 4.2%였습니다
+    if gs[i] > TB["GS_ENTRY"]:
+        return None
+
     grade = "홈런" if gs[i] <= TB["HR_GS_MAX"] else "일반"
     timely = hold <= TB["HOLD_MAX"]
 
@@ -173,6 +176,10 @@ def buy_at(S, i):
     if bad_wick or big_down:
         return None
     if c[i] < ma30[i]:
+        return None
+    # 진입 자리 제한 — 청선 1 이하에서만. 완결 236건 분석에서 유일하게 단조로운 조건이었습니다
+    from rules import GS_ENTRY
+    if gs[i] > GS_ENTRY:
         return None
 
     score = 0.0

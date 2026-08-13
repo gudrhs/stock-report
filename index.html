@@ -98,7 +98,7 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
   <h2 id=orderh>오늘 낼 주문 <small>장 시작 시가에 체결하는 기준입니다</small></h2>
   <div class=wrap id=orderbox></div>
 
-  <h2 class=hr>홈런 후보 <small>G(청선) 5 이하 · T 10 이상 · B 55 이상 — 큰 게 나오는 자리</small></h2>
+  <h2 class=hr>홈런 후보 <small>G(청선) 1 이하 · T 10 이상 · B 55 이상 — 큰 게 나오는 자리</small></h2>
   <div class="wrap hrbox" id=hrbox></div>
 
   <h2>T·B 매수 신호 <small>T 10 이상 · B 55 이상이 4일 넘게 유지된 종목</small></h2>
@@ -142,16 +142,16 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
 
   <div class=note>
     <b>어떻게 만들어지나</b><br>
-    매일 아침 7시(KST) GitHub Actions가 코스피200·코스닥150 350종목의 <b>전일 종가</b>를 받아
+    매일 아침 6시(KST) GitHub Actions가 코스피200·코스닥150 350종목의 <b>전일 종가</b>를 받아
     지표를 계산합니다. 종가로 판정한 주문은 <b>다음 거래일 시가</b>에 체결한 것으로 기록합니다 —
     종가를 보고 그 종가에 살 수는 없기 때문입니다. 손절만은 미리 걸어두는 주문이라 장중 체결로 처리합니다.
     모든 판정은 <code>data/signals.csv</code>에 한 줄씩 쌓이며, 그대로 자동매매에 옮길 수 있습니다.
     두 규칙을 각각 10종목씩 따로 굴리고 로그도 <code>strategy</code> 열로 구분합니다.<br><br>
-    <b>T·B 규칙</b> — 매수: T ≥ 10 이고 B ≥ 55 인 상태가 4일 이상 유지 (4~7일이 적기) ·
+    <b>T·B 규칙</b> — 매수: T ≥ 10 이고 B ≥ 55 인 상태가 4일 이상 유지 (4~7일이 적기) · <b>청선 1 이하</b> ·
     매도: 둘 중 하나라도 이탈 · 손절 -10%(장중)<br>
-    <b>홈런</b> — 위 조건에 <b>G(청선) 5 이하</b>가 더해진 자리. 큰 게 여기서 나옵니다.<br>
+    <b>홈런</b> — 위 조건에 <b>G(청선) 1 이하</b>가 더해진 자리.<br>완결 236건을 분석해 5.0에서 1.0으로 좁혔습니다. 진입 시 청선이 유일하게 성과와 단조로운 관계를 보였습니다 — G 0~1 구간은 기존 규칙 평균 +4.84%(승률 45.8%)인 반면 G 10 이상은 -4.81%(18.2%)였습니다. 점수는 오히려 높을수록 나빴습니다.<br>
     <b>기존 규칙</b> — 매수: 청선 3일 이상 5선 이하 유지 · 청선 표준편차 2.0 이하 ·
-    적선 10 이상이면서 5일간 확산 중 · 위꼬리/장대음봉 없음 · 30일선 위 ·
+    적선 10 이상이면서 5일간 확산 중 · 위꼬리/장대음봉 없음 · 30일선 위 · <b>청선 1 이하</b> ·
     매도: 손절 -7% · 청선 5선 이탈 · 장대음봉 -4% · 30일선 이탈 · 적선 기울기 -3 이하 ·
     고점 대비 -8% · 보유 40일<br><br>
     종목명을 누르면 <b>일봉과 60분봉</b>이 6단(가격+그물망 / 거래량 / U / T / B / G)으로 펼쳐집니다.
@@ -385,7 +385,7 @@ function render(s){
     +'<div class=card><div class=lb>기존 규칙 매수</div><div class=n>'+(st.buy||0)+'</div></div>'
     +'<div class="card hold"><div class=lb>보유 중</div><div class=n>'
       +(st.open_positions||0)+'+'+(st.tb_positions||0)+'</div></div>';
-  tbl($('hrbox'), HR, tb.homerun, '오늘은 홈런 조건(G≤5 · T≥10 · B≥55)을 채운 종목이 없습니다');
+  tbl($('hrbox'), HR, tb.homerun, '오늘은 홈런 조건(G≤1 · T≥10 · B≥55)을 채운 종목이 없습니다');
   tbl($('tbbox'), HR, tb.buy, 'T·B 조건을 채운 종목이 없습니다');
   tbl($('tbholdbox'), TBHOLD, tb.hold, 'T·B 규칙으로 보유 중인 종목이 없습니다');
 

@@ -2,22 +2,6 @@
 {
 "strategy": "기존",
 "grade": "",
-"code": "009970",
-"name": "영원무역홀딩스",
-"market": "코스피200",
-"entry_date": "2026-02-19",
-"exit_date": "2026-02-20",
-"entry": 233000,
-"exit": 220500,
-"pnl": -5.36,
-"days": 1,
-"reason": "청선 8.5 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -0.54
-},
-{
-"strategy": "기존",
-"grade": "",
 "code": "017670",
 "name": "SK텔레콤",
 "market": "코스피200",
@@ -29,7 +13,7 @@
 "days": 1,
 "reason": "장대음봉 -5.8%",
 "severity": "청산",
-"cum": -0.78
+"cum": -0.25
 },
 {
 "strategy": "기존",
@@ -45,39 +29,55 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -1.48
+"cum": -0.95
 },
 {
 "strategy": "기존",
 "grade": "",
-"code": "009420",
-"name": "한올바이오파마",
-"market": "코스피200",
-"entry_date": "2026-02-19",
+"code": "084370",
+"name": "유진테크",
+"market": "코스닥150",
+"entry_date": "2026-02-23",
 "exit_date": "2026-02-23",
-"entry": 55500,
-"exit": 57500,
-"pnl": 3.6,
-"days": 2,
-"reason": "적선 5일 기울기 -7.3 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -1.12
+"entry": 134200,
+"exit": 124805,
+"pnl": -7.0,
+"days": 0,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": -1.64
 },
 {
 "strategy": "기존",
 "grade": "",
-"code": "000810",
-"name": "삼성화재",
-"market": "코스피200",
-"entry_date": "2026-02-19",
-"exit_date": "2026-02-24",
-"entry": 552000,
-"exit": 578000,
-"pnl": 4.71,
-"days": 3,
-"reason": "청선 9.4 — 8.0선 초과 급이탈",
+"code": "131290",
+"name": "티에스이",
+"market": "코스닥150",
+"entry_date": "2026-02-20",
+"exit_date": "2026-02-23",
+"entry": 94900,
+"exit": 92900,
+"pnl": -2.11,
+"days": 1,
+"reason": "장대음봉 -4.7%",
 "severity": "청산",
-"cum": -0.66
+"cum": -1.85
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "086790",
+"name": "하나금융지주",
+"market": "코스피200",
+"entry_date": "2026-02-23",
+"exit_date": "2026-02-24",
+"entry": 133700,
+"exit": 124340,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": -2.54
 },
 {
 "strategy": "기존",
@@ -93,55 +93,7 @@
 "days": 3,
 "reason": "청선 9.8 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -0.18
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "005940",
-"name": "NH투자증권",
-"market": "코스피200",
-"entry_date": "2026-02-24",
-"exit_date": "2026-02-25",
-"entry": 37250,
-"exit": 37300,
-"pnl": 0.13,
-"days": 1,
-"reason": "장대음봉 -5.1%",
-"severity": "청산",
-"cum": -0.16
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "086790",
-"name": "하나금융지주",
-"market": "코스피200",
-"entry_date": "2026-02-19",
-"exit_date": "2026-02-25",
-"entry": 130700,
-"exit": 125200,
-"pnl": -4.21,
-"days": 4,
-"reason": "적선 5일 기울기 -4.2 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -0.58
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "139130",
-"name": "iM금융지주",
-"market": "코스피200",
-"entry_date": "2026-02-24",
-"exit_date": "2026-02-25",
-"entry": 21000,
-"exit": 20500,
-"pnl": -2.38,
-"days": 1,
-"reason": "장대음봉 -4.2%",
-"severity": "청산",
-"cum": -0.82
+"cum": -2.06
 },
 {
 "strategy": "기존",
@@ -157,7 +109,7 @@
 "days": 1,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -1.52
+"cum": -2.75
 },
 {
 "strategy": "TB",
@@ -174,6 +126,22 @@
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
 "cum": -1.0
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "026960",
+"name": "동서",
+"market": "코스피200",
+"entry_date": "2026-02-24",
+"exit_date": "2026-02-26",
+"entry": 30250,
+"exit": 28132,
+"pnl": -7.0,
+"days": 2,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": -3.43
 },
 {
 "strategy": "TB",
@@ -205,7 +173,7 @@
 "days": 6,
 "reason": "청선 8.4 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -1.91
+"cum": -3.82
 },
 {
 "strategy": "기존",
@@ -221,7 +189,7 @@
 "days": 6,
 "reason": "청선 5.4 — 5선 이탈",
 "severity": "청산",
-"cum": -2.16
+"cum": -4.07
 },
 {
 "strategy": "기존",
@@ -237,7 +205,7 @@
 "days": 5,
 "reason": "청선 8.6 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -2.36
+"cum": -4.25
 },
 {
 "strategy": "기존",
@@ -253,7 +221,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -3.04
+"cum": -4.92
 },
 {
 "strategy": "기존",
@@ -269,7 +237,7 @@
 "days": 5,
 "reason": "청선 7.6 — 5선 이탈",
 "severity": "청산",
-"cum": -3.34
+"cum": -5.22
 },
 {
 "strategy": "기존",
@@ -285,23 +253,23 @@
 "days": 1,
 "reason": "장중 손절 -7.3% (기준 -7.0%)",
 "severity": "손절",
-"cum": -4.04
+"cum": -5.91
 },
 {
-"strategy": "기존",
-"grade": "",
-"code": "005830",
-"name": "DB손해보험",
+"strategy": "TB",
+"grade": "홈런",
+"code": "004020",
+"name": "현대제철",
 "market": "코스피200",
-"entry_date": "2026-02-19",
+"entry_date": "2026-03-03",
 "exit_date": "2026-03-03",
-"entry": 183000,
-"exit": 184500,
-"pnl": 0.82,
-"days": 7,
-"reason": "청선 12.2 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -3.97
+"entry": 48300,
+"exit": 43470,
+"pnl": -10.0,
+"days": 0,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -2.97
 },
 {
 "strategy": "기존",
@@ -317,7 +285,23 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -4.64
+"cum": -6.57
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "030000",
+"name": "제일기획",
+"market": "코스피200",
+"entry_date": "2026-02-23",
+"exit_date": "2026-03-03",
+"entry": 22750,
+"exit": 21750,
+"pnl": -4.4,
+"days": 5,
+"reason": "적선 5일 기울기 -4.0 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": -6.98
 },
 {
 "strategy": "TB",
@@ -333,7 +317,7 @@
 "days": 7,
 "reason": "B 53.0 < 55 이탈",
 "severity": "이탈",
-"cum": -2.71
+"cum": -3.69
 },
 {
 "strategy": "TB",
@@ -349,23 +333,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -3.69
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "034730",
-"name": "SK",
-"market": "코스피200",
-"entry_date": "2026-02-25",
-"exit_date": "2026-03-03",
-"entry": 400000,
-"exit": 391500,
-"pnl": -2.12,
-"days": 3,
-"reason": "장대음봉 -5.1%",
-"severity": "청산",
-"cum": -4.84
+"cum": -4.65
 },
 {
 "strategy": "기존",
@@ -381,39 +349,39 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -5.51
+"cum": -7.63
 },
 {
 "strategy": "기존",
 "grade": "",
-"code": "051600",
-"name": "한전KPS",
-"market": "코스피200",
-"entry_date": "2026-02-19",
-"exit_date": "2026-03-03",
-"entry": 61000,
-"exit": 61000,
-"pnl": 0.0,
-"days": 7,
-"reason": "적선 5일 기울기 -6.5 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -5.51
-},
-{
-"strategy": "TB",
-"grade": "홈런",
 "code": "180640",
 "name": "한진칼",
 "market": "코스피200",
-"entry_date": "2026-02-27",
+"entry_date": "2026-02-20",
 "exit_date": "2026-03-03",
-"entry": 172700,
-"exit": 155430,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -4.65
+"entry": 144700,
+"exit": 155600,
+"pnl": 7.53,
+"days": 6,
+"reason": "청선 10.7 — 8.0선 초과 급이탈",
+"severity": "청산",
+"cum": -6.93
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "267250",
+"name": "HD현대",
+"market": "코스피200",
+"entry_date": "2026-02-24",
+"exit_date": "2026-03-03",
+"entry": 287500,
+"exit": 295000,
+"pnl": 2.61,
+"days": 4,
+"reason": "적선 5일 기울기 -21.7 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": -6.69
 },
 {
 "strategy": "기존",
@@ -429,7 +397,7 @@
 "days": 1,
 "reason": "장대음봉 -5.5%",
 "severity": "청산",
-"cum": -6.22
+"cum": -7.4
 },
 {
 "strategy": "TB",
@@ -446,22 +414,6 @@
 "reason": "B 51.8 < 55 이탈",
 "severity": "이탈",
 "cum": -5.78
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "003490",
-"name": "대한항공",
-"market": "코스피200",
-"entry_date": "2026-03-03",
-"exit_date": "2026-03-04",
-"entry": 26100,
-"exit": 23900,
-"pnl": -8.43,
-"days": 1,
-"reason": "청선 14.9 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -7.01
 },
 {
 "strategy": "TB",
@@ -509,23 +461,7 @@
 "days": 5,
 "reason": "청선 14.1 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -7.85
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "012630",
-"name": "HDC",
-"market": "코스피200",
-"entry_date": "2026-02-25",
-"exit_date": "2026-03-04",
-"entry": 24550,
-"exit": 22831,
-"pnl": -7.0,
-"days": 4,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -8.5
+"cum": -8.23
 },
 {
 "strategy": "TB",
@@ -594,22 +530,6 @@
 {
 "strategy": "기존",
 "grade": "",
-"code": "060370",
-"name": "LS마린솔루션",
-"market": "코스닥150",
-"entry_date": "2026-02-27",
-"exit_date": "2026-03-04",
-"entry": 32400,
-"exit": 29200,
-"pnl": -9.88,
-"days": 2,
-"reason": "장대음봉 -7.0%",
-"severity": "청산",
-"cum": -9.4
-},
-{
-"strategy": "기존",
-"grade": "",
 "code": "078600",
 "name": "대주전자재료",
 "market": "코스닥150",
@@ -621,7 +541,7 @@
 "days": 1,
 "reason": "청선 8.5 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -10.33
+"cum": -9.17
 },
 {
 "strategy": "기존",
@@ -637,7 +557,7 @@
 "days": 2,
 "reason": "청선 8.8 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -11.22
+"cum": -10.08
 },
 {
 "strategy": "기존",
@@ -653,7 +573,7 @@
 "days": 1,
 "reason": "적선 5일 기울기 -4.3 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -12.1
+"cum": -10.97
 },
 {
 "strategy": "TB",
@@ -677,15 +597,47 @@
 "code": "310210",
 "name": "보로노이",
 "market": "코스닥150",
-"entry_date": "2026-03-03",
+"entry_date": "2026-02-27",
 "exit_date": "2026-03-04",
-"entry": 334500,
-"exit": 301050,
+"entry": 314000,
+"exit": 282600,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -13.53
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "218410",
+"name": "RFHIC",
+"market": "코스닥150",
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-09",
+"entry": 72000,
+"exit": 64800,
 "pnl": -10.0,
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -13.53
+"cum": -14.4
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "226950",
+"name": "올릭스",
+"market": "코스닥150",
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-11",
+"entry": 200000,
+"exit": 180000,
+"pnl": -10.0,
+"days": 3,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -15.25
 },
 {
 "strategy": "기존",
@@ -701,55 +653,23 @@
 "days": 1,
 "reason": "장대음봉 -4.1%",
 "severity": "청산",
-"cum": -12.26
+"cum": -11.13
 },
 {
 "strategy": "TB",
-"grade": "일반",
-"code": "171090",
-"name": "선익시스템",
+"grade": "홈런",
+"code": "058470",
+"name": "리노공업",
 "market": "코스닥150",
-"entry_date": "2026-03-05",
-"exit_date": "2026-03-12",
-"entry": 126000,
-"exit": 113400,
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-16",
+"entry": 123000,
+"exit": 110700,
 "pnl": -10.0,
-"days": 5,
+"days": 6,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -14.4
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "237690",
-"name": "에스티팜",
-"market": "코스닥150",
-"entry_date": "2026-03-11",
-"exit_date": "2026-03-16",
-"entry": 161500,
-"exit": 159100,
-"pnl": -1.49,
-"days": 3,
-"reason": "적선 5일 기울기 -14.7 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -12.39
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "336260",
-"name": "두산퓨얼셀",
-"market": "코스피200",
-"entry_date": "2026-03-13",
-"exit_date": "2026-03-16",
-"entry": 47800,
-"exit": 44454,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -13.01
+"cum": -16.1
 },
 {
 "strategy": "기존",
@@ -765,87 +685,55 @@
 "days": 5,
 "reason": "장대음봉 -7.1%",
 "severity": "청산",
-"cum": -11.46
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "295310",
-"name": "에이치브이엠",
-"market": "코스닥150",
-"entry_date": "2026-03-13",
-"exit_date": "2026-03-17",
-"entry": 103200,
-"exit": 107200,
-"pnl": 3.88,
-"days": 2,
-"reason": "청선 5.4 — 5선 이탈",
-"severity": "청산",
-"cum": -11.12
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "052690",
-"name": "한전기술",
-"market": "코스피200",
-"entry_date": "2026-03-18",
-"exit_date": "2026-03-20",
-"entry": 173400,
-"exit": 170100,
-"pnl": -1.9,
-"days": 2,
-"reason": "청선 5.8 — 5선 이탈",
-"severity": "청산",
-"cum": -11.28
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "439260",
-"name": "대한조선",
-"market": "코스피200",
-"entry_date": "2026-03-05",
-"exit_date": "2026-03-23",
-"entry": 100400,
-"exit": 90000,
-"pnl": -10.36,
-"days": 12,
-"reason": "B 52.5 < 55 이탈",
-"severity": "이탈",
-"cum": -15.28
+"cum": -9.55
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "006360",
-"name": "GS건설",
-"market": "코스피200",
-"entry_date": "2026-03-24",
-"exit_date": "2026-03-24",
-"entry": 32150,
-"exit": 28935,
+"code": "440110",
+"name": "파두",
+"market": "코스닥150",
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-19",
+"entry": 66000,
+"exit": 59400,
 "pnl": -10.0,
-"days": 0,
+"days": 9,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -16.13
+"cum": -16.94
 },
 {
-"strategy": "기존",
-"grade": "",
-"code": "007660",
-"name": "이수페타시스",
+"strategy": "TB",
+"grade": "홈런",
+"code": "439260",
+"name": "대한조선",
 "market": "코스피200",
-"entry_date": "2026-03-23",
-"exit_date": "2026-03-24",
-"entry": 121600,
-"exit": 123300,
-"pnl": 1.4,
-"days": 1,
-"reason": "청선 12.1 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -11.16
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-20",
+"entry": 103900,
+"exit": 93510,
+"pnl": -10.0,
+"days": 10,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -17.77
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "347700",
+"name": "스피어",
+"market": "코스닥150",
+"entry_date": "2026-03-06",
+"exit_date": "2026-03-23",
+"entry": 45450,
+"exit": 40905,
+"pnl": -10.0,
+"days": 11,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -18.59
 },
 {
 "strategy": "기존",
@@ -861,39 +749,7 @@
 "days": 1,
 "reason": "장대음봉 -7.1%",
 "severity": "청산",
-"cum": -11.08
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "082920",
-"name": "비츠로셀",
-"market": "코스닥150",
-"entry_date": "2026-03-23",
-"exit_date": "2026-03-24",
-"entry": 28800,
-"exit": 30000,
-"pnl": 4.17,
-"days": 1,
-"reason": "청선 6.2 — 5선 이탈",
-"severity": "청산",
-"cum": -10.71
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "089970",
-"name": "브이엠",
-"market": "코스닥150",
-"entry_date": "2026-03-23",
-"exit_date": "2026-03-24",
-"entry": 45000,
-"exit": 46400,
-"pnl": 3.11,
-"days": 1,
-"reason": "청선 10.3 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -10.43
+"cum": -9.47
 },
 {
 "strategy": "기존",
@@ -909,39 +765,7 @@
 "days": 5,
 "reason": "장대음봉 -4.2%",
 "severity": "청산",
-"cum": -9.2
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "281820",
-"name": "케이씨텍",
-"market": "코스피200",
-"entry_date": "2026-03-23",
-"exit_date": "2026-03-24",
-"entry": 47850,
-"exit": 47250,
-"pnl": -1.25,
-"days": 1,
-"reason": "청선 12.8 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -9.31
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "310210",
-"name": "보로노이",
-"market": "코스닥150",
-"entry_date": "2026-03-05",
-"exit_date": "2026-03-24",
-"entry": 298000,
-"exit": 312000,
-"pnl": 4.7,
-"days": 13,
-"reason": "B 52.5 < 55 이탈",
-"severity": "이탈",
-"cum": -15.74
+"cum": -8.22
 },
 {
 "strategy": "기존",
@@ -957,39 +781,7 @@
 "days": 3,
 "reason": "장대음봉 -4.3%",
 "severity": "청산",
-"cum": -8.03
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "440110",
-"name": "파두",
-"market": "코스닥150",
-"entry_date": "2026-03-05",
-"exit_date": "2026-03-24",
-"entry": 59100,
-"exit": 58700,
-"pnl": -0.68,
-"days": 13,
-"reason": "B 53.8 < 55 이탈",
-"severity": "이탈",
-"cum": -15.79
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "458870",
-"name": "씨어스",
-"market": "코스닥150",
-"entry_date": "2026-03-23",
-"exit_date": "2026-03-24",
-"entry": 59532,
-"exit": 55364,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -8.68
+"cum": -6.93
 },
 {
 "strategy": "기존",
@@ -1005,7 +797,7 @@
 "days": 1,
 "reason": "청선 9.0 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -8.67
+"cum": -6.92
 },
 {
 "strategy": "TB",
@@ -1021,23 +813,7 @@
 "days": 2,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -16.64
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "042700",
-"name": "한미반도체",
-"market": "코스피200",
-"entry_date": "2026-03-05",
-"exit_date": "2026-03-27",
-"entry": 302000,
-"exit": 269000,
-"pnl": -10.93,
-"days": 16,
-"reason": "B 53.2 < 55 이탈",
-"severity": "이탈",
-"cum": -17.55
+"cum": -19.41
 },
 {
 "strategy": "기존",
@@ -1053,7 +829,23 @@
 "days": 1,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -9.31
+"cum": -7.57
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "010170",
+"name": "대한광통신",
+"market": "코스닥150",
+"entry_date": "2026-03-30",
+"exit_date": "2026-03-30",
+"entry": 9090,
+"exit": 8181,
+"pnl": -10.0,
+"days": 0,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -20.22
 },
 {
 "strategy": "TB",
@@ -1069,23 +861,39 @@
 "days": 17,
 "reason": "B 54.7 < 55 이탈",
 "severity": "이탈",
-"cum": -17.76
+"cum": -20.42
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "010170",
-"name": "대한광통신",
+"code": "032500",
+"name": "케이엠더블유",
 "market": "코스닥150",
-"entry_date": "2026-03-25",
-"exit_date": "2026-03-31",
-"entry": 8500,
-"exit": 7650,
+"entry_date": "2026-03-20",
+"exit_date": "2026-03-30",
+"entry": 29700,
+"exit": 26730,
 "pnl": -10.0,
-"days": 4,
+"days": 6,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -18.58
+"cum": -21.21
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "000250",
+"name": "삼천당제약",
+"market": "코스닥150",
+"entry_date": "2026-03-27",
+"exit_date": "2026-03-31",
+"entry": 1161000,
+"exit": 1044900,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -22.0
 },
 {
 "strategy": "TB",
@@ -1101,87 +909,71 @@
 "days": 19,
 "reason": "B 53.9 < 55 이탈",
 "severity": "이탈",
-"cum": -18.15
+"cum": -21.59
 },
 {
 "strategy": "TB",
-"grade": "일반",
-"code": "000250",
-"name": "삼천당제약",
+"grade": "홈런",
+"code": "032820",
+"name": "우리기술",
 "market": "코스닥150",
-"entry_date": "2026-03-05",
+"entry_date": "2026-03-10",
 "exit_date": "2026-04-01",
-"entry": 730000,
-"exit": 760000,
-"pnl": 4.11,
-"days": 19,
-"reason": "B 52.4 < 55 이탈",
+"entry": 18500,
+"exit": 22100,
+"pnl": 19.46,
+"days": 16,
+"reason": "B 52.1 < 55 이탈",
 "severity": "이탈",
-"cum": -17.82
+"cum": -20.06
 },
 {
 "strategy": "TB",
-"grade": "일반",
+"grade": "홈런",
 "code": "043260",
 "name": "성호전자",
 "market": "코스닥150",
-"entry_date": "2026-03-05",
+"entry_date": "2026-03-06",
 "exit_date": "2026-04-01",
-"entry": 28700,
+"entry": 31000,
 "exit": 41350,
-"pnl": 44.08,
-"days": 19,
+"pnl": 33.39,
+"days": 18,
 "reason": "B 52.4 < 55 이탈",
 "severity": "이탈",
-"cum": -14.19
+"cum": -17.39
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "131970",
-"name": "두산테스나",
-"market": "코스닥150",
-"entry_date": "2026-03-30",
-"exit_date": "2026-04-03",
-"entry": 103100,
-"exit": 92790,
-"pnl": -10.0,
-"days": 4,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -15.05
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "443060",
-"name": "HD현대마린솔루션",
+"code": "047040",
+"name": "대우건설",
 "market": "코스피200",
-"entry_date": "2026-03-31",
-"exit_date": "2026-04-03",
-"entry": 178000,
-"exit": 173600,
-"pnl": -2.47,
-"days": 3,
-"reason": "청선 10.2 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": -9.53
+"entry_date": "2026-04-02",
+"exit_date": "2026-04-02",
+"entry": 19650,
+"exit": 17685,
+"pnl": -10.0,
+"days": 0,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -18.22
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "376900",
-"name": "로킷헬스케어",
+"code": "023160",
+"name": "태광",
 "market": "코스닥150",
-"entry_date": "2026-03-27",
-"exit_date": "2026-04-06",
-"entry": 127900,
-"exit": 115110,
+"entry_date": "2026-04-07",
+"exit_date": "2026-04-07",
+"entry": 44850,
+"exit": 40365,
 "pnl": -10.0,
-"days": 6,
+"days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -15.9
+"cum": -19.04
 },
 {
 "strategy": "TB",
@@ -1189,15 +981,31 @@
 "code": "052020",
 "name": "에스티큐브",
 "market": "코스닥150",
-"entry_date": "2026-03-13",
+"entry_date": "2026-03-12",
 "exit_date": "2026-04-07",
-"entry": 14080,
+"entry": 13300,
 "exit": 15400,
-"pnl": 9.38,
-"days": 17,
+"pnl": 15.79,
+"days": 18,
 "reason": "B 54.4 < 55 이탈",
 "severity": "이탈",
-"cum": -15.11
+"cum": -17.76
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "376900",
+"name": "로킷헬스케어",
+"market": "코스닥150",
+"entry_date": "2026-03-17",
+"exit_date": "2026-04-07",
+"entry": 102100,
+"exit": 107800,
+"pnl": 5.58,
+"days": 15,
+"reason": "B 50.3 < 55 이탈",
+"severity": "이탈",
+"cum": -17.3
 },
 {
 "strategy": "TB",
@@ -1213,7 +1021,7 @@
 "days": 12,
 "reason": "B 51.1 < 55 이탈",
 "severity": "이탈",
-"cum": -15.35
+"cum": -17.53
 },
 {
 "strategy": "TB",
@@ -1229,7 +1037,7 @@
 "days": 25,
 "reason": "B 52.9 < 55 이탈",
 "severity": "이탈",
-"cum": -14.29
+"cum": -16.5
 },
 {
 "strategy": "TB",
@@ -1245,23 +1053,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -15.15
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "282330",
-"name": "BGF리테일",
-"market": "코스피200",
-"entry_date": "2026-04-08",
-"exit_date": "2026-04-13",
-"entry": 143000,
-"exit": 130900,
-"pnl": -8.46,
-"days": 3,
-"reason": "B 51.9 < 55 이탈",
-"severity": "이탈",
-"cum": -15.87
+"cum": -17.34
 },
 {
 "strategy": "기존",
@@ -1277,39 +1069,7 @@
 "days": 1,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -10.16
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "450080",
-"name": "에코프로머티",
-"market": "코스피200",
-"entry_date": "2026-04-13",
-"exit_date": "2026-04-14",
-"entry": 73200,
-"exit": 72600,
-"pnl": -0.82,
-"days": 1,
-"reason": "청선 7.9 — 5선 이탈",
-"severity": "청산",
-"cum": -10.24
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "014620",
-"name": "성광벤드",
-"market": "코스닥150",
-"entry_date": "2026-04-10",
-"exit_date": "2026-04-15",
-"entry": 39900,
-"exit": 39550,
-"pnl": -0.88,
-"days": 3,
-"reason": "장대음봉 -4.6%",
-"severity": "청산",
-"cum": -10.32
+"cum": -8.22
 },
 {
 "strategy": "기존",
@@ -1325,7 +1085,7 @@
 "days": 2,
 "reason": "장대음봉 -6.6%",
 "severity": "청산",
-"cum": -10.36
+"cum": -8.26
 },
 {
 "strategy": "기존",
@@ -1341,23 +1101,7 @@
 "days": 4,
 "reason": "청선 5.4 — 5선 이탈",
 "severity": "청산",
-"cum": -10.12
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "298040",
-"name": "효성중공업",
-"market": "코스피200",
-"entry_date": "2026-04-16",
-"exit_date": "2026-04-20",
-"entry": 3007000,
-"exit": 2991000,
-"pnl": -0.53,
-"days": 2,
-"reason": "적선 5일 기울기 -3.3 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -10.17
+"cum": -8.02
 },
 {
 "strategy": "기존",
@@ -1373,39 +1117,7 @@
 "days": 3,
 "reason": "적선 5일 기울기 -13.6 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -10.19
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "475150",
-"name": "SK이터닉스",
-"market": "코스피200",
-"entry_date": "2026-04-01",
-"exit_date": "2026-04-22",
-"entry": 55300,
-"exit": 53600,
-"pnl": -3.07,
-"days": 15,
-"reason": "B 54.9 < 55 이탈",
-"severity": "이탈",
-"cum": -16.13
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "006400",
-"name": "삼성SDI",
-"market": "코스피200",
-"entry_date": "2026-04-22",
-"exit_date": "2026-04-23",
-"entry": 686000,
-"exit": 637980,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -10.81
+"cum": -8.04
 },
 {
 "strategy": "기존",
@@ -1421,7 +1133,7 @@
 "days": 4,
 "reason": "적선 5일 기울기 -33.8 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -9.05
+"cum": -6.22
 },
 {
 "strategy": "기존",
@@ -1437,7 +1149,23 @@
 "days": 5,
 "reason": "적선 5일 기울기 -3.6 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -8.43
+"cum": -5.58
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "006400",
+"name": "삼성SDI",
+"market": "코스피200",
+"entry_date": "2026-04-21",
+"exit_date": "2026-04-24",
+"entry": 570000,
+"exit": 648000,
+"pnl": 13.68,
+"days": 3,
+"reason": "장대음봉 -4.4%",
+"severity": "청산",
+"cum": -4.29
 },
 {
 "strategy": "기존",
@@ -1453,7 +1181,7 @@
 "days": 5,
 "reason": "적선 5일 기울기 -3.9 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -8.51
+"cum": -4.37
 },
 {
 "strategy": "기존",
@@ -1469,23 +1197,7 @@
 "days": 1,
 "reason": "장대음봉 -6.9%",
 "severity": "청산",
-"cum": -8.61
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "097950",
-"name": "CJ제일제당",
-"market": "코스피200",
-"entry_date": "2026-04-16",
-"exit_date": "2026-04-24",
-"entry": 234500,
-"exit": 235000,
-"pnl": 0.21,
-"days": 6,
-"reason": "적선 5일 기울기 -5.7 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -8.59
+"cum": -4.48
 },
 {
 "strategy": "기존",
@@ -1501,7 +1213,7 @@
 "days": 8,
 "reason": "적선 5일 기울기 -4.7 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -8.26
+"cum": -4.12
 },
 {
 "strategy": "TB",
@@ -1509,15 +1221,15 @@
 "code": "010170",
 "name": "대한광통신",
 "market": "코스닥150",
-"entry_date": "2026-04-06",
+"entry_date": "2026-04-02",
 "exit_date": "2026-04-27",
-"entry": 13200,
+"entry": 10010,
 "exit": 13430,
-"pnl": 1.74,
-"days": 15,
+"pnl": 34.17,
+"days": 17,
 "reason": "B 54.1 < 55 이탈",
 "severity": "이탈",
-"cum": -15.98
+"cum": -14.51
 },
 {
 "strategy": "기존",
@@ -1533,7 +1245,7 @@
 "days": 1,
 "reason": "적선 5일 기울기 -4.2 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -8.6
+"cum": -4.48
 },
 {
 "strategy": "기존",
@@ -1549,23 +1261,7 @@
 "days": 3,
 "reason": "청선 9.1 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -7.51
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "204270",
-"name": "제이앤티씨",
-"market": "코스닥150",
-"entry_date": "2026-04-24",
-"exit_date": "2026-04-29",
-"entry": 19380,
-"exit": 19350,
-"pnl": -0.15,
-"days": 3,
-"reason": "장대음봉 -6.9%",
-"severity": "청산",
-"cum": -7.52
+"cum": -3.35
 },
 {
 "strategy": "기존",
@@ -1581,7 +1277,7 @@
 "days": 2,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -8.17
+"cum": -4.02
 },
 {
 "strategy": "기존",
@@ -1597,39 +1293,7 @@
 "days": 8,
 "reason": "장대음봉 -5.2%",
 "severity": "청산",
-"cum": -6.64
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "373220",
-"name": "LG에너지솔루션",
-"market": "코스피200",
-"entry_date": "2026-04-24",
-"exit_date": "2026-04-30",
-"entry": 473000,
-"exit": 471000,
-"pnl": -0.42,
-"days": 4,
-"reason": "적선 5일 기울기 -3.2 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": -6.68
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "483650",
-"name": "달바글로벌",
-"market": "코스피200",
-"entry_date": "2026-04-29",
-"exit_date": "2026-04-30",
-"entry": 243000,
-"exit": 225989,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -7.33
+"cum": -2.42
 },
 {
 "strategy": "기존",
@@ -1645,7 +1309,39 @@
 "days": 10,
 "reason": "청선 6.0 — 5선 이탈",
 "severity": "청산",
-"cum": -5.19
+"cum": -0.16
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "064400",
+"name": "LG씨엔에스",
+"market": "코스피200",
+"entry_date": "2026-04-24",
+"exit_date": "2026-05-04",
+"entry": 67600,
+"exit": 66700,
+"pnl": -1.33,
+"days": 5,
+"reason": "적선 5일 기울기 -5.0 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": -0.29
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "006360",
+"name": "GS건설",
+"market": "코스피200",
+"entry_date": "2026-04-09",
+"exit_date": "2026-05-06",
+"entry": 35450,
+"exit": 36650,
+"pnl": 3.39,
+"days": 17,
+"reason": "B 53.1 < 55 이탈",
+"severity": "이탈",
+"cum": -14.22
 },
 {
 "strategy": "기존",
@@ -1661,7 +1357,23 @@
 "days": 6,
 "reason": "적선 5일 기울기 -8.8 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -3.76
+"cum": 1.21
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "016360",
+"name": "삼성증권",
+"market": "코스피200",
+"entry_date": "2026-05-06",
+"exit_date": "2026-05-06",
+"entry": 161100,
+"exit": 149823,
+"pnl": -7.0,
+"days": 0,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": 0.5
 },
 {
 "strategy": "기존",
@@ -1677,7 +1389,7 @@
 "days": 10,
 "reason": "장대음봉 -5.3%",
 "severity": "청산",
-"cum": -2.33
+"cum": 1.99
 },
 {
 "strategy": "기존",
@@ -1693,39 +1405,55 @@
 "days": 8,
 "reason": "청선 5.9 — 5선 이탈",
 "severity": "청산",
-"cum": -2.44
+"cum": 1.88
 },
 {
-"strategy": "기존",
-"grade": "",
-"code": "011780",
-"name": "금호석유화학",
-"market": "코스피200",
-"entry_date": "2026-05-04",
+"strategy": "TB",
+"grade": "홈런",
+"code": "033100",
+"name": "제룡전기",
+"market": "코스닥150",
+"entry_date": "2026-05-06",
 "exit_date": "2026-05-07",
-"entry": 149400,
-"exit": 141800,
-"pnl": -5.09,
-"days": 2,
-"reason": "청선 7.2 — 5선 이탈",
-"severity": "청산",
-"cum": -2.93
+"entry": 93500,
+"exit": 84150,
+"pnl": -10.0,
+"days": 1,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -15.08
 },
 {
 "strategy": "기존",
 "grade": "",
-"code": "096770",
-"name": "SK이노베이션",
+"code": "016360",
+"name": "삼성증권",
 "market": "코스피200",
-"entry_date": "2026-04-30",
+"entry_date": "2026-05-07",
 "exit_date": "2026-05-08",
-"entry": 146500,
-"exit": 138200,
-"pnl": -5.67,
-"days": 4,
-"reason": "청선 8.7 — 8.0선 초과 급이탈",
+"entry": 147100,
+"exit": 136803,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": 1.16
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "020150",
+"name": "롯데에너지머티리얼즈",
+"market": "코스피200",
+"entry_date": "2026-04-22",
+"exit_date": "2026-05-08",
+"entry": 59200,
+"exit": 71500,
+"pnl": 20.78,
+"days": 10,
+"reason": "장대음봉 -5.7%",
 "severity": "청산",
-"cum": -3.48
+"cum": 3.27
 },
 {
 "strategy": "기존",
@@ -1741,7 +1469,7 @@
 "days": 6,
 "reason": "장대음봉 -4.7%",
 "severity": "청산",
-"cum": -1.5
+"cum": 5.39
 },
 {
 "strategy": "기존",
@@ -1749,31 +1477,15 @@
 "code": "006400",
 "name": "삼성SDI",
 "market": "코스피200",
-"entry_date": "2026-05-04",
+"entry_date": "2026-05-06",
 "exit_date": "2026-05-11",
-"entry": 715000,
+"entry": 707000,
 "exit": 670000,
-"pnl": -6.29,
-"days": 4,
+"pnl": -5.23,
+"days": 3,
 "reason": "적선 5일 기울기 -18.1 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -2.12
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "023160",
-"name": "태광",
-"market": "코스닥150",
-"entry_date": "2026-04-01",
-"exit_date": "2026-05-11",
-"entry": 36200,
-"exit": 40950,
-"pnl": 13.12,
-"days": 26,
-"reason": "B 47.2 < 55 이탈",
-"severity": "이탈",
-"cum": -14.88
+"cum": 4.84
 },
 {
 "strategy": "기존",
@@ -1789,7 +1501,7 @@
 "days": 2,
 "reason": "장대음봉 -4.4%",
 "severity": "청산",
-"cum": -2.46
+"cum": 4.48
 },
 {
 "strategy": "기존",
@@ -1805,23 +1517,7 @@
 "days": 1,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -3.14
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "005490",
-"name": "POSCO홀딩스",
-"market": "코스피200",
-"entry_date": "2026-05-11",
-"exit_date": "2026-05-12",
-"entry": 521000,
-"exit": 484529,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -3.82
+"cum": 3.75
 },
 {
 "strategy": "기존",
@@ -1837,7 +1533,23 @@
 "days": 6,
 "reason": "청선 12.5 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": -2.17
+"cum": 5.52
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "036930",
+"name": "주성엔지니어링",
+"market": "코스닥150",
+"entry_date": "2026-05-11",
+"exit_date": "2026-05-12",
+"entry": 145900,
+"exit": 135687,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": 4.78
 },
 {
 "strategy": "기존",
@@ -1853,7 +1565,7 @@
 "days": 4,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -2.86
+"cum": 4.05
 },
 {
 "strategy": "TB",
@@ -1861,31 +1573,15 @@
 "code": "066970",
 "name": "엘앤에프",
 "market": "코스피200",
-"entry_date": "2026-04-07",
+"entry_date": "2026-04-03",
 "exit_date": "2026-05-12",
-"entry": 167000,
+"entry": 166100,
 "exit": 190200,
-"pnl": 13.89,
-"days": 23,
+"pnl": 14.51,
+"days": 25,
 "reason": "B 54.1 < 55 이탈",
 "severity": "이탈",
-"cum": -13.69
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "067310",
-"name": "하나마이크론",
-"market": "코스닥150",
-"entry_date": "2026-05-11",
-"exit_date": "2026-05-12",
-"entry": 44200,
-"exit": 41106,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": -3.54
+"cum": -13.85
 },
 {
 "strategy": "기존",
@@ -1901,7 +1597,39 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": -4.21
+"cum": 3.32
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "120110",
+"name": "코오롱인더",
+"market": "코스피200",
+"entry_date": "2026-04-02",
+"exit_date": "2026-05-12",
+"entry": 83100,
+"exit": 89200,
+"pnl": 7.34,
+"days": 26,
+"reason": "B 52.9 < 55 이탈",
+"severity": "이탈",
+"cum": -13.22
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "189300",
+"name": "인텔리안테크",
+"market": "코스닥150",
+"entry_date": "2026-05-11",
+"exit_date": "2026-05-12",
+"entry": 170000,
+"exit": 158100,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": 2.6
 },
 {
 "strategy": "TB",
@@ -1917,7 +1645,7 @@
 "days": 28,
 "reason": "B 54.5 < 55 이탈",
 "severity": "이탈",
-"cum": -11.49
+"cum": -11.0
 },
 {
 "strategy": "TB",
@@ -1933,7 +1661,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -12.37
+"cum": -11.89
 },
 {
 "strategy": "기존",
@@ -1949,23 +1677,23 @@
 "days": 8,
 "reason": "적선 5일 기울기 -7.1 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": -2.39
+"cum": 4.55
 },
 {
 "strategy": "기존",
 "grade": "",
-"code": "336260",
-"name": "두산퓨얼셀",
-"market": "코스피200",
-"entry_date": "2026-05-06",
+"code": "440110",
+"name": "파두",
+"market": "코스닥150",
+"entry_date": "2026-05-11",
 "exit_date": "2026-05-13",
-"entry": 60000,
-"exit": 88000,
-"pnl": 46.67,
-"days": 5,
-"reason": "장대음봉 -4.1%",
+"entry": 94700,
+"exit": 92000,
+"pnl": -2.85,
+"days": 2,
+"reason": "장대음봉 -5.6%",
 "severity": "청산",
-"cum": 2.16
+"cum": 4.25
 },
 {
 "strategy": "TB",
@@ -1981,7 +1709,7 @@
 "days": 23,
 "reason": "B 54.6 < 55 이탈",
 "severity": "이탈",
-"cum": -11.6
+"cum": -11.11
 },
 {
 "strategy": "기존",
@@ -1997,7 +1725,7 @@
 "days": 4,
 "reason": "청선 5.5 — 5선 이탈",
 "severity": "청산",
-"cum": 2.7
+"cum": 4.8
 },
 {
 "strategy": "기존",
@@ -2013,7 +1741,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 1.99
+"cum": 4.07
 },
 {
 "strategy": "TB",
@@ -2029,7 +1757,23 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -12.49
+"cum": -12.0
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "083450",
+"name": "GST",
+"market": "코스닥150",
+"entry_date": "2026-05-14",
+"exit_date": "2026-05-15",
+"entry": 66300,
+"exit": 61658,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 -7.0% (기준 -7.0%)",
+"severity": "손절",
+"cum": 3.34
 },
 {
 "strategy": "TB",
@@ -2045,7 +1789,7 @@
 "days": 3,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -13.36
+"cum": -12.88
 },
 {
 "strategy": "기존",
@@ -2061,7 +1805,7 @@
 "days": 1,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 1.27
+"cum": 2.62
 },
 {
 "strategy": "TB",
@@ -2077,7 +1821,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -14.23
+"cum": -13.75
 },
 {
 "strategy": "기존",
@@ -2085,15 +1829,15 @@
 "code": "000660",
 "name": "SK하이닉스",
 "market": "코스피200",
-"entry_date": "2026-04-20",
+"entry_date": "2026-04-21",
 "exit_date": "2026-05-18",
-"entry": 1148000,
+"entry": 1196000,
 "exit": 1780000,
-"pnl": 55.05,
-"days": 18,
+"pnl": 48.83,
+"days": 17,
 "reason": "청선 8.6 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 6.85
+"cum": 7.63
 },
 {
 "strategy": "기존",
@@ -2109,7 +1853,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 6.1
+"cum": 6.87
 },
 {
 "strategy": "기존",
@@ -2125,7 +1869,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 5.36
+"cum": 6.13
 },
 {
 "strategy": "기존",
@@ -2133,47 +1877,15 @@
 "code": "005930",
 "name": "삼성전자",
 "market": "코스피200",
-"entry_date": "2026-05-07",
+"entry_date": "2026-05-06",
 "exit_date": "2026-05-18",
-"entry": 272000,
+"entry": 254000,
 "exit": 269500,
-"pnl": -0.92,
-"days": 7,
+"pnl": 6.1,
+"days": 8,
 "reason": "청선 9.4 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 5.26
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "012330",
-"name": "현대모비스",
-"market": "코스피200",
-"entry_date": "2026-05-18",
-"exit_date": "2026-05-18",
-"entry": 612000,
-"exit": 569160,
-"pnl": -7.0,
-"days": 0,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": 4.52
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "014680",
-"name": "한솔케미칼",
-"market": "코스피200",
-"entry_date": "2026-05-15",
-"exit_date": "2026-05-18",
-"entry": 326500,
-"exit": 303645,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": 3.79
+"cum": 6.77
 },
 {
 "strategy": "TB",
@@ -2181,15 +1893,15 @@
 "code": "047040",
 "name": "대우건설",
 "market": "코스피200",
-"entry_date": "2026-04-13",
+"entry_date": "2026-04-09",
 "exit_date": "2026-05-18",
-"entry": 23350,
+"entry": 21500,
 "exit": 26950,
-"pnl": 15.42,
-"days": 23,
+"pnl": 25.35,
+"days": 25,
 "reason": "B 52.7 < 55 이탈",
 "severity": "이탈",
-"cum": -12.91
+"cum": -11.57
 },
 {
 "strategy": "TB",
@@ -2205,7 +1917,7 @@
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -13.78
+"cum": -12.45
 },
 {
 "strategy": "TB",
@@ -2221,7 +1933,7 @@
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -14.64
+"cum": -13.33
 },
 {
 "strategy": "TB",
@@ -2229,47 +1941,15 @@
 "code": "082920",
 "name": "비츠로셀",
 "market": "코스닥150",
-"entry_date": "2026-03-27",
+"entry_date": "2026-03-31",
 "exit_date": "2026-05-18",
-"entry": 33950,
+"entry": 37400,
 "exit": 51700,
-"pnl": 52.28,
-"days": 34,
+"pnl": 38.24,
+"days": 32,
 "reason": "B 53.7 < 55 이탈",
 "severity": "이탈",
-"cum": -10.18
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "083450",
-"name": "GST",
-"market": "코스닥150",
-"entry_date": "2026-05-13",
-"exit_date": "2026-05-18",
-"entry": 60700,
-"exit": 57400,
-"pnl": -5.44,
-"days": 3,
-"reason": "청선 12.5 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": 3.23
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "204320",
-"name": "HL만도",
-"market": "코스피200",
-"entry_date": "2026-05-15",
-"exit_date": "2026-05-18",
-"entry": 63100,
-"exit": 58682,
-"pnl": -7.0,
-"days": 1,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": 2.5
+"cum": -10.01
 },
 {
 "strategy": "TB",
@@ -2277,31 +1957,15 @@
 "code": "322000",
 "name": "HD현대에너지솔루션",
 "market": "코스피200",
-"entry_date": "2026-04-01",
+"entry_date": "2026-03-31",
 "exit_date": "2026-05-18",
-"entry": 141800,
+"entry": 137700,
 "exit": 196800,
-"pnl": 38.79,
-"days": 31,
+"pnl": 42.92,
+"days": 32,
 "reason": "B 54.2 < 55 이탈",
 "severity": "이탈",
-"cum": -6.69
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "007070",
-"name": "GS리테일",
-"market": "코스피200",
-"entry_date": "2026-05-19",
-"exit_date": "2026-05-19",
-"entry": 28800,
-"exit": 26784,
-"pnl": -7.0,
-"days": 0,
-"reason": "장중 손절 -7.0% (기준 -7.0%)",
-"severity": "손절",
-"cum": 1.79
+"cum": -6.15
 },
 {
 "strategy": "기존",
@@ -2317,7 +1981,7 @@
 "days": 1,
 "reason": "장중 손절 -8.2% (기준 -7.0%)",
 "severity": "손절",
-"cum": 0.95
+"cum": 5.89
 },
 {
 "strategy": "TB",
@@ -2333,55 +1997,23 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -7.62
+"cum": -7.09
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "037460",
-"name": "삼지전자",
-"market": "코스닥150",
-"entry_date": "2026-05-18",
+"code": "383220",
+"name": "F&F",
+"market": "코스피200",
+"entry_date": "2026-05-12",
 "exit_date": "2026-05-19",
-"entry": 59200,
-"exit": 51400,
-"pnl": -13.18,
-"days": 1,
-"reason": "장중 손절 -13.2% (기준 -10.0%)",
+"entry": 86200,
+"exit": 77580,
+"pnl": -10.0,
+"days": 5,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -8.84
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "161890",
-"name": "한국콜마",
-"market": "코스피200",
-"entry_date": "2026-05-18",
-"exit_date": "2026-05-19",
-"entry": 95600,
-"exit": 93000,
-"pnl": -2.72,
-"days": 1,
-"reason": "청선 9.3 — 8.0선 초과 급이탈",
-"severity": "청산",
-"cum": 0.67
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "006400",
-"name": "삼성SDI",
-"market": "코스피200",
-"entry_date": "2026-04-08",
-"exit_date": "2026-05-20",
-"entry": 471000,
-"exit": 580000,
-"pnl": 23.14,
-"days": 28,
-"reason": "B 51.3 < 55 이탈",
-"severity": "이탈",
-"cum": -6.73
+"cum": -8.02
 },
 {
 "strategy": "TB",
@@ -2397,7 +2029,7 @@
 "days": 2,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -7.67
+"cum": -8.94
 },
 {
 "strategy": "TB",
@@ -2413,7 +2045,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -8.59
+"cum": -9.85
 },
 {
 "strategy": "TB",
@@ -2429,23 +2061,7 @@
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -9.5
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "383220",
-"name": "F&F",
-"market": "코스피200",
-"entry_date": "2026-05-11",
-"exit_date": "2026-05-26",
-"entry": 82400,
-"exit": 74160,
-"pnl": -10.0,
-"days": 10,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -10.41
+"cum": -10.75
 },
 {
 "strategy": "TB",
@@ -2461,7 +2077,7 @@
 "days": 3,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -11.3
+"cum": -11.64
 },
 {
 "strategy": "TB",
@@ -2477,23 +2093,7 @@
 "days": 5,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -12.19
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "083450",
-"name": "GST",
-"market": "코스닥150",
-"entry_date": "2026-04-22",
-"exit_date": "2026-06-01",
-"entry": 42600,
-"exit": 51700,
-"pnl": 21.36,
-"days": 25,
-"reason": "B 54.1 < 55 이탈",
-"severity": "이탈",
-"cum": -10.31
+"cum": -12.53
 },
 {
 "strategy": "기존",
@@ -2509,23 +2109,7 @@
 "days": 5,
 "reason": "장대음봉 -5.7%",
 "severity": "청산",
-"cum": 3.24
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "018260",
-"name": "삼성에스디에스",
-"market": "코스피200",
-"entry_date": "2026-06-01",
-"exit_date": "2026-06-02",
-"entry": 323000,
-"exit": 290700,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -11.21
+"cum": 8.59
 },
 {
 "strategy": "기존",
@@ -2541,7 +2125,7 @@
 "days": 3,
 "reason": "청선 22.2 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 3.23
+"cum": 8.58
 },
 {
 "strategy": "기존",
@@ -2557,7 +2141,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 2.5
+"cum": 7.82
 },
 {
 "strategy": "기존",
@@ -2573,7 +2157,7 @@
 "days": 1,
 "reason": "청선 9.6 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 1.5
+"cum": 6.77
 },
 {
 "strategy": "TB",
@@ -2581,15 +2165,15 @@
 "code": "034730",
 "name": "SK",
 "market": "코스피200",
-"entry_date": "2026-05-27",
+"entry_date": "2026-05-28",
 "exit_date": "2026-06-05",
-"entry": 700000,
-"exit": 630000,
+"entry": 676000,
+"exit": 608400,
 "pnl": -10.0,
-"days": 6,
+"days": 5,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -12.1
+"cum": -13.4
 },
 {
 "strategy": "기존",
@@ -2605,23 +2189,23 @@
 "days": 1,
 "reason": "청선 14.1 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 0.92
+"cum": 6.15
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "000660",
-"name": "SK하이닉스",
+"code": "001740",
+"name": "SK네트웍스",
 "market": "코스피200",
-"entry_date": "2026-05-28",
+"entry_date": "2026-05-29",
 "exit_date": "2026-06-08",
-"entry": 2189000,
-"exit": 1856000,
-"pnl": -15.21,
-"days": 6,
-"reason": "장중 손절 -15.2% (기준 -10.0%)",
+"entry": 12000,
+"exit": 9500,
+"pnl": -20.83,
+"days": 5,
+"reason": "장중 손절 -20.8% (기준 -10.0%)",
 "severity": "손절",
-"cum": -13.44
+"cum": -15.2
 },
 {
 "strategy": "기존",
@@ -2637,55 +2221,7 @@
 "days": 4,
 "reason": "청선 9.6 — 8.0선 초과 급이탈",
 "severity": "청산",
-"cum": 0.08
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "005930",
-"name": "삼성전자",
-"market": "코스피200",
-"entry_date": "2026-06-04",
-"exit_date": "2026-06-08",
-"entry": 349000,
-"exit": 293000,
-"pnl": -16.05,
-"days": 2,
-"reason": "장중 손절 -16.1% (기준 -10.0%)",
-"severity": "손절",
-"cum": -14.83
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "011070",
-"name": "LG이노텍",
-"market": "코스피200",
-"entry_date": "2026-05-29",
-"exit_date": "2026-06-08",
-"entry": 1193000,
-"exit": 985000,
-"pnl": -17.44,
-"days": 5,
-"reason": "장중 손절 -17.4% (기준 -10.0%)",
-"severity": "손절",
-"cum": -16.31
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "080220",
-"name": "제주반도체",
-"market": "코스닥150",
-"entry_date": "2026-05-20",
-"exit_date": "2026-06-08",
-"entry": 97100,
-"exit": 82900,
-"pnl": -14.62,
-"days": 11,
-"reason": "장중 손절 -14.6% (기준 -10.0%)",
-"severity": "손절",
-"cum": -17.53
+"cum": 5.27
 },
 {
 "strategy": "TB",
@@ -2701,7 +2237,7 @@
 "days": 11,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -18.36
+"cum": -16.05
 },
 {
 "strategy": "TB",
@@ -2717,23 +2253,7 @@
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -19.18
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "007390",
-"name": "네이처셀",
-"market": "코스닥150",
-"entry_date": "2026-06-08",
-"exit_date": "2026-06-09",
-"entry": 31500,
-"exit": 28350,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -19.98
+"cum": -16.89
 },
 {
 "strategy": "TB",
@@ -2749,7 +2269,7 @@
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -20.78
+"cum": -17.72
 },
 {
 "strategy": "TB",
@@ -2765,39 +2285,23 @@
 "days": 27,
 "reason": "B 53.9 < 55 이탈",
 "severity": "이탈",
-"cum": -16.26
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "090360",
-"name": "로보스타",
-"market": "코스닥150",
-"entry_date": "2026-06-09",
-"exit_date": "2026-06-09",
-"entry": 136300,
-"exit": 122670,
-"pnl": -10.0,
-"days": 0,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -17.1
+"cum": -13.02
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "290650",
-"name": "엘앤씨바이오",
+"code": "037460",
+"name": "삼지전자",
 "market": "코스닥150",
-"entry_date": "2026-06-09",
-"exit_date": "2026-06-10",
-"entry": 84500,
-"exit": 76050,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -17.93
+"entry_date": "2026-04-09",
+"exit_date": "2026-06-09",
+"entry": 29200,
+"exit": 41600,
+"pnl": 42.47,
+"days": 39,
+"reason": "B 50.9 < 55 이탈",
+"severity": "이탈",
+"cum": -9.33
 },
 {
 "strategy": "TB",
@@ -2813,39 +2317,7 @@
 "days": 1,
 "reason": "장중 손절 -12.1% (기준 -10.0%)",
 "severity": "손절",
-"cum": -18.92
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "090360",
-"name": "로보스타",
-"market": "코스닥150",
-"entry_date": "2026-06-10",
-"exit_date": "2026-06-11",
-"entry": 111100,
-"exit": 102000,
-"pnl": -8.19,
-"days": 1,
-"reason": "B 53.2 < 55 이탈",
-"severity": "이탈",
-"cum": -19.58
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "161390",
-"name": "한국타이어앤테크놀로지",
-"market": "코스피200",
-"entry_date": "2026-06-10",
-"exit_date": "2026-06-18",
-"entry": 72000,
-"exit": 67300,
-"pnl": -6.53,
-"days": 6,
-"reason": "B 52.8 < 55 이탈",
-"severity": "이탈",
-"cum": -20.11
+"cum": -10.42
 },
 {
 "strategy": "TB",
@@ -2861,7 +2333,7 @@
 "days": 6,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -20.9
+"cum": -11.32
 },
 {
 "strategy": "기존",
@@ -2877,39 +2349,23 @@
 "days": 2,
 "reason": "적선 5일 기울기 -7.7 — 상승탄력 꺾임",
 "severity": "청산",
-"cum": 1.32
+"cum": 6.57
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "000660",
-"name": "SK하이닉스",
+"code": "011070",
+"name": "LG이노텍",
 "market": "코스피200",
-"entry_date": "2026-06-23",
-"exit_date": "2026-06-23",
-"entry": 2898000,
-"exit": 2608200,
-"pnl": -10.0,
-"days": 0,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -21.7
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "005930",
-"name": "삼성전자",
-"market": "코스피200",
-"entry_date": "2026-06-22",
-"exit_date": "2026-06-23",
-"entry": 343000,
-"exit": 347500,
-"pnl": 1.31,
-"days": 1,
-"reason": "적선 5일 기울기 -19.9 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": 1.45
+"entry_date": "2026-05-22",
+"exit_date": "2026-06-24",
+"entry": 857000,
+"exit": 969000,
+"pnl": 13.07,
+"days": 21,
+"reason": "B 50.4 < 55 이탈",
+"severity": "이탈",
+"cum": -10.16
 },
 {
 "strategy": "TB",
@@ -2917,15 +2373,15 @@
 "code": "023530",
 "name": "롯데쇼핑",
 "market": "코스피200",
-"entry_date": "2026-06-09",
+"entry_date": "2026-06-10",
 "exit_date": "2026-06-24",
-"entry": 168200,
+"entry": 180000,
 "exit": 175500,
-"pnl": 4.34,
-"days": 11,
+"pnl": -2.5,
+"days": 10,
 "reason": "B 54.1 < 55 이탈",
 "severity": "이탈",
-"cum": -21.36
+"cum": -10.38
 },
 {
 "strategy": "TB",
@@ -2933,63 +2389,47 @@
 "code": "183300",
 "name": "코미코",
 "market": "코스닥150",
-"entry_date": "2026-06-11",
+"entry_date": "2026-06-08",
 "exit_date": "2026-06-24",
-"entry": 103900,
+"entry": 99700,
 "exit": 96000,
-"pnl": -7.6,
-"days": 9,
+"pnl": -3.71,
+"days": 12,
 "reason": "B 49.9 < 55 이탈",
 "severity": "이탈",
-"cum": -21.95
+"cum": -10.72
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "420770",
-"name": "기가비스",
-"market": "코스닥150",
-"entry_date": "2026-06-24",
+"code": "402340",
+"name": "SK스퀘어",
+"market": "코스피200",
+"entry_date": "2026-06-23",
 "exit_date": "2026-06-24",
-"entry": 157300,
-"exit": 141570,
+"entry": 1972000,
+"exit": 1774800,
+"pnl": -10.0,
+"days": 1,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -11.61
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "041830",
+"name": "인바디",
+"market": "코스닥150",
+"entry_date": "2026-06-26",
+"exit_date": "2026-06-26",
+"entry": 49100,
+"exit": 44190,
 "pnl": -10.0,
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -22.73
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "000810",
-"name": "삼성화재",
-"market": "코스피200",
-"entry_date": "2026-05-21",
-"exit_date": "2026-06-25",
-"entry": 555000,
-"exit": 653000,
-"pnl": 17.66,
-"days": 23,
-"reason": "B 54.0 < 55 이탈",
-"severity": "이탈",
-"cum": -21.37
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "000660",
-"name": "SK하이닉스",
-"market": "코스피200",
-"entry_date": "2026-06-24",
-"exit_date": "2026-07-02",
-"entry": 2598000,
-"exit": 2338200,
-"pnl": -10.0,
-"days": 6,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -22.16
+"cum": -12.49
 },
 {
 "strategy": "TB",
@@ -2997,31 +2437,79 @@
 "code": "034730",
 "name": "SK",
 "market": "코스피200",
-"entry_date": "2026-06-24",
-"exit_date": "2026-07-03",
-"entry": 713000,
-"exit": 689000,
-"pnl": -3.37,
-"days": 7,
-"reason": "B 52.2 < 55 이탈",
-"severity": "이탈",
-"cum": -22.42
+"entry_date": "2026-06-26",
+"exit_date": "2026-06-29",
+"entry": 868000,
+"exit": 781200,
+"pnl": -10.0,
+"days": 1,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -13.37
 },
 {
 "strategy": "TB",
-"grade": "일반",
-"code": "041830",
-"name": "인바디",
+"grade": "홈런",
+"code": "080220",
+"name": "제주반도체",
 "market": "코스닥150",
-"entry_date": "2026-07-03",
-"exit_date": "2026-07-03",
-"entry": 59900,
-"exit": 53910,
+"entry_date": "2026-05-18",
+"exit_date": "2026-06-29",
+"entry": 84400,
+"exit": 99200,
+"pnl": 17.54,
+"days": 28,
+"reason": "B 51.5 < 55 이탈",
+"severity": "이탈",
+"cum": -11.85
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "089970",
+"name": "브이엠",
+"market": "코스닥150",
+"entry_date": "2026-06-29",
+"exit_date": "2026-06-29",
+"entry": 112400,
+"exit": 101160,
 "pnl": -10.0,
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -23.19
+"cum": -12.73
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "089970",
+"name": "브이엠",
+"market": "코스닥150",
+"entry_date": "2026-07-01",
+"exit_date": "2026-07-02",
+"entry": 113400,
+"exit": 102060,
+"pnl": -10.0,
+"days": 1,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -13.6
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "000660",
+"name": "SK하이닉스",
+"market": "코스피200",
+"entry_date": "2026-05-08",
+"exit_date": "2026-07-03",
+"entry": 1591000,
+"exit": 2197000,
+"pnl": 38.09,
+"days": 38,
+"reason": "B 48.4 < 55 이탈",
+"severity": "이탈",
+"cum": -10.31
 },
 {
 "strategy": "TB",
@@ -3037,23 +2525,23 @@
 "days": 6,
 "reason": "B 54.8 < 55 이탈",
 "severity": "이탈",
-"cum": -23.64
+"cum": -10.83
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "402340",
-"name": "SK스퀘어",
-"market": "코스피200",
-"entry_date": "2026-06-18",
+"code": "319660",
+"name": "피에스케이",
+"market": "코스닥150",
+"entry_date": "2026-06-29",
 "exit_date": "2026-07-03",
-"entry": 1656000,
-"exit": 1530000,
-"pnl": -7.61,
-"days": 11,
-"reason": "B 53.2 < 55 이탈",
-"severity": "이탈",
-"cum": -24.22
+"entry": 191500,
+"exit": 172350,
+"pnl": -10.0,
+"days": 4,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -11.72
 },
 {
 "strategy": "TB",
@@ -3061,15 +2549,15 @@
 "code": "281820",
 "name": "케이씨텍",
 "market": "코스피200",
-"entry_date": "2026-07-03",
+"entry_date": "2026-07-02",
 "exit_date": "2026-07-06",
-"entry": 113500,
-"exit": 102150,
+"entry": 111500,
+"exit": 100350,
 "pnl": -10.0,
-"days": 1,
+"days": 2,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -24.98
+"cum": -12.6
 },
 {
 "strategy": "TB",
@@ -3077,31 +2565,15 @@
 "code": "420770",
 "name": "기가비스",
 "market": "코스닥150",
-"entry_date": "2026-06-25",
+"entry_date": "2026-06-26",
 "exit_date": "2026-07-06",
-"entry": 163700,
-"exit": 147330,
+"entry": 159600,
+"exit": 143640,
 "pnl": -10.0,
-"days": 7,
+"days": 6,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -25.73
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "000500",
-"name": "가온전선",
-"market": "코스피200",
-"entry_date": "2026-07-07",
-"exit_date": "2026-07-07",
-"entry": 273000,
-"exit": 245700,
-"pnl": -10.0,
-"days": 0,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -26.47
+"cum": -13.48
 },
 {
 "strategy": "TB",
@@ -3117,23 +2589,7 @@
 "days": 31,
 "reason": "B 51.9 < 55 이탈",
 "severity": "이탈",
-"cum": -22.22
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "089970",
-"name": "브이엠",
-"market": "코스닥150",
-"entry_date": "2026-07-03",
-"exit_date": "2026-07-07",
-"entry": 98700,
-"exit": 88830,
-"pnl": -10.0,
-"days": 2,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -23.0
+"cum": -8.48
 },
 {
 "strategy": "TB",
@@ -3149,7 +2605,7 @@
 "days": 19,
 "reason": "B 51.5 < 55 이탈",
 "severity": "이탈",
-"cum": -23.1
+"cum": -8.6
 },
 {
 "strategy": "TB",
@@ -3165,71 +2621,23 @@
 "days": 35,
 "reason": "B 53.9 < 55 이탈",
 "severity": "이탈",
-"cum": -20.77
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "041830",
-"name": "인바디",
-"market": "코스닥150",
-"entry_date": "2026-07-07",
-"exit_date": "2026-07-08",
-"entry": 58500,
-"exit": 52650,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -21.56
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "281820",
-"name": "케이씨텍",
-"market": "코스피200",
-"entry_date": "2026-07-07",
-"exit_date": "2026-07-08",
-"entry": 99600,
-"exit": 89300,
-"pnl": -10.34,
-"days": 1,
-"reason": "B 54.5 < 55 이탈",
-"severity": "이탈",
-"cum": -22.37
+"cum": -5.83
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "319660",
-"name": "피에스케이",
+"code": "019210",
+"name": "와이지-원",
 "market": "코스닥150",
-"entry_date": "2026-06-11",
-"exit_date": "2026-07-08",
-"entry": 143500,
-"exit": 153400,
-"pnl": 6.9,
-"days": 19,
-"reason": "B 52.9 < 55 이탈",
-"severity": "이탈",
-"cum": -21.83
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "000500",
-"name": "가온전선",
-"market": "코스피200",
-"entry_date": "2026-07-08",
+"entry_date": "2026-07-06",
 "exit_date": "2026-07-09",
-"entry": 242000,
-"exit": 231000,
-"pnl": -4.55,
-"days": 1,
-"reason": "B 54.3 < 55 이탈",
-"severity": "이탈",
-"cum": -22.19
+"entry": 23350,
+"exit": 21015,
+"pnl": -10.0,
+"days": 3,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -6.77
 },
 {
 "strategy": "TB",
@@ -3245,7 +2653,7 @@
 "days": 22,
 "reason": "B 51.6 < 55 이탈",
 "severity": "이탈",
-"cum": -21.39
+"cum": -5.81
 },
 {
 "strategy": "TB",
@@ -3261,7 +2669,7 @@
 "days": 3,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -22.18
+"cum": -6.75
 },
 {
 "strategy": "기존",
@@ -3277,7 +2685,7 @@
 "days": 0,
 "reason": "장중 손절 -7.0% (기준 -7.0%)",
 "severity": "손절",
-"cum": 0.74
+"cum": 5.83
 },
 {
 "strategy": "TB",
@@ -3293,23 +2701,7 @@
 "days": 1,
 "reason": "B 53.2 < 55 이탈",
 "severity": "이탈",
-"cum": -22.63
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "041830",
-"name": "인바디",
-"market": "코스닥150",
-"entry_date": "2026-07-09",
-"exit_date": "2026-07-13",
-"entry": 53700,
-"exit": 48330,
-"pnl": -10.0,
-"days": 2,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -23.4
+"cum": -7.29
 },
 {
 "strategy": "TB",
@@ -3325,7 +2717,7 @@
 "days": 0,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -24.17
+"cum": -8.22
 },
 {
 "strategy": "TB",
@@ -3341,7 +2733,7 @@
 "days": 2,
 "reason": "B 53.4 < 55 이탈",
 "severity": "이탈",
-"cum": -24.85
+"cum": -9.04
 },
 {
 "strategy": "TB",
@@ -3357,39 +2749,7 @@
 "days": 3,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -25.6
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "019210",
-"name": "와이지-원",
-"market": "코스닥150",
-"entry_date": "2026-07-03",
-"exit_date": "2026-07-14",
-"entry": 21200,
-"exit": 21000,
-"pnl": -0.94,
-"days": 7,
-"reason": "B 54.2 < 55 이탈",
-"severity": "이탈",
-"cum": -25.67
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "073240",
-"name": "금호타이어",
-"market": "코스피200",
-"entry_date": "2026-07-14",
-"exit_date": "2026-07-14",
-"entry": 7000,
-"exit": 6300,
-"pnl": -10.0,
-"days": 0,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -26.41
+"cum": -9.95
 },
 {
 "strategy": "TB",
@@ -3397,47 +2757,15 @@
 "code": "241710",
 "name": "코스메카코리아",
 "market": "코스닥150",
-"entry_date": "2026-07-13",
+"entry_date": "2026-07-14",
 "exit_date": "2026-07-15",
-"entry": 87300,
-"exit": 78570,
-"pnl": -10.0,
-"days": 2,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -27.15
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "251970",
-"name": "펌텍코리아",
-"market": "코스닥150",
-"entry_date": "2026-07-13",
-"exit_date": "2026-07-15",
-"entry": 43850,
-"exit": 42050,
-"pnl": -4.1,
-"days": 2,
-"reason": "B 54.4 < 55 이탈",
-"severity": "이탈",
-"cum": -27.45
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "073240",
-"name": "금호타이어",
-"market": "코스피200",
-"entry_date": "2026-07-15",
-"exit_date": "2026-07-16",
-"entry": 6670,
-"exit": 6003,
+"entry": 87600,
+"exit": 78840,
 "pnl": -10.0,
 "days": 1,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -28.17
+"cum": -10.85
 },
 {
 "strategy": "TB",
@@ -3453,23 +2781,7 @@
 "days": 4,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -28.89
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "319660",
-"name": "피에스케이",
-"market": "코스닥150",
-"entry_date": "2026-07-16",
-"exit_date": "2026-07-20",
-"entry": 198000,
-"exit": 178200,
-"pnl": -10.0,
-"days": 1,
-"reason": "장중 손절 -10.0% (기준 -10.0%)",
-"severity": "손절",
-"cum": -29.6
+"cum": -11.74
 },
 {
 "strategy": "TB",
@@ -3485,39 +2797,7 @@
 "days": 5,
 "reason": "B 49.7 < 55 이탈",
 "severity": "이탈",
-"cum": -30.45
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "161890",
-"name": "한국콜마",
-"market": "코스피200",
-"entry_date": "2026-07-10",
-"exit_date": "2026-07-21",
-"entry": 102300,
-"exit": 99400,
-"pnl": -2.83,
-"days": 6,
-"reason": "B 50.4 < 55 이탈",
-"severity": "이탈",
-"cum": -30.65
-},
-{
-"strategy": "TB",
-"grade": "일반",
-"code": "241710",
-"name": "코스메카코리아",
-"market": "코스닥150",
-"entry_date": "2026-07-16",
-"exit_date": "2026-07-21",
-"entry": 82500,
-"exit": 77800,
-"pnl": -5.7,
-"days": 2,
-"reason": "B 50.1 < 55 이탈",
-"severity": "이탈",
-"cum": -31.04
+"cum": -12.81
 },
 {
 "strategy": "TB",
@@ -3525,15 +2805,15 @@
 "code": "093320",
 "name": "케이아이엔엑스",
 "market": "코스닥150",
-"entry_date": "2026-07-15",
+"entry_date": "2026-07-16",
 "exit_date": "2026-07-22",
-"entry": 132700,
+"entry": 136500,
 "exit": 128300,
-"pnl": -3.32,
-"days": 4,
+"pnl": -6.01,
+"days": 3,
 "reason": "B 54.2 < 55 이탈",
 "severity": "이탈",
-"cum": -31.27
+"cum": -13.33
 },
 {
 "strategy": "TB",
@@ -3549,7 +2829,7 @@
 "days": 9,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -31.96
+"cum": -14.2
 },
 {
 "strategy": "TB",
@@ -3565,7 +2845,7 @@
 "days": 5,
 "reason": "장중 손절 -10.0% (기준 -10.0%)",
 "severity": "손절",
-"cum": -32.64
+"cum": -15.06
 },
 {
 "strategy": "TB",
@@ -3581,23 +2861,7 @@
 "days": 5,
 "reason": "B 54.0 < 55 이탈",
 "severity": "이탈",
-"cum": -32.65
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "086790",
-"name": "하나금융지주",
-"market": "코스피200",
-"entry_date": "2026-07-21",
-"exit_date": "2026-07-29",
-"entry": 131200,
-"exit": 124000,
-"pnl": -5.49,
-"days": 6,
-"reason": "B 47.0 < 55 이탈",
-"severity": "이탈",
-"cum": -33.02
+"cum": -15.07
 },
 {
 "strategy": "기존",
@@ -3613,23 +2877,7 @@
 "days": 1,
 "reason": "장대음봉 -4.1%",
 "severity": "청산",
-"cum": 0.49
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "008930",
-"name": "한미사이언스",
-"market": "코스피200",
-"entry_date": "2026-07-29",
-"exit_date": "2026-07-30",
-"entry": 33950,
-"exit": 32650,
-"pnl": -3.83,
-"days": 1,
-"reason": "B 53.7 < 55 이탈",
-"severity": "이탈",
-"cum": -33.28
+"cum": 5.56
 },
 {
 "strategy": "TB",
@@ -3645,119 +2893,39 @@
 "days": 7,
 "reason": "B 54.8 < 55 이탈",
 "severity": "이탈",
-"cum": -32.87
+"cum": -14.55
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "093320",
-"name": "케이아이엔엑스",
-"market": "코스닥150",
-"entry_date": "2026-07-28",
-"exit_date": "2026-07-30",
-"entry": 143100,
-"exit": 129300,
-"pnl": -9.64,
-"days": 2,
-"reason": "B 53.1 < 55 이탈",
-"severity": "이탈",
-"cum": -33.51
-},
-{
-"strategy": "TB",
-"grade": "홈런",
-"code": "009970",
-"name": "영원무역홀딩스",
-"market": "코스피200",
-"entry_date": "2026-07-31",
-"exit_date": "2026-08-03",
-"entry": 202500,
-"exit": 185000,
-"pnl": -8.64,
-"days": 1,
-"reason": "B 50.8 < 55 이탈",
-"severity": "이탈",
-"cum": -34.09
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "002790",
-"name": "아모레퍼시픽홀딩스",
-"market": "코스피200",
-"entry_date": "2026-08-11",
-"exit_date": "2026-08-12",
-"entry": 26400,
-"exit": 27300,
-"pnl": 3.41,
-"days": 2,
-"reason": "적선 5일 기울기 -5.4 — 상승탄력 꺾임",
-"severity": "청산",
-"cum": 0.83
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "008930",
-"name": "한미사이언스",
-"market": "코스피200",
-"entry_date": "2026-08-06",
-"exit_date": "2026-08-12",
-"entry": 40250,
-"exit": 45600,
-"pnl": 13.29,
-"days": 5,
-"reason": "장대음봉 -5.2%",
-"severity": "청산",
-"cum": 2.17
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "009540",
-"name": "HD한국조선해양",
-"market": "코스피200",
-"entry_date": "2026-08-10",
-"exit_date": "2026-08-12",
-"entry": 398500,
-"exit": 394000,
-"pnl": -1.13,
-"days": 3,
-"reason": "장대음봉 -4.2%",
-"severity": "청산",
-"cum": 2.05
-},
-{
-"strategy": "기존",
-"grade": "",
-"code": "089860",
-"name": "롯데렌탈",
+"code": "073240",
+"name": "금호타이어",
 "market": "코스피200",
 "entry_date": "2026-08-07",
-"exit_date": "2026-08-12",
-"entry": 40100,
-"exit": 45400,
-"pnl": 13.22,
-"days": 4,
-"reason": "장대음봉 -4.7%",
-"severity": "청산",
-"cum": 3.4
+"exit_date": "2026-08-11",
+"entry": 7890,
+"exit": 7101,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -15.41
 },
 {
 "strategy": "TB",
 "grade": "홈런",
-"code": "111770",
-"name": "영원무역",
-"market": "코스피200",
-"entry_date": "2026-07-23",
+"code": "119850",
+"name": "지엔씨에너지",
+"market": "코스닥150",
+"entry_date": "2026-08-07",
 "exit_date": "2026-08-12",
-"entry": 84500,
-"exit": 90500,
-"pnl": 7.1,
-"days": 15,
-"reason": "B 50.0 < 55 이탈",
-"severity": "이탈",
-"cum": -33.62
+"entry": 53400,
+"exit": 48060,
+"pnl": -10.0,
+"days": 3,
+"reason": "장중 손절 -10.0% (기준 -10.0%)",
+"severity": "손절",
+"cum": -16.25
 },
 {
 "strategy": "기존",
@@ -3773,6 +2941,6 @@
 "days": 4,
 "reason": "장대음봉 -7.0%",
 "severity": "청산",
-"cum": 3.3
+"cum": 5.46
 }
 ]

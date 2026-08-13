@@ -5,32 +5,21 @@
 "entry": 36750,
 "entry_date": "2026-07-20",
 "peak": 45000,
-"days": 20,
+"days": 18,
 "score": 82.0,
 "grade": "홈런",
 "signal_date": "2026-07-16"
 },
-"251970": {
-"name": "펌텍코리아",
-"market": "코스닥150",
-"entry": 46400,
-"entry_date": "2026-07-31",
-"peak": 58900,
-"days": 11,
-"score": 34.3,
-"grade": "일반",
-"signal_date": "2026-07-30"
-},
-"051900": {
-"name": "LG생활건강",
+"111770": {
+"name": "영원무역",
 "market": "코스피200",
-"entry": 289000,
-"entry_date": "2026-08-05",
-"peak": 333500,
-"days": 8,
-"score": 82.8,
+"entry": 86200,
+"entry_date": "2026-07-24",
+"peak": 95000,
+"days": 14,
+"score": 65.3,
 "grade": "홈런",
-"signal_date": "2026-08-04"
+"signal_date": "2026-07-23"
 },
 "008930": {
 "name": "한미사이언스",
@@ -38,8 +27,19 @@
 "entry": 38850,
 "entry_date": "2026-08-05",
 "peak": 46200,
-"days": 8,
+"days": 6,
 "score": 82.1,
+"grade": "홈런",
+"signal_date": "2026-08-04"
+},
+"051900": {
+"name": "LG생활건강",
+"market": "코스피200",
+"entry": 289000,
+"entry_date": "2026-08-05",
+"peak": 333500,
+"days": 6,
+"score": 78.2,
 "grade": "홈런",
 "signal_date": "2026-08-04"
 },
@@ -49,43 +49,10 @@
 "entry": 193000,
 "entry_date": "2026-08-05",
 "peak": 249500,
-"days": 8,
+"days": 6,
 "score": 67.7,
 "grade": "홈런",
 "signal_date": "2026-08-04"
-},
-"090430": {
-"name": "아모레퍼시픽",
-"market": "코스피200",
-"entry": 131200,
-"entry_date": "2026-08-05",
-"peak": 141800,
-"days": 8,
-"score": 56.3,
-"grade": "홈런",
-"signal_date": "2026-08-04"
-},
-"004370": {
-"name": "농심",
-"market": "코스피200",
-"entry": 377500,
-"entry_date": "2026-08-05",
-"peak": 405000,
-"days": 8,
-"score": 44.8,
-"grade": "홈런",
-"signal_date": "2026-08-04"
-},
-"119850": {
-"name": "지엔씨에너지",
-"market": "코스닥150",
-"entry": 50000,
-"entry_date": "2026-08-06",
-"peak": 52800,
-"days": 7,
-"score": 65.3,
-"grade": "홈런",
-"signal_date": "2026-08-05"
 },
 "316140": {
 "name": "우리금융지주",
@@ -93,20 +60,42 @@
 "entry": 33450,
 "entry_date": "2026-08-06",
 "peak": 34800,
-"days": 7,
-"score": 62.9,
+"days": 5,
+"score": 42.5,
 "grade": "홈런",
 "signal_date": "2026-08-05"
 },
-"241710": {
-"name": "코스메카코리아",
-"market": "코스닥150",
-"entry": 108400,
-"entry_date": "2026-08-12",
-"peak": 123400,
-"days": 2,
-"score": 92.2,
+"090430": {
+"name": "아모레퍼시픽",
+"market": "코스피200",
+"entry": 135900,
+"entry_date": "2026-08-07",
+"peak": 141800,
+"days": 4,
+"score": 72.7,
 "grade": "홈런",
-"signal_date": "2026-08-12"
+"signal_date": "2026-08-06"
+},
+"004370": {
+"name": "농심",
+"market": "코스피200",
+"entry": 387000,
+"entry_date": "2026-08-07",
+"peak": 405000,
+"days": 4,
+"score": 70.8,
+"grade": "홈런",
+"signal_date": "2026-08-06"
+},
+"068270": {
+"name": "셀트리온",
+"market": "코스피200",
+"entry": 208500,
+"entry_date": "2026-08-12",
+"peak": 208500,
+"days": 1,
+"score": 85.8,
+"grade": "홈런",
+"signal_date": "2026-08-11"
 }
 }
