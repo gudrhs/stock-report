@@ -60,18 +60,90 @@ def fetch_all(codes, start, end, workers=8):
     return out
 
 
-def build_all(data):
-    """{code: (지표시계열, 날짜→인덱스)} — 종목당 한 번만 계산합니다"""
+def build_all(data, cymap=None):
+    """
+    {code: (지표시계열, 날짜→인덱스)} — 종목당 한 번만 계산합니다.
+    cymap = {code: {"B":[...], "T":[...], "U":[...]}} 를 주면 T·B·U를
+    CYBOS 차트 엔진 값(HTS와 동일)으로 대체합니다.
+    """
     out = {}
+    n_exact = 0
     for code, df in data.items():
         o, h, l, c, v = (df[k].astype(float).tolist()
                          for k in ("Open", "High", "Low", "Close", "Volume"))
-        S = engine.build_series(o, h, l, c, v)
+        cy = (cymap or {}).get(code)
+        if cy:
+            n_exact += 1
+        S = engine.build_series(o, h, l, c, v, cy)
         if S is None:
             continue
         idx = {d.strftime("%Y-%m-%d"): i for i, d in enumerate(df.index)}
         out[code] = (S, idx)
+    if cymap is not None:
+        print(f"  CYBOS 정확 지표 적용 {n_exact}종목")
     return out
+
+
+# ══════════ CYBOS 지표 (32비트 워커 호출) ══════════
+def find_py32():
+    """32비트 파이썬 경로 탐색"""
+    base = os.environ.get("LOCALAPPDATA", "")
+    for d in ("Python313-32", "Python312-32", "Python311-32"):
+        p = os.path.join(base, "Programs", "Python", d, "python.exe")
+        if os.path.exists(p):
+            return p
+    for p in (r"C:\Python313-32\python.exe", r"C:\Python312-32\python.exe"):
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def run_cyworker(data):
+    """
+    가격을 임시 CSV로 쓰고 32비트 워커를 불러 지표를 계산합니다.
+    pandas가 32비트 3.12에 설치되지 않아(휠 없음) 이렇게 분리했습니다.
+    반환: {code: {"B":[...], "T":[...], "U":[...]}} 또는 None
+    """
+    import subprocess, tempfile
+    py32 = find_py32()
+    if not py32:
+        print("  32비트 파이썬을 찾지 못했습니다")
+        return None
+    worker = os.path.join(HERE, "cyworker.py")
+    tmp = tempfile.mkdtemp(prefix="cyindi_")
+    src = os.path.join(tmp, "in.csv")
+    dst = os.path.join(tmp, "out.csv")
+
+    with open(src, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["code", "seq", "open", "high", "low", "close", "volume"])
+        for code, df in data.items():
+            for i, (_, r) in enumerate(df.iterrows()):
+                w.writerow([code, i, float(r["Open"]), float(r["High"]),
+                            float(r["Low"]), float(r["Close"]), float(r["Volume"])])
+
+    print(f"  32비트 워커 실행 중… ({len(data)}종목, 몇 분 걸립니다)")
+    try:
+        pr = subprocess.run([py32, "-u", worker, src, dst],
+                            capture_output=True, text=True, timeout=1800)
+    except subprocess.TimeoutExpired:
+        print("  워커 시간 초과")
+        return None
+    tail = (pr.stderr or "").strip().splitlines()
+    if tail:
+        print("  워커:", tail[-1])
+    if pr.returncode != 0 or not os.path.exists(dst):
+        if "NOT_CONNECTED" in (pr.stderr or ""):
+            print("  크레온(CREON Plus)이 연결돼 있지 않습니다")
+        return None
+
+    cymap = {}
+    with open(dst, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            d = cymap.setdefault(r["code"], {"B": [], "T": [], "U": []})
+            for k in ("B", "T", "U"):
+                d[k].append(float(r[k]) if r[k] not in ("", None) else None)
+    return cymap
 
 
 # ══════════ 저장 ══════════
@@ -383,6 +455,10 @@ def main():
     ap.add_argument("--backfill", type=int, default=0, help="최근 N영업일 소급 실행")
     ap.add_argument("--reset", action="store_true", help="기록·로그를 지우고 새로 시작")
     ap.add_argument("--no-m60", action="store_true", help="60분봉 수집 생략 (빠른 실행)")
+    ap.add_argument("--cyindi", action="store_true",
+                    help="CYBOS 차트 엔진으로 T·B·U 계산 (윈도우+크레온 연결 필요)")
+    ap.add_argument("--force", action="store_true",
+                    help="이미 기록된 날짜도 다시 계산")
     a = ap.parse_args()
 
     os.makedirs(DATA, exist_ok=True)
@@ -416,8 +492,15 @@ def main():
         print("수집 실패 — 네트워크를 확인하세요")
         return 1
 
+    cymap = None
+    if a.cyindi:
+        print("CYBOS 차트 엔진으로 T·B·U 계산 (HTS와 동일)")
+        cymap = run_cyworker(data)
+        if cymap is None:
+            print("  → 실패. 근사 공식으로 진행합니다")
+
     print("지표 계산 중… (종목당 1회)")
-    series = build_all(data)
+    series = build_all(data, cymap)
     print(f"  {len(series)}종목 준비 완료")
 
     # 실제 거래일 목록 (가장 많은 데이터를 가진 종목 기준)
@@ -426,6 +509,18 @@ def main():
     if a.date:
         days = [d for d in days if d <= a.date]
     targets = days[-(a.backfill or 1):]
+
+    # 이미 기록된 날짜는 건너뜁니다 — 같은 날 두 번 돌아도 로그가 겹치지 않도록.
+    # (소급·초기화·강제 실행은 예외)
+    if not (a.backfill or a.reset or a.force):
+        done = set(load_json(os.path.join(DATA, "dates.json"), []))
+        skip = [d for d in targets if d in done]
+        targets = [d for d in targets if d not in done]
+        if skip:
+            print(f"  이미 기록된 날짜 {len(skip)}일 건너뜀 ({', '.join(skip[-3:])})")
+        if not targets:
+            print("\n새로 처리할 거래일이 없습니다 — 종료합니다")
+            return 0
 
     state = dict(
         positions=load_json(os.path.join(DATA, "positions.json"), {}),

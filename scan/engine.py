@@ -10,8 +10,15 @@ import indi
 from rules import SELL
 
 
-def build_series(o, h, l, c, v):
-    """종목 하나의 전체 지표 시계열. 데이터가 짧으면 None"""
+def build_series(o, h, l, c, v, cy=None):
+    """
+    종목 하나의 전체 지표 시계열. 데이터가 짧으면 None
+
+    cy를 주면 T·B·U를 그 값으로 대체합니다 — CYBOS 차트 엔진이 계산한
+    정확한 값(HTS와 동일)을 쓰기 위한 통로입니다. 제 근사 공식은
+    매수신호를 1.48배 과다 발생시키는 것으로 확인됐습니다.
+    cy 형식: {"B":[...], "T":[...], "U":[...]} (길이는 c와 동일)
+    """
     n = len(c)
     if n < 130:
         return None
@@ -21,8 +28,18 @@ def build_series(o, h, l, c, v):
     U, Us = indi.ultimate(h, l, c)
     mt, mb, red = indi.mesh(c)
     ma30 = indi.sma(c, SELL["MA_BREAK"])
+
+    if cy:
+        if cy.get("T") and len(cy["T"]) == n:
+            T = list(cy["T"])
+        if cy.get("B") and len(cy["B"]) == n:
+            B = list(cy["B"])
+        if cy.get("U") and len(cy["U"]) == n:
+            U = list(cy["U"])
+
     return dict(n=n, o=o, h=h, l=l, c=c, v=v,
-                gb=gb, gs=gs, T=T, B=B, U=U, red=red, ma30=ma30)
+                gb=gb, gs=gs, T=T, B=B, U=U, red=red, ma30=ma30,
+                exact=bool(cy))
 
 
 def _hold_at(gs, i, lookback):
