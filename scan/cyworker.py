@@ -7,7 +7,7 @@ pandas 불필요(csv만 사용). 64비트 daily.py가 subprocess로 부릅니다
   in : code,seq,open,high,low,close,volume   (종목별 시간순)
   out: code,seq,B,T,T_sig,U,U_sig            (계산 불가 구간은 빈칸)
 """
-import sys, csv, traceback
+import sys, csv, time, traceback
 
 DBLMAX = 1.7976931348623157e+308
 SPEC = {
@@ -25,7 +25,60 @@ def clean(x):
     return None if f >= DBLMAX * 0.99 else f
 
 
+def fetch_mode(codes_file, out_file, count):
+    """
+    시세 수집 모드 — CYBOS에서 일봉을 받아 CSV로 저장합니다.
+    FDR이 요청 제한에 걸릴 때 쓰는 대안. CYBOS 제한은 15초당 60건으로 명확합니다.
+    """
+    import pythoncom
+    import win32com.client as wc
+    pythoncom.CoInitialize()
+
+    cb = wc.Dispatch("CpUtil.CpCybos")
+    if not cb.IsConnect:
+        print("NOT_CONNECTED", file=sys.stderr)
+        sys.exit(2)
+    ch = wc.Dispatch("CpSysDib.StockChart")
+
+    codes = [l.strip() for l in open(codes_file, encoding="utf-8") if l.strip()]
+    out = open(out_file, "w", newline="", encoding="utf-8")
+    W = csv.writer(out)
+    W.writerow(["code", "date", "open", "high", "low", "close", "volume"])
+    ok = 0
+    for i, code in enumerate(codes, 1):
+        # 요청 제한 (15초당 60건)
+        if cb.GetLimitRemainCount(1) <= 1:
+            time.sleep(cb.LimitRequestRemainTime / 1000.0 + 0.3)
+        try:
+            ch.SetInputValue(0, code)
+            ch.SetInputValue(1, ord('2'))
+            ch.SetInputValue(4, count)
+            ch.SetInputValue(5, [0, 2, 3, 4, 5, 8])
+            ch.SetInputValue(6, ord('D'))
+            ch.SetInputValue(9, ord('1'))
+            ch.BlockRequest()
+            if ch.GetDibStatus() != 0:
+                continue
+            n = ch.GetHeaderValue(3)
+            rows = []
+            for j in range(n - 1, -1, -1):          # 최신→과거이므로 뒤집기
+                rows.append([code, ch.GetDataValue(0, j), ch.GetDataValue(1, j),
+                             ch.GetDataValue(2, j), ch.GetDataValue(3, j),
+                             ch.GetDataValue(4, j), ch.GetDataValue(5, j)])
+            W.writerows(rows)
+            ok += 1
+        except Exception:
+            pass
+        if i % 25 == 0:
+            print(f"FETCH {i}/{len(codes)} ok={ok}", file=sys.stderr, flush=True)
+            out.flush()
+    out.close()
+    print(f"FETCH_OK {ok}", file=sys.stderr)
+
+
 def main():
+    if sys.argv[1] == "--fetch":
+        return fetch_mode(sys.argv[2], sys.argv[3], int(sys.argv[4]))
     src, dst = sys.argv[1], sys.argv[2]
 
     import pythoncom

@@ -1,45 +1,14 @@
 {
 "buy": [
 {
-"code": "241710",
-"name": "코스메카코리아",
+"code": "119850",
+"name": "지엔씨에너지",
 "market": "코스닥150",
-"score": 92.3,
+"score": 78.0,
 "rank": 1,
 "grade": "홈런",
-"signal_date": "2026-08-12"
-},
-{
-"code": "078930",
-"name": "GS",
-"market": "코스피200",
-"score": 80.2,
-"rank": 3,
-"grade": "홈런",
-"signal_date": "2026-08-12"
-},
-{
-"code": "251970",
-"name": "펌텍코리아",
-"market": "코스닥150",
-"score": 75.5,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-08-12"
+"signal_date": "2026-08-13"
 }
 ],
-"sell": [
-{
-"code": "111770",
-"reason": "B 48.6 < 55 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-12"
-},
-{
-"code": "316140",
-"reason": "B 54.2 < 55 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-12"
-}
-]
+"sell": []
 }

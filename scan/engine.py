@@ -34,8 +34,9 @@ def build_series(o, h, l, c, v, cy=None):
             T = list(cy["T"])
         if cy.get("B") and len(cy["B"]) == n:
             B = list(cy["B"])
-        if cy.get("U") and len(cy["U"]) == n:
-            U = list(cy["U"])
+        # U는 CYBOS 값을 쓰지 않습니다. 0~100이어야 할 값이 914,571처럼 나옵니다
+        # (정규화되지 않은 원시 합계로 보입니다). 매매 규칙에는 U를 쓰지 않으므로
+        # 화면 표시용으로 제 계산을 그대로 둡니다.
 
     return dict(n=n, o=o, h=h, l=l, c=c, v=v,
                 gb=gb, gs=gs, T=T, B=B, U=U, red=red, ma30=ma30,
@@ -119,14 +120,16 @@ def tb_buy_at(S, i):
     grade = "홈런" if gs[i] <= TB["HR_GS_MAX"] else "일반"
     timely = hold <= TB["HOLD_MAX"]
 
-    # 점수 — 홈런 조건에 얼마나 부합하는지
+    # ── 점수 = 자리 잡는 순서
+    # 신호가 자리보다 훨씬 많아(120일간 1,958건 vs 10자리) 무엇을 먼저 담느냐가
+    # 성과를 좌우합니다. 선택 기준별 120일 백테스트 결과:
+    #   복합(등락+적선+유지) +44.7% MDD-18.5% │ 적선순 +36.1% │ 무작위 +23.7%
+    #   청선 낮은순 -4.3%  ← 옛 점수는 배점 100 중 34점을 청선에 주고 있었습니다
+    r20 = (c[i] / c[i - 20] - 1) * 100 if i >= 20 else 0.0
     score = 0.0
-    score += 34 * max(0.0, (TB["HR_GS_MAX"] - min(gs[i], TB["HR_GS_MAX"])) / TB["HR_GS_MAX"])
-    score += 22 * min(1.0, (S["T"][i] - TB["T_MIN"]) / 30.0)
-    score += 18 * min(1.0, (S["B"][i] - TB["B_MIN"]) / 20.0)
-    score += 14 if timely else 4              # 4~7일이 적기
-    score += 6 if S["red"][i] else 0
-    score += 6 if c[i] >= S["ma30"][i] else 0
+    score += 40 * min(1.0, max(0.0, r20) / 80.0)          # 직전 20일 상승폭
+    score += 35 * min(1.0, gb[i] / 60.0)                  # 적선(확산 정도)
+    score += 25 * min(1.0, hold / 30.0)                   # T·B 유지일
 
     return dict(
         grade=grade, homerun=(grade == "홈런"), timely=timely,

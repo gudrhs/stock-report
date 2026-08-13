@@ -13,7 +13,7 @@
   signals.csv         매수·매도 이벤트 로그 (append-only, 자동매매용)
   positions.json      현재 보유 중인 가상 포지션
 """
-import os, sys, json, csv, argparse, datetime, warnings
+import os, sys, json, csv, time, argparse, datetime, warnings
 warnings.filterwarnings("ignore")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,19 +44,43 @@ CSV_COLS = [
 
 
 # ══════════ 데이터 수집 ══════════
-def fetch_all(codes, start, end, workers=8):
-    """{code: DataFrame} — 실패한 종목은 빠집니다"""
+def fetch_all(codes, start, end, workers=4, quiet=False, tries=4):
+    """
+    {code: DataFrame} — 실패한 종목은 빠집니다.
+
+    FDR은 네이버·KRX를 그대로 두드리기 때문에 동시 요청이 많으면 100건 근처에서
+    막힙니다. 스레드를 줄이고 실패 시 시간을 늘려가며 다시 시도합니다.
+    """
     def one(cd):
-        try:
-            df = fdr.DataReader(cd, start, end)
-            return cd, (df if len(df) >= 130 else None)
-        except Exception:
-            return cd, None
-    out = {}
+        for k in range(tries):
+            try:
+                df = fdr.DataReader(cd, start, end)
+                if len(df) >= 130:
+                    return cd, df
+                return cd, None
+            except Exception:
+                if k < tries - 1:
+                    time.sleep(1.5 * (k + 1))       # 1.5s → 3s → 4.5s
+        return cd, None
+
+    out, fail = {}, []
+    done = 0
+    t0 = time.time()
     with ThreadPoolExecutor(workers) as ex:
         for cd, df in ex.map(one, codes):
+            done += 1
             if df is not None:
                 out[cd] = df
+            else:
+                fail.append(cd)
+            if not quiet and (done % 25 == 0 or done == len(codes)):
+                el = time.time() - t0
+                eta = el / done * (len(codes) - done)
+                print(f"    {done}/{len(codes)} 수집 · 성공 {len(out)} 실패 {len(fail)}"
+                      f" ({el:.0f}초 경과, 남은 시간 약 {eta:.0f}초)", flush=True)
+    if fail and not quiet:
+        print(f"    수집 실패 {len(fail)}종목: {', '.join(fail[:8])}"
+              + (" …" if len(fail) > 8 else ""))
     return out
 
 
@@ -98,6 +122,55 @@ def find_py32():
     return None
 
 
+def fetch_via_cybos(codes, bars):
+    """
+    CYBOS로 일봉을 받습니다. FDR이 요청 제한에 막힐 때 쓰는 경로.
+    CYBOS 제한은 15초당 60건으로 명확해서 훨씬 안정적입니다 (350종목 ≈ 90초).
+    반환: {code: DataFrame} 또는 None
+    """
+    import subprocess, tempfile
+    import pandas as pd
+    py32 = find_py32()
+    if not py32:
+        print("  32비트 파이썬을 찾지 못했습니다")
+        return None
+    worker = os.path.join(HERE, "cyworker.py")
+    tmp = tempfile.mkdtemp(prefix="cyfetch_")
+    cf = os.path.join(tmp, "codes.txt")
+    of = os.path.join(tmp, "px.csv")
+    with open(cf, "w", encoding="utf-8") as f:
+        f.write("\n".join("A" + c if not c.startswith("A") else c for c in codes))
+
+    print(f"  CYBOS로 시세 수집 중… ({len(codes)}종목, 약 {len(codes)//60*15+30}초)")
+    try:
+        pr = subprocess.run([py32, "-u", worker, "--fetch", cf, of, str(bars)],
+                            stdout=subprocess.DEVNULL, text=True, timeout=1800)
+    except subprocess.TimeoutExpired:
+        print("  시세 수집 시간 초과")
+        return None
+    if pr.returncode != 0 or not os.path.exists(of):
+        print("  CYBOS 시세 수집 실패")
+        return None
+
+    raw = {}
+    with open(of, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            raw.setdefault(r["code"].lstrip("A"), []).append(
+                (r["date"], float(r["open"]), float(r["high"]),
+                 float(r["low"]), float(r["close"]), float(r["volume"])))
+    out = {}
+    for code, rows in raw.items():
+        if len(rows) < 130:
+            continue
+        idx = pd.to_datetime([str(x[0]) for x in rows], format="%Y%m%d")
+        out[code] = pd.DataFrame(
+            dict(Open=[x[1] for x in rows], High=[x[2] for x in rows],
+                 Low=[x[3] for x in rows], Close=[x[4] for x in rows],
+                 Volume=[x[5] for x in rows]), index=idx)
+    print(f"  {len(out)}종목 수집 완료")
+    return out or None
+
+
 def run_cyworker(data):
     """
     가격을 임시 CSV로 쓰고 32비트 워커를 불러 지표를 계산합니다.
@@ -125,16 +198,12 @@ def run_cyworker(data):
     print(f"  32비트 워커 실행 중… ({len(data)}종목, 몇 분 걸립니다)")
     try:
         pr = subprocess.run([py32, "-u", worker, src, dst],
-                            capture_output=True, text=True, timeout=1800)
+                            stdout=subprocess.DEVNULL, text=True, timeout=1800)
     except subprocess.TimeoutExpired:
         print("  워커 시간 초과")
         return None
-    tail = (pr.stderr or "").strip().splitlines()
-    if tail:
-        print("  워커:", tail[-1])
     if pr.returncode != 0 or not os.path.exists(dst):
-        if "NOT_CONNECTED" in (pr.stderr or ""):
-            print("  크레온(CREON Plus)이 연결돼 있지 않습니다")
+        print("  워커 실패 (크레온 연결 또는 32비트 환경 확인)")
         return None
 
     cymap = {}
@@ -189,7 +258,7 @@ def build_stats(strategy=None):
         eq *= (1 + x / 100 / CFG["MAX_POS"])
     by = {}
     for r in sells:
-        k = next((w for w in ("손절", "청선", "장대음봉", "30일선", "적선", "고점", "기간")
+        k = next((w for w in ("손절", "익절", "청선", "장대음봉", "30일선", "적선", "고점", "기간", "이탈")
                   if w in r["reason"]), "기타")
         by.setdefault(k, []).append(float(r["pnl_pct"]))
     hr = [float(r["pnl_pct"]) for r in sells if r.get("grade") == "홈런"]
@@ -291,13 +360,14 @@ def scan_day(date, series, meta):
     for i, b in enumerate(buys, 1):
         b["rank"] = i
     # T·B는 홈런을 위로 올리고, 그 안에서 점수순
-    tbuys.sort(key=lambda x: (not x["homerun"], -x["score"]))
+    # 홈런을 위로 올리지 않습니다 — 청선 우선 정렬이 성과를 깎았습니다
+    tbuys.sort(key=lambda x: -x["score"])
     for i, b in enumerate(tbuys, 1):
         b["rank"] = i
     return snaps, buys, tbuys
 
 
-def trade(date, snaps, buys, positions, pending, sell_fn, tag, max_pos, stop_loss):
+def trade(date, snaps, buys, positions, pending, sell_fn, tag, max_pos, stop_loss, take=None):
     """
     한 전략의 하루 매매. 순서가 중요합니다.
 
@@ -348,25 +418,32 @@ def trade(date, snaps, buys, positions, pending, sell_fn, tag, max_pos, stop_los
                            severity=od.get("grade") or "진입",
                            grade=od.get("grade", "")))
 
-    # ── 2) 장중 손절 (실제 자동매매는 손절주문을 미리 걸어둡니다)
-    #     stop_loss가 None이면 손절 없이 규칙 이탈까지만 봅니다
-    for code in (list(positions.keys()) if stop_loss is not None else []):
+    # ── 2) 장중 손절·익절 (실제 자동매매는 주문을 미리 걸어둡니다)
+    for code in list(positions.keys()):
         pos, s = positions[code], snaps.get(code)
         if not s:
             continue
-        stop = pos["entry"] * (1 + stop_loss / 100.0)
-        if s["low"] > stop:
+        hit = None
+        if stop_loss is not None:
+            stop = pos["entry"] * (1 + stop_loss / 100.0)
+            if s["low"] <= stop:
+                hit = (int(min(stop, s["open"])), "손절", f"장중 손절 (기준 {stop_loss}%)")
+        if hit is None and take is not None:
+            tp = pos["entry"] * (1 + take / 100.0)
+            if s["high"] >= tp:
+                hit = (int(max(tp, s["open"])), "익절", f"장중 익절 (목표 +{take:.0f}%)")
+        if hit is None:
             continue
-        px = int(min(stop, s["open"]))       # 갭하락이면 시가 체결
+        px, sev, why = hit
         pnl = round((px / pos["entry"] - 1) * 100, 2)
-        reason = f"장중 손절 {pnl:+.1f}% (기준 {stop_loss}%)"
+        reason = f"{why} {pnl:+.1f}%"
         rows.append(log_row(date, code, pos["name"], pos.get("market", ""), "SELL",
-                            "손절", reason, dict(s, close=px), pos=pos, pnl=pnl,
+                            sev, reason, dict(s, close=px), pos=pos, pnl=pnl,
                             strategy=tag))
         filled.append(dict(kind="매도", code=code, name=pos["name"], price=px, pnl=pnl,
                            days=pos.get("days", 0), entry=pos["entry"],
                            entry_date=pos["entry_date"], reason=reason,
-                           severity="손절", grade=pos.get("grade", "")))
+                           severity=sev, grade=pos.get("grade", "")))
         positions.pop(code)
 
     # ── 3) 오늘 종가로 내일 낼 주문 결정
@@ -413,9 +490,11 @@ def run_day(date, series, uni, state, quiet=False):
     snaps, buys, tbuys = scan_day(date, series, meta)
 
     a = trade(date, snaps, buys, state["positions"], state["pending"],
-              rules.sell_check, "기존", CFG["MAX_POS"], rules.SELL["STOP_LOSS"])
+              rules.sell_check, "기존", CFG["MAX_POS"], rules.SELL["STOP_LOSS"],
+              rules.SELL.get("TAKE"))
     b = trade(date, snaps, tbuys, state["positions_tb"], state["pending_tb"],
-              rules.tb_sell_check, "TB", CFG["MAX_POS"], rules.TB["STOP_LOSS"])
+              rules.tb_sell_check, "TB", CFG["MAX_POS"], rules.TB["STOP_LOSS"],
+              rules.TB.get("TAKE"))
     state["pending"], state["pending_tb"] = a["nxt"], b["nxt"]
 
     homerun = [x for x in tbuys if x["homerun"]]
@@ -457,6 +536,8 @@ def main():
     ap.add_argument("--no-m60", action="store_true", help="60분봉 수집 생략 (빠른 실행)")
     ap.add_argument("--cyindi", action="store_true",
                     help="CYBOS 차트 엔진으로 T·B·U 계산 (윈도우+크레온 연결 필요)")
+    ap.add_argument("--cyprice", action="store_true",
+                    help="시세도 CYBOS에서 받기 (FDR 요청 제한 회피)")
     ap.add_argument("--force", action="store_true",
                     help="이미 기록된 날짜도 다시 계산")
     a = ap.parse_args()
@@ -485,9 +566,14 @@ def main():
     end = a.date or datetime.date.today().strftime("%Y-%m-%d")
     start = (datetime.date.fromisoformat(end)
              - datetime.timedelta(days=int((CFG["BARS"] + a.backfill) * 1.65) + 60))
-    print(f"시세 수집 중… ({start} ~ {end})")
-    data = fetch_all([c for c, _, _, _ in uni], start, end)
-    print(f"  {len(data)}종목 수집 완료")
+    codes = [c for c, _, _, _ in uni]
+    data = None
+    if a.cyprice:
+        data = fetch_via_cybos(codes, CFG["BARS"] + a.backfill + 40)
+    if not data:
+        print(f"시세 수집 중… ({start} ~ {end})")
+        data = fetch_all(codes, start, end)
+        print(f"  {len(data)}종목 수집 완료")
     if not data:
         print("수집 실패 — 네트워크를 확인하세요")
         return 1
