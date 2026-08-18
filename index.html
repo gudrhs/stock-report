@@ -62,6 +62,17 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
 
   <h2 id=cand-h>오늘의 매수 후보 <small id=cand-sub>스캔 결과 불러오는 중…</small></h2>
   <div class=wrap id=candbox></div>
+  <div id=chartbox style="display:none;margin:14px 0">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <b id=chart-title style="font-size:14px"></b>
+      <span style="font-size:11.5px;color:#8b93a3">지표는 HTS(CYBOS)와 같은 값 · 가로 스크롤 가능</span>
+      <span style="flex:1"></span>
+      <a href="#" id=chart-close style="color:#7cc0f5;font-size:12px;text-decoration:none">닫기 ✕</a>
+    </div>
+    <div style="overflow-x:auto;border:1px solid #262a33;border-radius:12px;background:#0b0d11">
+      <canvas id=chart-cv width=1100 height=640 style="display:block"></canvas>
+    </div>
+  </div>
   <div class=note id=cand-note style="display:none"></div>
 
   <h2>매매 내역 <small>대신증권 모의투자 계좌에서 실제 체결된 것만</small></h2>
@@ -93,6 +104,7 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
   </div>
 </div>
 
+<script src="chart.js?v=2"></script>
 <script>
 var $=function(id){return document.getElementById(id)};
 function num(n){return n==null||n===''?'-':Number(n).toLocaleString()}
@@ -225,6 +237,21 @@ var CAND=[
  {t:'일봉 청선',a:'r',f:function(r){return Number(r.gsell).toFixed(1)}},
  {t:'20일 수익률',a:'r',f:function(r){return pc(r.r20!=null?r.r20:r.chg20)}}
 ];
+var CHARTS=null;
+function showChart(code,name){
+  if(!CHARTS||!CHARTS[code]||!window.drawChart){return}
+  var d=CHARTS[code].daily;
+  $('chart-title').textContent=name+' ('+code+') — 일봉 '+d.c.length+'봉';
+  $('chartbox').style.display='';
+  drawChart($('chart-cv'), d, name);
+  $('chartbox').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.addEventListener('click',function(e){
+  var tr=e.target.closest&&e.target.closest('#candbox tr[data-code]');
+  if(tr){showChart(tr.getAttribute('data-code'), tr.getAttribute('data-name'))}
+});
+$('chart-close').onclick=function(e){e.preventDefault();$('chartbox').style.display='none'};
+
 fetch('data/latest.json?v='+Date.now()).then(function(r){
   if(!r.ok)throw new Error('no latest');return r.json();
 }).then(function(L){
@@ -236,8 +263,19 @@ fetch('data/latest.json?v='+Date.now()).then(function(r){
     ?' · <b style="color:#ffab6b">장세 '+Math.round((L.breadth||0)*100)+'% — 신규 매수 중단 구간</b>'
     :' · 장세 '+Math.round((L.breadth||0)*100)+'%';
   $('cand-sub').innerHTML='기준일 '+esc(L.date)+' 종가'+gateTxt
-    +' · 신호 '+(tb.buy_total!=null?tb.buy_total:buys.length)+'종목';
+    +' · 신호 '+(tb.buy_total!=null?tb.buy_total:buys.length)+'종목 · <b>줄을 누르면 차트</b>';
   tbl($('candbox'), CAND, buys, '오늘 조건을 충족한 종목이 없습니다');
+  // 행에 코드 심기 (클릭 → 차트)
+  var trs=$('candbox').querySelectorAll('tbody tr');
+  var k=0;
+  buys.forEach(function(b){
+    if(trs[k]){trs[k].setAttribute('data-code',b.code);
+      trs[k].setAttribute('data-name',b.name);trs[k].style.cursor='pointer'}
+    k++;
+  });
+  fetch('data/charts.json?v='+Date.now()).then(function(r){
+    if(!r.ok)throw 0;return r.json();
+  }).then(function(C){CHARTS=C}).catch(function(){});
   var note=$('cand-note');
   note.style.display='';
   note.innerHTML='<b>읽는 법</b> — 조건: 주봉·일봉 모두 청선 ≤ 5, 적선 ≥ 40. '
