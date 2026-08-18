@@ -60,6 +60,10 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
 
   <div class=cards id=cards></div>
 
+  <h2 id=cand-h>오늘의 매수 후보 <small id=cand-sub>스캔 결과 불러오는 중…</small></h2>
+  <div class=wrap id=candbox></div>
+  <div class=note id=cand-note style="display:none"></div>
+
   <h2>매매 내역 <small>대신증권 모의투자 계좌에서 실제 체결된 것만</small></h2>
   <div class=wrap id=fillbox></div>
 
@@ -72,9 +76,10 @@ code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color
   <div class=note>
     <b>매매 규칙</b> — 「매수 전략」 문서 20260502판 원형<br>
     매수: <b>주봉</b> G 청선 ≤ 5 · 적선 ≥ 40 <b>그리고 일봉</b> 청선 ≤ 5 · 적선 ≥ 40<br>
-    매도: <b>주봉 청선이 25를 넘을 때</b> · 손절 -10%(장중) · <b>익절 없음</b><br>
+    매도: <b>주봉 청선이 25를 넘을 때</b> · 손절 -12%(장중) · <b>익절 없음</b><br>
     장세 필터: 상위 200종목 중 20일 전보다 오른 종목이 55% 미만이면 신규 매수를 멈춥니다.<br>
-    대상 시가총액 상위 200종목 · 동시 보유 10종목 · 1종목 300만원<br><br>
+    대상 시가총액 상위 200종목 · 동시 보유 10종목 ·
+    1종목 투자금은 <b>총자산 ÷ 10</b>으로 잔고에 맞춰 자동 계산합니다<br><br>
     G·T·B는 CYBOS 차트 엔진의 실제 값(HTS 화면과 동일)입니다.
     매도를 주봉으로 하는 것이 핵심입니다 — 일봉이 흔들려도 주봉이 살아 있으면 들고 갑니다.<br><br>
     <b>이 페이지에 적힌 숫자는 전부 실제 체결가입니다.</b> 가상 매매나 백테스트 결과가
@@ -204,6 +209,46 @@ var OPEN=[
  {t:'투자금',a:'r',f:function(r){return num(r.qty*r.price)+'원'}},
  {t:'왜 샀나',cl:' why',f:function(r){return esc(r.why)||'-'}}
 ];
+
+// ── 오늘의 매수 후보 (latest.json = 매일 아침 스캔 결과)
+var CAND=[
+ {t:'순위',a:'c',f:function(r){return r.rank}},
+ {t:'구분',a:'c',f:function(r){
+   if(r._ordered)return '<span class="pill p-buy">오늘 주문</span>';
+   return r.homerun?'<span class="pill p-buy">매수 대상</span>'
+                   :'<span class="pill p-sell">대기</span>'}},
+ {t:'종목',cl:' nm',f:function(r){return esc(r.name)+'<span class=cd>'+esc(r.code)+'</span>'}},
+ {t:'종가',a:'r',f:function(r){return num(r.close)+'원'}},
+ {t:'주봉 적선',a:'r',f:function(r){return r.wgbuy==null?'-':Number(r.wgbuy).toFixed(1)}},
+ {t:'주봉 청선',a:'r',f:function(r){return r.wgsell==null?'-':Number(r.wgsell).toFixed(1)}},
+ {t:'일봉 적선',a:'r',f:function(r){return Number(r.gbuy).toFixed(1)}},
+ {t:'일봉 청선',a:'r',f:function(r){return Number(r.gsell).toFixed(1)}},
+ {t:'20일 수익률',a:'r',f:function(r){return pc(r.r20!=null?r.r20:r.chg20)}}
+];
+fetch('data/latest.json?v='+Date.now()).then(function(r){
+  if(!r.ok)throw new Error('no latest');return r.json();
+}).then(function(L){
+  var tb=L.tb||{}, buys=(tb.buy&&tb.buy.length?tb.buy:tb.homerun)||[];
+  var ordered={};
+  ((tb.order||{}).buy||[]).forEach(function(c){ordered[c]=1});
+  buys.forEach(function(b){b._ordered=!!ordered[b.code]});
+  var gateTxt=L.gate===false
+    ?' · <b style="color:#ffab6b">장세 '+Math.round((L.breadth||0)*100)+'% — 신규 매수 중단 구간</b>'
+    :' · 장세 '+Math.round((L.breadth||0)*100)+'%';
+  $('cand-sub').innerHTML='기준일 '+esc(L.date)+' 종가'+gateTxt
+    +' · 신호 '+(tb.buy_total!=null?tb.buy_total:buys.length)+'종목';
+  tbl($('candbox'), CAND, buys, '오늘 조건을 충족한 종목이 없습니다');
+  var note=$('cand-note');
+  note.style.display='';
+  note.innerHTML='<b>읽는 법</b> — 조건: 주봉·일봉 모두 청선 ≤ 5, 적선 ≥ 40. '
+    +'적선 높은 순으로 최대 10자리를 채웁니다.<br>'
+    +'<b>오늘 주문</b>은 다음 장 시작(09:00)에 시장가로 실제 주문이 나가는 종목이고, '
+    +'<b>매수 대상</b>인데 주문이 없는 것은 이미 보유 중이거나 자리가 없는 경우입니다. '
+    +'체결되면 아래 매매 내역에 실제 체결가로 기록됩니다.';
+}).catch(function(){
+  $('cand-sub').textContent='스캔 결과가 아직 없습니다';
+  $('candbox').innerHTML='<div class=empty>다음 스캔(매 거래일 07:30) 후에 표시됩니다.</div>';
+});
 
 fetch('data/fills.csv?v='+Date.now()).then(function(r){
   if(!r.ok)throw new Error('no file');return r.text();
