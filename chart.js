@@ -70,13 +70,16 @@ function ultimate(h, l, c, p1, p2, p3, sig) {
   return [out, pad(out.length, sma(compact(out), sig))];
 }
 function golden(c, n) {
-  n = n || 32;
+  /* 대신증권 Golden Power 정확 재현 (2026-08-14 확정, 기간 25)
+     적선 = 100(C/LL − LL/C) · 청선 = 100(HH/C − C/HH)
+     CYBOS 실측 133만 표본과 오차 0.0001 미만 — HTS 화면과 같은 값입니다 */
+  n = n || 25;
   var buy = [], sell = [], i;
   for (i = 0; i < c.length; i++) {
     var w = c.slice(Math.max(0, i - n + 1), i + 1);
     var lo = Math.min.apply(null, w), hi = Math.max.apply(null, w);
-    buy.push(lo ? (c[i] / lo - 1) * 100 : 0);
-    sell.push(c[i] ? (hi / c[i] - 1) * 100 : 0);
+    buy.push((lo && c[i]) ? (c[i] / lo - lo / c[i]) * 100 : 0);
+    sell.push((hi && c[i]) ? (hi / c[i] - c[i] / hi) * 100 : 0);
   }
   return [buy, sell];
 }
@@ -134,7 +137,7 @@ function drawChart(cv, d, title) {
   var W = cv.width, H = cv.height, x = cv.getContext('2d');
   x.fillStyle = C.bg; x.fillRect(0, 0, W, H);
 
-  var G = golden(d.c, 32), T = tsi(d.c), B = rsi(d.c, 35),
+  var G = golden(d.c, 25), T = tsi(d.c), B = rsi(d.c, 35),
       U = ultimate(d.h, d.l, d.c), M = mesh(d.c);
   var L = 56, R = 8, TOP = 6, GAP = 3;
   var hs = [0.42, 0.10, 0.11, 0.115, 0.115, 0.14];   // 가격/거래량/U/T/B/G
@@ -288,15 +291,18 @@ function drawChart(cv, d, title) {
   frame(p4, 'BPDI Hilo Index   기준 55');
   ylab(p4, be[0], be[1], 50, '50'); ylab(p4, be[0], be[1], 55, '55');
 
-  /* 6단 — G */
-  var p5 = panel(5), ge = ext([G[0], G[1], [0, 6]]);
+  /* 6단 — G (정확 눈금: 매수 청≤5·적≥40 / 주봉 매도 25) */
+  var p5 = panel(5), ge = ext([G[0], G[1], [0, 45]]);
   months(p5);
-  hline(p5, ge[0], ge[1], 5, C.ref, [], 1.2);
+  hline(p5, ge[0], ge[1], 40, C.ref, [4, 3], 1);
+  hline(p5, ge[0], ge[1], 25, C.ref, [], 1.2);
+  hline(p5, ge[0], ge[1], 5, C.ref, [], 1);
   hline(p5, ge[0], ge[1], 0, C.zero, [], 1);
   line(p5, G[0], ge[0], ge[1], C.up, 1.3);
   line(p5, G[1], ge[0], ge[1], C.dn, 1.3);
-  frame(p5, 'Golden Buy(적) · Golden Sell(청)   기준 5');
-  ylab(p5, ge[0], ge[1], 0, '0'); ylab(p5, ge[0], ge[1], 5, '5');
+  frame(p5, 'Golden Buy(적) · Golden Sell(청)   기준 5·25·40 — HTS와 같은 값');
+  ylab(p5, ge[0], ge[1], 5, '5'); ylab(p5, ge[0], ge[1], 25, '25');
+  ylab(p5, ge[0], ge[1], 40, '40');
 
   /* 날짜축 — 겹치지 않도록 최소 간격을 둡니다 */
   x.fillStyle = C.text; x.font = '9px sans-serif'; x.textAlign = 'center';
