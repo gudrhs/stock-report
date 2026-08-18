@@ -4190,5 +4190,53 @@
 "reason": "장중 손절 (기준 -7.0%) -7.0%",
 "severity": "손절",
 "cum": 13.09
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "035720",
+"name": "카카오",
+"market": "코스피200",
+"entry_date": "2026-08-12",
+"exit_date": "2026-08-18",
+"entry": 40700,
+"exit": 37851,
+"pnl": -7.0,
+"days": 3,
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"cum": 12.29
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "251270",
+"name": "넷마블",
+"market": "코스피200",
+"entry_date": "2026-08-07",
+"exit_date": "2026-08-18",
+"entry": 38650,
+"exit": 38900,
+"pnl": 0.65,
+"days": 6,
+"reason": "적선 5일 기울기 -5.2 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": 12.37
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "251970",
+"name": "펌텍코리아",
+"market": "코스닥150",
+"entry_date": "2026-08-12",
+"exit_date": "2026-08-18",
+"entry": 54500,
+"exit": 53200,
+"pnl": -2.39,
+"days": 3,
+"reason": "B 59.9 < 60 이탈",
+"severity": "이탈",
+"cum": 26.93
 }
 ]

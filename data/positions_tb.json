@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 40100,
 "entry_date": "2026-08-07",
-"peak": 45000,
-"days": 6,
+"peak": 45300,
+"days": 7,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -16,21 +16,10 @@
 "entry": 44450,
 "entry_date": "2026-08-10",
 "peak": 46200,
-"days": 5,
+"days": 6,
 "score": 57.1,
 "grade": "홈런",
 "signal_date": "2026-08-07"
-},
-"251970": {
-"name": "펌텍코리아",
-"market": "코스닥150",
-"entry": 54500,
-"entry_date": "2026-08-12",
-"peak": 58900,
-"days": 3,
-"score": 46.5,
-"grade": "홈런",
-"signal_date": "2026-08-11"
 },
 "192820": {
 "name": "코스맥스",
@@ -38,7 +27,7 @@
 "entry": 243000,
 "entry_date": "2026-08-13",
 "peak": 258000,
-"days": 2,
+"days": 3,
 "score": 59.7,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -48,8 +37,8 @@
 "market": "코스피200",
 "entry": 101000,
 "entry_date": "2026-08-13",
-"peak": 117000,
-"days": 2,
+"peak": 119300,
+"days": 3,
 "score": 49.5,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -60,9 +49,31 @@
 "entry": 56700,
 "entry_date": "2026-08-14",
 "peak": 56700,
-"days": 1,
+"days": 2,
 "score": 78.0,
 "grade": "홈런",
 "signal_date": "2026-08-13"
+},
+"241710": {
+"name": "코스메카코리아",
+"market": "코스닥150",
+"entry": 126000,
+"entry_date": "2026-08-18",
+"peak": 126000,
+"days": 1,
+"score": 63.3,
+"grade": "홈런",
+"signal_date": "2026-08-14"
+},
+"007340": {
+"name": "DN오토모티브",
+"market": "코스피200",
+"entry": 65900,
+"entry_date": "2026-08-18",
+"peak": 65900,
+"days": 1,
+"score": 60.5,
+"grade": "홈런",
+"signal_date": "2026-08-14"
 }
 }

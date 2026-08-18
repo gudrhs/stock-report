@@ -1,39 +1,35 @@
 {
-"buy": [
-{
-"code": "032190",
-"name": "다우데이타",
-"market": "코스닥150",
-"score": 72.6,
-"rank": 2,
-"grade": "",
-"signal_date": "2026-08-14"
-},
-{
-"code": "003690",
-"name": "코리안리",
-"market": "코스피200",
-"score": 69.4,
-"rank": 3,
-"grade": "",
-"signal_date": "2026-08-14"
-},
-{
-"code": "036460",
-"name": "한국가스공사",
-"market": "코스피200",
-"score": 58.0,
-"rank": 4,
-"grade": "",
-"signal_date": "2026-08-14"
-}
-],
+"buy": [],
 "sell": [
 {
-"code": "251270",
-"reason": "적선 5일 기울기 -5.2 — 상승탄력 꺾임",
+"code": "000100",
+"reason": "장대음봉 -4.9%",
 "severity": "청산",
-"signal_date": "2026-08-14"
+"signal_date": "2026-08-18"
+},
+{
+"code": "213420",
+"reason": "청선 7.9 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-08-18"
+},
+{
+"code": "068760",
+"reason": "청선 10.0 — 8.0선 초과 급이탈",
+"severity": "청산",
+"signal_date": "2026-08-18"
+},
+{
+"code": "036830",
+"reason": "청선 5.1 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-08-18"
+},
+{
+"code": "181710",
+"reason": "장대음봉 -5.6%",
+"severity": "청산",
+"signal_date": "2026-08-18"
 }
 ]
 }

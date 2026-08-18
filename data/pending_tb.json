@@ -1,30 +1,4 @@
 {
-"buy": [
-{
-"code": "241710",
-"name": "코스메카코리아",
-"market": "코스닥150",
-"score": 63.3,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-08-14"
-},
-{
-"code": "007340",
-"name": "DN오토모티브",
-"market": "코스피200",
-"score": 60.5,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-08-14"
-}
-],
-"sell": [
-{
-"code": "251970",
-"reason": "B 59.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-14"
-}
-]
+"buy": [],
+"sell": []
 }
