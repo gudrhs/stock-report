@@ -1,77 +1,11 @@
 {
-"000100": {
-"name": "유한양행",
-"market": "코스피200",
-"entry": 82400,
-"entry_date": "2026-08-11",
-"peak": 85600,
-"days": 5,
-"score": 83.3,
-"grade": "",
-"signal_date": "2026-08-10"
-},
-"213420": {
-"name": "덕산네오룩스",
-"market": "코스닥150",
-"entry": 35950,
-"entry_date": "2026-08-11",
-"peak": 36350,
-"days": 5,
-"score": 69.3,
-"grade": "",
-"signal_date": "2026-08-10"
-},
-"068760": {
-"name": "셀트리온제약",
-"market": "코스닥150",
-"entry": 44750,
-"entry_date": "2026-08-11",
-"peak": 46100,
-"days": 5,
-"score": 68.1,
-"grade": "",
-"signal_date": "2026-08-10"
-},
-"036830": {
-"name": "솔브레인홀딩스",
-"market": "코스닥150",
-"entry": 40750,
-"entry_date": "2026-08-13",
-"peak": 42550,
-"days": 3,
-"score": 67.6,
-"grade": "",
-"signal_date": "2026-08-12"
-},
-"181710": {
-"name": "NHN",
-"market": "코스피200",
-"entry": 65500,
-"entry_date": "2026-08-14",
-"peak": 74700,
-"days": 2,
-"score": 74.4,
-"grade": "",
-"signal_date": "2026-08-13"
-},
-"032190": {
-"name": "다우데이타",
-"market": "코스닥150",
-"entry": 20600,
-"entry_date": "2026-08-18",
-"peak": 20600,
-"days": 1,
-"score": 72.6,
-"grade": "",
-"signal_date": "2026-08-14"
-},
 "003690": {
 "name": "코리안리",
 "market": "코스피200",
 "entry": 15300,
 "entry_date": "2026-08-18",
 "peak": 15300,
-"days": 1,
+"days": 2,
 "score": 69.4,
 "grade": "",
 "signal_date": "2026-08-14"
@@ -82,7 +16,7 @@
 "entry": 36400,
 "entry_date": "2026-08-18",
 "peak": 36550,
-"days": 1,
+"days": 2,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"

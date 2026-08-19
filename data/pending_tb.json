@@ -1,4 +1,32 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "181710",
+"name": "NHN",
+"market": "코스피200",
+"score": 79.2,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-08-19"
+},
+{
+"code": "119850",
+"name": "지엔씨에너지",
+"market": "코스닥150",
+"score": 70.9,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-08-19"
+},
+{
+"code": "041960",
+"name": "코미팜",
+"market": "코스닥150",
+"score": 42.7,
+"rank": 5,
+"grade": "홈런",
+"signal_date": "2026-08-19"
+}
+],
 "sell": []
 }

@@ -1,35 +1,30 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "085620",
+"name": "미래에셋생명",
+"market": "코스피200",
+"score": 85.2,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-08-19"
+},
+{
+"code": "078930",
+"name": "GS",
+"market": "코스피200",
+"score": 81.4,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-08-19"
+}
+],
 "sell": [
 {
-"code": "000100",
-"reason": "장대음봉 -4.9%",
+"code": "003690",
+"reason": "적선 5일 기울기 -4.1 — 상승탄력 꺾임",
 "severity": "청산",
-"signal_date": "2026-08-18"
-},
-{
-"code": "213420",
-"reason": "청선 7.9 — 5선 이탈",
-"severity": "청산",
-"signal_date": "2026-08-18"
-},
-{
-"code": "068760",
-"reason": "청선 10.0 — 8.0선 초과 급이탈",
-"severity": "청산",
-"signal_date": "2026-08-18"
-},
-{
-"code": "036830",
-"reason": "청선 5.1 — 5선 이탈",
-"severity": "청산",
-"signal_date": "2026-08-18"
-},
-{
-"code": "181710",
-"reason": "장대음봉 -5.6%",
-"severity": "청산",
-"signal_date": "2026-08-18"
+"signal_date": "2026-08-19"
 }
 ]
 }
