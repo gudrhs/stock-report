@@ -1,32 +1,30 @@
 {
 "buy": [
 {
-"code": "181710",
-"name": "NHN",
+"code": "161890",
+"name": "한국콜마",
 "market": "코스피200",
-"score": 79.2,
-"rank": 1,
+"score": 52.2,
+"rank": 3,
 "grade": "홈런",
-"signal_date": "2026-08-19"
+"signal_date": "2026-08-20"
 },
 {
-"code": "119850",
-"name": "지엔씨에너지",
-"market": "코스닥150",
-"score": 70.9,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-08-19"
-},
-{
-"code": "041960",
-"name": "코미팜",
-"market": "코스닥150",
-"score": 42.7,
+"code": "004370",
+"name": "농심",
+"market": "코스피200",
+"score": 32.9,
 "rank": 5,
 "grade": "홈런",
-"signal_date": "2026-08-19"
+"signal_date": "2026-08-20"
 }
 ],
-"sell": []
+"sell": [
+{
+"code": "119850",
+"reason": "B 59.4 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-08-20"
+}
+]
 }

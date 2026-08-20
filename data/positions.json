@@ -1,24 +1,35 @@
 {
-"003690": {
-"name": "코리안리",
-"market": "코스피200",
-"entry": 15300,
-"entry_date": "2026-08-18",
-"peak": 15300,
-"days": 2,
-"score": 69.4,
-"grade": "",
-"signal_date": "2026-08-14"
-},
 "036460": {
 "name": "한국가스공사",
 "market": "코스피200",
 "entry": 36400,
 "entry_date": "2026-08-18",
 "peak": 36550,
-"days": 2,
+"days": 3,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
+},
+"085620": {
+"name": "미래에셋생명",
+"market": "코스피200",
+"entry": 23050,
+"entry_date": "2026-08-20",
+"peak": 26600,
+"days": 1,
+"score": 85.2,
+"grade": "",
+"signal_date": "2026-08-19"
+},
+"078930": {
+"name": "GS",
+"market": "코스피200",
+"entry": 117700,
+"entry_date": "2026-08-20",
+"peak": 117700,
+"days": 1,
+"score": 81.4,
+"grade": "",
+"signal_date": "2026-08-19"
 }
 }
