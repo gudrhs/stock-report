@@ -5,7 +5,7 @@
 "entry": 36400,
 "entry_date": "2026-08-18",
 "peak": 36550,
-"days": 3,
+"days": 4,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
@@ -16,19 +16,8 @@
 "entry": 23050,
 "entry_date": "2026-08-20",
 "peak": 26600,
-"days": 1,
+"days": 2,
 "score": 85.2,
-"grade": "",
-"signal_date": "2026-08-19"
-},
-"078930": {
-"name": "GS",
-"market": "코스피200",
-"entry": 117700,
-"entry_date": "2026-08-20",
-"peak": 117700,
-"days": 1,
-"score": 81.4,
 "grade": "",
 "signal_date": "2026-08-19"
 }

@@ -5,7 +5,7 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 46850,
-"days": 9,
+"days": 10,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -16,7 +16,7 @@
 "entry": 44450,
 "entry_date": "2026-08-10",
 "peak": 46200,
-"days": 8,
+"days": 9,
 "score": 57.1,
 "grade": "홈런",
 "signal_date": "2026-08-07"
@@ -26,8 +26,8 @@
 "market": "코스피200",
 "entry": 243000,
 "entry_date": "2026-08-13",
-"peak": 260500,
-"days": 5,
+"peak": 271000,
+"days": 6,
 "score": 59.7,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -38,7 +38,7 @@
 "entry": 101000,
 "entry_date": "2026-08-13",
 "peak": 119700,
-"days": 5,
+"days": 6,
 "score": 49.5,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -48,8 +48,8 @@
 "market": "코스닥150",
 "entry": 126000,
 "entry_date": "2026-08-18",
-"peak": 137200,
-"days": 3,
+"peak": 137300,
+"days": 4,
 "score": 63.3,
 "grade": "홈런",
 "signal_date": "2026-08-14"
@@ -59,20 +59,9 @@
 "market": "코스피200",
 "entry": 72500,
 "entry_date": "2026-08-20",
-"peak": 72500,
-"days": 1,
+"peak": 75200,
+"days": 2,
 "score": 79.2,
-"grade": "홈런",
-"signal_date": "2026-08-19"
-},
-"119850": {
-"name": "지엔씨에너지",
-"market": "코스닥150",
-"entry": 53600,
-"entry_date": "2026-08-20",
-"peak": 53600,
-"days": 1,
-"score": 70.9,
 "grade": "홈런",
 "signal_date": "2026-08-19"
 },
@@ -82,9 +71,31 @@
 "entry": 9430,
 "entry_date": "2026-08-20",
 "peak": 9740,
-"days": 1,
+"days": 2,
 "score": 42.7,
 "grade": "홈런",
 "signal_date": "2026-08-19"
+},
+"161890": {
+"name": "한국콜마",
+"market": "코스피200",
+"entry": 136300,
+"entry_date": "2026-08-21",
+"peak": 136700,
+"days": 1,
+"score": 52.2,
+"grade": "홈런",
+"signal_date": "2026-08-20"
+},
+"004370": {
+"name": "농심",
+"market": "코스피200",
+"entry": 438500,
+"entry_date": "2026-08-21",
+"peak": 438500,
+"days": 1,
+"score": 32.9,
+"grade": "홈런",
+"signal_date": "2026-08-20"
 }
 }

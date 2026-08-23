@@ -4382,5 +4382,37 @@
 "reason": "적선 5일 기울기 -4.1 — 상승탄력 꺾임",
 "severity": "청산",
 "cum": 8.6
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "078930",
+"name": "GS",
+"market": "코스피200",
+"entry_date": "2026-08-20",
+"exit_date": "2026-08-21",
+"entry": 117700,
+"exit": 113000,
+"pnl": -3.99,
+"days": 1,
+"reason": "장대음봉 -5.1%",
+"severity": "청산",
+"cum": 8.17
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "119850",
+"name": "지엔씨에너지",
+"market": "코스닥150",
+"entry_date": "2026-08-20",
+"exit_date": "2026-08-21",
+"entry": 53600,
+"exit": 50300,
+"pnl": -6.16,
+"days": 1,
+"reason": "B 59.4 < 60 이탈",
+"severity": "이탈",
+"cum": 23.63
 }
 ]

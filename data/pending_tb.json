@@ -1,30 +1,14 @@
 {
 "buy": [
 {
-"code": "161890",
-"name": "한국콜마",
-"market": "코스피200",
-"score": 52.2,
-"rank": 3,
+"code": "251970",
+"name": "펌텍코리아",
+"market": "코스닥150",
+"score": 59.8,
+"rank": 4,
 "grade": "홈런",
-"signal_date": "2026-08-20"
-},
-{
-"code": "004370",
-"name": "농심",
-"market": "코스피200",
-"score": 32.9,
-"rank": 5,
-"grade": "홈런",
-"signal_date": "2026-08-20"
+"signal_date": "2026-08-21"
 }
 ],
-"sell": [
-{
-"code": "119850",
-"reason": "B 59.4 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-20"
-}
-]
+"sell": []
 }
