@@ -1,11 +1,23 @@
 {
-"buy": [],
-"sell": [
+"buy": [
 {
-"code": "085620",
-"reason": "청선 8.8 — 8.0선 초과 급이탈",
-"severity": "청산",
-"signal_date": "2026-08-21"
+"code": "192820",
+"name": "코스맥스",
+"market": "코스피200",
+"score": 87.3,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-08-24"
+},
+{
+"code": "008930",
+"name": "한미사이언스",
+"market": "코스피200",
+"score": 77.5,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-08-24"
 }
-]
+],
+"sell": []
 }

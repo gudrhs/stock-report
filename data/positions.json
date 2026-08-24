@@ -5,20 +5,9 @@
 "entry": 36400,
 "entry_date": "2026-08-18",
 "peak": 36550,
-"days": 4,
+"days": 5,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
-},
-"085620": {
-"name": "미래에셋생명",
-"market": "코스피200",
-"entry": 23050,
-"entry_date": "2026-08-20",
-"peak": 26600,
-"days": 2,
-"score": 85.2,
-"grade": "",
-"signal_date": "2026-08-19"
 }
 }
