@@ -4430,5 +4430,37 @@
 "reason": "청선 8.8 — 8.0선 초과 급이탈",
 "severity": "청산",
 "cum": 8.83
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "008930",
+"name": "한미사이언스",
+"market": "코스피200",
+"entry_date": "2026-08-25",
+"exit_date": "2026-08-25",
+"entry": 52500,
+"exit": 48825,
+"pnl": -7.0,
+"days": 0,
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"cum": 8.06
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "181710",
+"name": "NHN",
+"market": "코스피200",
+"entry_date": "2026-08-20",
+"exit_date": "2026-08-25",
+"entry": 72500,
+"exit": 65250,
+"pnl": -10.0,
+"days": 3,
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"cum": 22.4
 }
 ]

@@ -4,10 +4,21 @@
 "market": "코스피200",
 "entry": 36400,
 "entry_date": "2026-08-18",
-"peak": 36550,
-"days": 5,
+"peak": 36800,
+"days": 6,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
+},
+"192820": {
+"name": "코스맥스",
+"market": "코스피200",
+"entry": 286000,
+"entry_date": "2026-08-25",
+"peak": 289000,
+"days": 1,
+"score": 87.3,
+"grade": "",
+"signal_date": "2026-08-24"
 }
 }
