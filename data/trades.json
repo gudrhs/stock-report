@@ -4462,5 +4462,53 @@
 "reason": "장중 손절 (기준 -10.0%) -10.0%",
 "severity": "손절",
 "cum": 22.4
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "008930",
+"name": "한미사이언스",
+"market": "코스피200",
+"entry_date": "2026-08-10",
+"exit_date": "2026-08-27",
+"entry": 44450,
+"exit": 43300,
+"pnl": -2.59,
+"days": 11,
+"reason": "B 58.9 < 60 이탈",
+"severity": "이탈",
+"cum": 22.08
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "041960",
+"name": "코미팜",
+"market": "코스닥150",
+"entry_date": "2026-08-20",
+"exit_date": "2026-08-27",
+"entry": 9430,
+"exit": 9350,
+"pnl": -0.85,
+"days": 4,
+"reason": "B 58.9 < 60 이탈",
+"severity": "이탈",
+"cum": 21.98
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "078930",
+"name": "GS",
+"market": "코스피200",
+"entry_date": "2026-08-13",
+"exit_date": "2026-08-27",
+"entry": 101000,
+"exit": 131300,
+"pnl": 30.0,
+"days": 8,
+"reason": "장중 익절 (목표 +30%) +30.0%",
+"severity": "익절",
+"cum": 25.64
 }
 ]

@@ -1,45 +1,30 @@
 {
 "buy": [
 {
-"code": "085620",
-"name": "미래에셋생명",
+"code": "078930",
+"name": "GS",
 "market": "코스피200",
-"score": 77.2,
+"score": 77.1,
 "rank": 1,
 "grade": "홈런",
-"signal_date": "2026-08-25"
+"signal_date": "2026-08-27"
 },
 {
-"code": "257720",
-"name": "실리콘투",
-"market": "코스닥150",
-"score": 54.2,
-"rank": 8,
-"grade": "홈런",
-"signal_date": "2026-08-25"
-},
-{
-"code": "001450",
-"name": "현대해상",
+"code": "003230",
+"name": "삼양식품",
 "market": "코스피200",
-"score": 42.8,
-"rank": 9,
+"score": 39.3,
+"rank": 2,
 "grade": "홈런",
-"signal_date": "2026-08-25"
+"signal_date": "2026-08-27"
 }
 ],
 "sell": [
 {
-"code": "008930",
+"code": "251970",
 "reason": "B 58.9 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-08-25"
-},
-{
-"code": "041960",
-"reason": "B 58.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-25"
+"signal_date": "2026-08-27"
 }
 ]
 }

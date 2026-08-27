@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 36400,
 "entry_date": "2026-08-18",
-"peak": 36800,
-"days": 6,
+"peak": 37350,
+"days": 7,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
@@ -16,9 +16,31 @@
 "entry": 286000,
 "entry_date": "2026-08-25",
 "peak": 289000,
-"days": 1,
+"days": 2,
 "score": 87.3,
 "grade": "",
 "signal_date": "2026-08-24"
+},
+"225570": {
+"name": "넥슨게임즈",
+"market": "코스닥150",
+"entry": 10890,
+"entry_date": "2026-08-27",
+"peak": 11100,
+"days": 1,
+"score": 76.0,
+"grade": "",
+"signal_date": "2026-08-25"
+},
+"112610": {
+"name": "씨에스윈드",
+"market": "코스피200",
+"entry": 50100,
+"entry_date": "2026-08-27",
+"peak": 50100,
+"days": 1,
+"score": 67.6,
+"grade": "",
+"signal_date": "2026-08-25"
 }
 }

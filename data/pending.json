@@ -1,22 +1,22 @@
 {
 "buy": [
 {
-"code": "225570",
-"name": "넥슨게임즈",
-"market": "코스닥150",
-"score": 76.0,
-"rank": 2,
+"code": "003230",
+"name": "삼양식품",
+"market": "코스피200",
+"score": 79.1,
+"rank": 1,
 "grade": "",
-"signal_date": "2026-08-25"
+"signal_date": "2026-08-27"
 },
 {
-"code": "112610",
-"name": "씨에스윈드",
+"code": "007660",
+"name": "이수페타시스",
 "market": "코스피200",
-"score": 67.6,
-"rank": 3,
+"score": 72.0,
+"rank": 2,
 "grade": "",
-"signal_date": "2026-08-25"
+"signal_date": "2026-08-27"
 }
 ],
 "sell": []
