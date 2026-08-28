@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 40100,
 "entry_date": "2026-08-07",
-"peak": 47500,
-"days": 13,
+"peak": 47750,
+"days": 14,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -15,8 +15,8 @@
 "market": "코스피200",
 "entry": 243000,
 "entry_date": "2026-08-13",
-"peak": 289000,
-"days": 9,
+"peak": 302000,
+"days": 10,
 "score": 59.7,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -26,8 +26,8 @@
 "market": "코스닥150",
 "entry": 126000,
 "entry_date": "2026-08-18",
-"peak": 140000,
-"days": 7,
+"peak": 152400,
+"days": 8,
 "score": 63.3,
 "grade": "홈런",
 "signal_date": "2026-08-14"
@@ -37,8 +37,8 @@
 "market": "코스피200",
 "entry": 136300,
 "entry_date": "2026-08-21",
-"peak": 150000,
-"days": 4,
+"peak": 160300,
+"days": 5,
 "score": 52.2,
 "grade": "홈런",
 "signal_date": "2026-08-20"
@@ -49,40 +49,18 @@
 "entry": 438500,
 "entry_date": "2026-08-21",
 "peak": 455500,
-"days": 4,
+"days": 5,
 "score": 32.9,
 "grade": "홈런",
 "signal_date": "2026-08-20"
-},
-"251970": {
-"name": "펌텍코리아",
-"market": "코스닥150",
-"entry": 59000,
-"entry_date": "2026-08-24",
-"peak": 63400,
-"days": 3,
-"score": 59.8,
-"grade": "홈런",
-"signal_date": "2026-08-21"
-},
-"085620": {
-"name": "미래에셋생명",
-"market": "코스피200",
-"entry": 29200,
-"entry_date": "2026-08-27",
-"peak": 29600,
-"days": 1,
-"score": 77.2,
-"grade": "홈런",
-"signal_date": "2026-08-25"
 },
 "257720": {
 "name": "실리콘투",
 "market": "코스닥150",
 "entry": 48250,
 "entry_date": "2026-08-27",
-"peak": 48250,
-"days": 1,
+"peak": 51900,
+"days": 2,
 "score": 54.2,
 "grade": "홈런",
 "signal_date": "2026-08-25"
@@ -92,10 +70,32 @@
 "market": "코스피200",
 "entry": 51000,
 "entry_date": "2026-08-27",
-"peak": 51000,
-"days": 1,
+"peak": 51400,
+"days": 2,
 "score": 42.8,
 "grade": "홈런",
 "signal_date": "2026-08-25"
+},
+"078930": {
+"name": "GS",
+"market": "코스피200",
+"entry": 124800,
+"entry_date": "2026-08-28",
+"peak": 127900,
+"days": 1,
+"score": 77.1,
+"grade": "홈런",
+"signal_date": "2026-08-27"
+},
+"003230": {
+"name": "삼양식품",
+"market": "코스피200",
+"entry": 1481000,
+"entry_date": "2026-08-28",
+"peak": 1542000,
+"days": 1,
+"score": 39.3,
+"grade": "홈런",
+"signal_date": "2026-08-27"
 }
 }

@@ -1,30 +1,14 @@
 {
 "buy": [
 {
-"code": "078930",
-"name": "GS",
+"code": "090430",
+"name": "아모레퍼시픽",
 "market": "코스피200",
-"score": 77.1,
-"rank": 1,
+"score": 26.5,
+"rank": 9,
 "grade": "홈런",
-"signal_date": "2026-08-27"
-},
-{
-"code": "003230",
-"name": "삼양식품",
-"market": "코스피200",
-"score": 39.3,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-08-27"
+"signal_date": "2026-08-28"
 }
 ],
-"sell": [
-{
-"code": "251970",
-"reason": "B 58.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-08-27"
-}
-]
+"sell": []
 }

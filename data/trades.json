@@ -4510,5 +4510,37 @@
 "reason": "장중 익절 (목표 +30%) +30.0%",
 "severity": "익절",
 "cum": 25.64
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "085620",
+"name": "미래에셋생명",
+"market": "코스피200",
+"entry_date": "2026-08-27",
+"exit_date": "2026-08-28",
+"entry": 29200,
+"exit": 25950,
+"pnl": -11.13,
+"days": 1,
+"reason": "장중 손절 (기준 -10.0%) -11.1%",
+"severity": "손절",
+"cum": 24.24
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "251970",
+"name": "펌텍코리아",
+"market": "코스닥150",
+"entry_date": "2026-08-24",
+"exit_date": "2026-08-28",
+"entry": 59000,
+"exit": 56700,
+"pnl": -3.9,
+"days": 3,
+"reason": "B 58.9 < 60 이탈",
+"severity": "이탈",
+"cum": 23.75
 }
 ]

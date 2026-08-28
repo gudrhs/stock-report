@@ -1,22 +1,40 @@
 {
 "buy": [
 {
-"code": "003230",
-"name": "삼양식품",
-"market": "코스피200",
-"score": 79.1,
+"code": "014620",
+"name": "성광벤드",
+"market": "코스닥150",
+"score": 85.2,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-08-27"
+"signal_date": "2026-08-28"
 },
 {
-"code": "007660",
-"name": "이수페타시스",
-"market": "코스피200",
-"score": 72.0,
-"rank": 2,
+"code": "023160",
+"name": "태광",
+"market": "코스닥150",
+"score": 77.5,
+"rank": 3,
 "grade": "",
-"signal_date": "2026-08-27"
+"signal_date": "2026-08-28"
+},
+{
+"code": "066970",
+"name": "엘앤에프",
+"market": "코스피200",
+"score": 73.8,
+"rank": 5,
+"grade": "",
+"signal_date": "2026-08-28"
+},
+{
+"code": "005490",
+"name": "POSCO홀딩스",
+"market": "코스피200",
+"score": 72.6,
+"rank": 6,
+"grade": "",
+"signal_date": "2026-08-28"
 }
 ],
 "sell": []
