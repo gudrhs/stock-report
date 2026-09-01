@@ -1,14 +1,21 @@
 {
 "buy": [
 {
-"code": "090430",
-"name": "아모레퍼시픽",
+"code": "181710",
+"name": "NHN",
 "market": "코스피200",
-"score": 26.5,
-"rank": 9,
+"score": 86.7,
+"rank": 1,
 "grade": "홈런",
-"signal_date": "2026-08-28"
+"signal_date": "2026-09-01"
 }
 ],
-"sell": []
+"sell": [
+{
+"code": "004370",
+"reason": "B 59.4 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-01"
+}
+]
 }

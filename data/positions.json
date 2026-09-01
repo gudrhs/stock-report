@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 36400,
 "entry_date": "2026-08-18",
-"peak": 37350,
-"days": 8,
+"peak": 37400,
+"days": 9,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
@@ -15,8 +15,8 @@
 "market": "코스피200",
 "entry": 286000,
 "entry_date": "2026-08-25",
-"peak": 302000,
-"days": 3,
+"peak": 303500,
+"days": 4,
 "score": 87.3,
 "grade": "",
 "signal_date": "2026-08-24"
@@ -26,8 +26,8 @@
 "market": "코스닥150",
 "entry": 10890,
 "entry_date": "2026-08-27",
-"peak": 11100,
-"days": 2,
+"peak": 11200,
+"days": 3,
 "score": 76.0,
 "grade": "",
 "signal_date": "2026-08-25"
@@ -38,7 +38,7 @@
 "entry": 50100,
 "entry_date": "2026-08-27",
 "peak": 50100,
-"days": 2,
+"days": 3,
 "score": 67.6,
 "grade": "",
 "signal_date": "2026-08-25"
@@ -49,7 +49,7 @@
 "entry": 1481000,
 "entry_date": "2026-08-28",
 "peak": 1542000,
-"days": 1,
+"days": 2,
 "score": 79.1,
 "grade": "",
 "signal_date": "2026-08-27"
@@ -60,9 +60,53 @@
 "entry": 112000,
 "entry_date": "2026-08-28",
 "peak": 114000,
-"days": 1,
+"days": 2,
 "score": 72.0,
 "grade": "",
 "signal_date": "2026-08-27"
+},
+"014620": {
+"name": "성광벤드",
+"market": "코스닥150",
+"entry": 31950,
+"entry_date": "2026-09-01",
+"peak": 31950,
+"days": 1,
+"score": 85.2,
+"grade": "",
+"signal_date": "2026-08-28"
+},
+"023160": {
+"name": "태광",
+"market": "코스닥150",
+"entry": 26200,
+"entry_date": "2026-09-01",
+"peak": 26250,
+"days": 1,
+"score": 77.5,
+"grade": "",
+"signal_date": "2026-08-28"
+},
+"066970": {
+"name": "엘앤에프",
+"market": "코스피200",
+"entry": 142100,
+"entry_date": "2026-09-01",
+"peak": 142100,
+"days": 1,
+"score": 73.8,
+"grade": "",
+"signal_date": "2026-08-28"
+},
+"005490": {
+"name": "POSCO홀딩스",
+"market": "코스피200",
+"entry": 339000,
+"entry_date": "2026-09-01",
+"peak": 339000,
+"days": 1,
+"score": 72.6,
+"grade": "",
+"signal_date": "2026-08-28"
 }
 }
