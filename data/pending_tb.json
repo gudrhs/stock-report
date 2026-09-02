@@ -1,21 +1,21 @@
 {
 "buy": [
 {
-"code": "181710",
-"name": "NHN",
+"code": "280360",
+"name": "롯데웰푸드",
 "market": "코스피200",
-"score": 86.7,
+"score": 59.0,
 "rank": 1,
 "grade": "홈런",
-"signal_date": "2026-09-01"
+"signal_date": "2026-09-02"
 }
 ],
 "sell": [
 {
-"code": "004370",
-"reason": "B 59.4 < 60 이탈",
+"code": "090430",
+"reason": "B 57.9 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-09-01"
+"signal_date": "2026-09-02"
 }
 ]
 }

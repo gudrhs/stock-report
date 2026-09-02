@@ -1,21 +1,39 @@
 {
 "buy": [
 {
-"code": "086450",
-"name": "동국제약",
-"market": "코스닥150",
-"score": 80.8,
+"code": "175330",
+"name": "JB금융지주",
+"market": "코스피200",
+"score": 65.9,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-09-01"
+"signal_date": "2026-09-02"
 }
 ],
 "sell": [
 {
-"code": "066970",
-"reason": "장대음봉 -6.4%",
+"code": "192820",
+"reason": "청선 6.1 — 5선 이탈",
 "severity": "청산",
-"signal_date": "2026-09-01"
+"signal_date": "2026-09-02"
+},
+{
+"code": "003230",
+"reason": "적선 5일 기울기 -3.0 — 상승탄력 꺾임",
+"severity": "청산",
+"signal_date": "2026-09-02"
+},
+{
+"code": "014620",
+"reason": "청선 7.9 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-09-02"
+},
+{
+"code": "023160",
+"reason": "청선 7.7 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-09-02"
 }
 ]
 }
