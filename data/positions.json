@@ -4,22 +4,11 @@
 "market": "코스피200",
 "entry": 36400,
 "entry_date": "2026-08-18",
-"peak": 37400,
-"days": 10,
+"peak": 37700,
+"days": 11,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
-},
-"192820": {
-"name": "코스맥스",
-"market": "코스피200",
-"entry": 286000,
-"entry_date": "2026-08-25",
-"peak": 303500,
-"days": 5,
-"score": 87.3,
-"grade": "",
-"signal_date": "2026-08-24"
 },
 "225570": {
 "name": "넥슨게임즈",
@@ -27,62 +16,18 @@
 "entry": 10890,
 "entry_date": "2026-08-27",
 "peak": 11480,
-"days": 4,
+"days": 5,
 "score": 76.0,
 "grade": "",
 "signal_date": "2026-08-25"
-},
-"003230": {
-"name": "삼양식품",
-"market": "코스피200",
-"entry": 1481000,
-"entry_date": "2026-08-28",
-"peak": 1542000,
-"days": 3,
-"score": 79.1,
-"grade": "",
-"signal_date": "2026-08-27"
-},
-"007660": {
-"name": "이수페타시스",
-"market": "코스피200",
-"entry": 112000,
-"entry_date": "2026-08-28",
-"peak": 114000,
-"days": 3,
-"score": 72.0,
-"grade": "",
-"signal_date": "2026-08-27"
-},
-"014620": {
-"name": "성광벤드",
-"market": "코스닥150",
-"entry": 31950,
-"entry_date": "2026-09-01",
-"peak": 31950,
-"days": 2,
-"score": 85.2,
-"grade": "",
-"signal_date": "2026-08-28"
-},
-"023160": {
-"name": "태광",
-"market": "코스닥150",
-"entry": 26200,
-"entry_date": "2026-09-01",
-"peak": 26250,
-"days": 2,
-"score": 77.5,
-"grade": "",
-"signal_date": "2026-08-28"
 },
 "005490": {
 "name": "POSCO홀딩스",
 "market": "코스피200",
 "entry": 339000,
 "entry_date": "2026-09-01",
-"peak": 339000,
-"days": 2,
+"peak": 342000,
+"days": 3,
 "score": 72.6,
 "grade": "",
 "signal_date": "2026-08-28"
@@ -93,9 +38,20 @@
 "entry": 21450,
 "entry_date": "2026-09-02",
 "peak": 21850,
-"days": 1,
+"days": 2,
 "score": 80.8,
 "grade": "",
 "signal_date": "2026-09-01"
+},
+"175330": {
+"name": "JB금융지주",
+"market": "코스피200",
+"entry": 30500,
+"entry_date": "2026-09-03",
+"peak": 31600,
+"days": 1,
+"score": 65.9,
+"grade": "",
+"signal_date": "2026-09-02"
 }
 }

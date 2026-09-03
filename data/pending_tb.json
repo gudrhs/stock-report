@@ -1,21 +1,33 @@
 {
 "buy": [
 {
-"code": "280360",
-"name": "롯데웰푸드",
+"code": "088350",
+"name": "한화생명",
 "market": "코스피200",
-"score": 59.0,
-"rank": 1,
+"score": 55.2,
+"rank": 2,
 "grade": "홈런",
-"signal_date": "2026-09-02"
+"signal_date": "2026-09-03"
 }
 ],
 "sell": [
 {
-"code": "090430",
-"reason": "B 57.9 < 60 이탈",
+"code": "257720",
+"reason": "B 57.4 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-09-02"
+"signal_date": "2026-09-03"
+},
+{
+"code": "003230",
+"reason": "B 57.3 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-03"
+},
+{
+"code": "181710",
+"reason": "B 58.1 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-03"
 }
 ]
 }

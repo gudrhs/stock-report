@@ -5,7 +5,7 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 50500,
-"days": 16,
+"days": 17,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -16,7 +16,7 @@
 "entry": 243000,
 "entry_date": "2026-08-13",
 "peak": 303500,
-"days": 12,
+"days": 13,
 "score": 59.7,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -27,7 +27,7 @@
 "entry": 126000,
 "entry_date": "2026-08-18",
 "peak": 152400,
-"days": 10,
+"days": 11,
 "score": 63.3,
 "grade": "홈런",
 "signal_date": "2026-08-14"
@@ -38,7 +38,7 @@
 "entry": 136300,
 "entry_date": "2026-08-21",
 "peak": 160300,
-"days": 7,
+"days": 8,
 "score": 52.2,
 "grade": "홈런",
 "signal_date": "2026-08-20"
@@ -49,7 +49,7 @@
 "entry": 48250,
 "entry_date": "2026-08-27",
 "peak": 54600,
-"days": 4,
+"days": 5,
 "score": 54.2,
 "grade": "홈런",
 "signal_date": "2026-08-25"
@@ -59,8 +59,8 @@
 "market": "코스피200",
 "entry": 51000,
 "entry_date": "2026-08-27",
-"peak": 52400,
-"days": 4,
+"peak": 53500,
+"days": 5,
 "score": 42.8,
 "grade": "홈런",
 "signal_date": "2026-08-25"
@@ -71,7 +71,7 @@
 "entry": 124800,
 "entry_date": "2026-08-28",
 "peak": 127900,
-"days": 3,
+"days": 4,
 "score": 77.1,
 "grade": "홈런",
 "signal_date": "2026-08-27"
@@ -82,21 +82,10 @@
 "entry": 1481000,
 "entry_date": "2026-08-28",
 "peak": 1542000,
-"days": 3,
+"days": 4,
 "score": 39.3,
 "grade": "홈런",
 "signal_date": "2026-08-27"
-},
-"090430": {
-"name": "아모레퍼시픽",
-"market": "코스피200",
-"entry": 147000,
-"entry_date": "2026-09-01",
-"peak": 147600,
-"days": 2,
-"score": 26.5,
-"grade": "홈런",
-"signal_date": "2026-08-28"
 },
 "181710": {
 "name": "NHN",
@@ -104,9 +93,20 @@
 "entry": 70200,
 "entry_date": "2026-09-02",
 "peak": 70200,
-"days": 1,
+"days": 2,
 "score": 86.7,
 "grade": "홈런",
 "signal_date": "2026-09-01"
+},
+"280360": {
+"name": "롯데웰푸드",
+"market": "코스피200",
+"entry": 148500,
+"entry_date": "2026-09-03",
+"peak": 148500,
+"days": 1,
+"score": 59.0,
+"grade": "홈런",
+"signal_date": "2026-09-02"
 }
 }
