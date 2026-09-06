@@ -5,7 +5,7 @@
 "entry": 36400,
 "entry_date": "2026-08-18",
 "peak": 37700,
-"days": 11,
+"days": 12,
 "score": 58.0,
 "grade": "",
 "signal_date": "2026-08-14"
@@ -15,8 +15,8 @@
 "market": "코스닥150",
 "entry": 10890,
 "entry_date": "2026-08-27",
-"peak": 11480,
-"days": 5,
+"peak": 11600,
+"days": 6,
 "score": 76.0,
 "grade": "",
 "signal_date": "2026-08-25"
@@ -27,7 +27,7 @@
 "entry": 339000,
 "entry_date": "2026-09-01",
 "peak": 342000,
-"days": 3,
+"days": 4,
 "score": 72.6,
 "grade": "",
 "signal_date": "2026-08-28"
@@ -38,7 +38,7 @@
 "entry": 21450,
 "entry_date": "2026-09-02",
 "peak": 21850,
-"days": 2,
+"days": 3,
 "score": 80.8,
 "grade": "",
 "signal_date": "2026-09-01"
@@ -49,9 +49,20 @@
 "entry": 30500,
 "entry_date": "2026-09-03",
 "peak": 31600,
-"days": 1,
+"days": 2,
 "score": 65.9,
 "grade": "",
 "signal_date": "2026-09-02"
+},
+"086790": {
+"name": "하나금융지주",
+"market": "코스피200",
+"entry": 139500,
+"entry_date": "2026-09-04",
+"peak": 139500,
+"days": 1,
+"score": 61.2,
+"grade": "",
+"signal_date": "2026-09-03"
 }
 }

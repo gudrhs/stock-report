@@ -1,33 +1,39 @@
 {
 "buy": [
 {
-"code": "088350",
-"name": "한화생명",
-"market": "코스피200",
-"score": 55.2,
-"rank": 2,
+"code": "025980",
+"name": "아난티",
+"market": "코스닥150",
+"score": 68.3,
+"rank": 1,
 "grade": "홈런",
-"signal_date": "2026-09-03"
+"signal_date": "2026-09-04"
+},
+{
+"code": "225570",
+"name": "넥슨게임즈",
+"market": "코스닥150",
+"score": 45.1,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-09-04"
+},
+{
+"code": "000880",
+"name": "한화",
+"market": "코스피200",
+"score": 43.8,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-09-04"
 }
 ],
 "sell": [
 {
-"code": "257720",
-"reason": "B 57.4 < 60 이탈",
+"code": "088350",
+"reason": "B 58.2 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-09-03"
-},
-{
-"code": "003230",
-"reason": "B 57.3 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-03"
-},
-{
-"code": "181710",
-"reason": "B 58.1 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-03"
+"signal_date": "2026-09-04"
 }
 ]
 }

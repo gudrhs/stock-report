@@ -4686,5 +4686,53 @@
 "reason": "청선 6.1 — 5선 이탈",
 "severity": "청산",
 "cum": 4.55
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "003230",
+"name": "삼양식품",
+"market": "코스피200",
+"entry_date": "2026-08-28",
+"exit_date": "2026-09-04",
+"entry": 1481000,
+"exit": 1420000,
+"pnl": -4.12,
+"days": 4,
+"reason": "B 57.3 < 60 이탈",
+"severity": "이탈",
+"cum": 22.85
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "181710",
+"name": "NHN",
+"market": "코스피200",
+"entry_date": "2026-09-02",
+"exit_date": "2026-09-04",
+"entry": 70200,
+"exit": 66900,
+"pnl": -4.7,
+"days": 2,
+"reason": "B 58.1 < 60 이탈",
+"severity": "이탈",
+"cum": 22.27
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "257720",
+"name": "실리콘투",
+"market": "코스닥150",
+"entry_date": "2026-08-27",
+"exit_date": "2026-09-04",
+"entry": 48250,
+"exit": 48800,
+"pnl": 1.14,
+"days": 5,
+"reason": "B 57.4 < 60 이탈",
+"severity": "이탈",
+"cum": 22.41
 }
 ]
