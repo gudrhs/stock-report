@@ -4734,5 +4734,37 @@
 "reason": "B 57.4 < 60 이탈",
 "severity": "이탈",
 "cum": 22.41
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "036460",
+"name": "한국가스공사",
+"market": "코스피200",
+"entry_date": "2026-08-18",
+"exit_date": "2026-09-07",
+"entry": 36400,
+"exit": 35150,
+"pnl": -3.43,
+"days": 12,
+"reason": "장대음봉 -6.9%",
+"severity": "청산",
+"cum": 4.19
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "088350",
+"name": "한화생명",
+"market": "코스피200",
+"entry_date": "2026-09-04",
+"exit_date": "2026-09-07",
+"entry": 6060,
+"exit": 5810,
+"pnl": -4.13,
+"days": 1,
+"reason": "B 58.2 < 60 이탈",
+"severity": "이탈",
+"cum": 21.91
 }
 ]

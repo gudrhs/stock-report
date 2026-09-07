@@ -5,7 +5,7 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 50900,
-"days": 18,
+"days": 19,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -16,7 +16,7 @@
 "entry": 243000,
 "entry_date": "2026-08-13",
 "peak": 303500,
-"days": 14,
+"days": 15,
 "score": 59.7,
 "grade": "홈런",
 "signal_date": "2026-08-12"
@@ -27,7 +27,7 @@
 "entry": 126000,
 "entry_date": "2026-08-18",
 "peak": 152400,
-"days": 12,
+"days": 13,
 "score": 63.3,
 "grade": "홈런",
 "signal_date": "2026-08-14"
@@ -38,7 +38,7 @@
 "entry": 136300,
 "entry_date": "2026-08-21",
 "peak": 160300,
-"days": 9,
+"days": 10,
 "score": 52.2,
 "grade": "홈런",
 "signal_date": "2026-08-20"
@@ -49,7 +49,7 @@
 "entry": 51000,
 "entry_date": "2026-08-27",
 "peak": 53500,
-"days": 6,
+"days": 7,
 "score": 42.8,
 "grade": "홈런",
 "signal_date": "2026-08-25"
@@ -60,7 +60,7 @@
 "entry": 124800,
 "entry_date": "2026-08-28",
 "peak": 127900,
-"days": 5,
+"days": 6,
 "score": 77.1,
 "grade": "홈런",
 "signal_date": "2026-08-27"
@@ -76,15 +76,26 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"088350": {
-"name": "한화생명",
-"market": "코스피200",
-"entry": 6060,
-"entry_date": "2026-09-04",
-"peak": 6060,
+"225570": {
+"name": "넥슨게임즈",
+"market": "코스닥150",
+"entry": 11580,
+"entry_date": "2026-09-07",
+"peak": 11580,
 "days": 1,
-"score": 55.2,
+"score": 45.1,
 "grade": "홈런",
-"signal_date": "2026-09-03"
+"signal_date": "2026-09-04"
+},
+"000880": {
+"name": "한화",
+"market": "코스피200",
+"entry": 138900,
+"entry_date": "2026-09-07",
+"peak": 139000,
+"days": 1,
+"score": 43.8,
+"grade": "홈런",
+"signal_date": "2026-09-04"
 }
 }
