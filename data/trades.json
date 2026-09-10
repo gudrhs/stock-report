@@ -4766,5 +4766,37 @@
 "reason": "B 58.2 < 60 이탈",
 "severity": "이탈",
 "cum": 21.91
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "086450",
+"name": "동국제약",
+"market": "코스닥150",
+"entry_date": "2026-09-02",
+"exit_date": "2026-09-10",
+"entry": 21450,
+"exit": 19610,
+"pnl": -8.58,
+"days": 4,
+"reason": "청선 7.0 — 5선 이탈",
+"severity": "청산",
+"cum": 3.3
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "241710",
+"name": "코스메카코리아",
+"market": "코스닥150",
+"entry_date": "2026-08-18",
+"exit_date": "2026-09-10",
+"entry": 126000,
+"exit": 122700,
+"pnl": -2.62,
+"days": 13,
+"reason": "B 58.1 < 60 이탈",
+"severity": "이탈",
+"cum": 21.59
 }
 ]
