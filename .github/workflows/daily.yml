@@ -37,6 +37,9 @@ jobs:
       - name: 패키지 설치
         run: pip install -r requirements.txt
 
+      - name: 종목 목록 회귀 테스트
+        run: python -m unittest discover -s tests -v
+
       - name: 휴장일 확인
         id: check
         run: |
