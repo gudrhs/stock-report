@@ -5,54 +5,10 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 50900,
-"days": 20,
+"days": 21,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
-},
-"192820": {
-"name": "코스맥스",
-"market": "코스피200",
-"entry": 243000,
-"entry_date": "2026-08-13",
-"peak": 303500,
-"days": 16,
-"score": 59.7,
-"grade": "홈런",
-"signal_date": "2026-08-12"
-},
-"161890": {
-"name": "한국콜마",
-"market": "코스피200",
-"entry": 136300,
-"entry_date": "2026-08-21",
-"peak": 160300,
-"days": 11,
-"score": 52.2,
-"grade": "홈런",
-"signal_date": "2026-08-20"
-},
-"001450": {
-"name": "현대해상",
-"market": "코스피200",
-"entry": 51000,
-"entry_date": "2026-08-27",
-"peak": 53500,
-"days": 8,
-"score": 42.8,
-"grade": "홈런",
-"signal_date": "2026-08-25"
-},
-"078930": {
-"name": "GS",
-"market": "코스피200",
-"entry": 124800,
-"entry_date": "2026-08-28",
-"peak": 127900,
-"days": 7,
-"score": 77.1,
-"grade": "홈런",
-"signal_date": "2026-08-27"
 },
 "280360": {
 "name": "롯데웰푸드",
@@ -71,7 +27,7 @@
 "entry": 11580,
 "entry_date": "2026-09-07",
 "peak": 11690,
-"days": 2,
+"days": 3,
 "score": 45.1,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -82,7 +38,7 @@
 "entry": 138900,
 "entry_date": "2026-09-07",
 "peak": 139000,
-"days": 2,
+"days": 3,
 "score": 43.8,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -93,9 +49,31 @@
 "entry": 53600,
 "entry_date": "2026-09-10",
 "peak": 58900,
-"days": 1,
+"days": 2,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
+},
+"403870": {
+"name": "HPSP",
+"market": "코스닥150",
+"entry": 53300,
+"entry_date": "2026-09-11",
+"peak": 54050,
+"days": 1,
+"score": 60.3,
+"grade": "홈런",
+"signal_date": "2026-09-10"
+},
+"294870": {
+"name": "IPARK현대산업개발",
+"market": "코스피200",
+"entry": 23700,
+"entry_date": "2026-09-11",
+"peak": 24650,
+"days": 1,
+"score": 24.4,
+"grade": "홈런",
+"signal_date": "2026-09-10"
 }
 }

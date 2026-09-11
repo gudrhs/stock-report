@@ -1,48 +1,14 @@
 {
 "buy": [
 {
-"code": "403870",
-"name": "HPSP",
-"market": "코스닥150",
-"score": 60.3,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-09-10"
-},
-{
-"code": "294870",
-"name": "IPARK현대산업개발",
+"code": "175330",
+"name": "JB금융지주",
 "market": "코스피200",
-"score": 24.4,
-"rank": 4,
+"score": 19.6,
+"rank": 3,
 "grade": "홈런",
-"signal_date": "2026-09-10"
+"signal_date": "2026-09-11"
 }
 ],
-"sell": [
-{
-"code": "192820",
-"reason": "B 58.6 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-10"
-},
-{
-"code": "161890",
-"reason": "B 56.0 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-10"
-},
-{
-"code": "001450",
-"reason": "B 58.2 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-10"
-},
-{
-"code": "078930",
-"reason": "B 56.6 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-10"
-}
-]
+"sell": []
 }

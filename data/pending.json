@@ -1,27 +1,57 @@
 {
 "buy": [
 {
-"code": "052690",
-"name": "한전기술",
+"code": "375500",
+"name": "DL이앤씨",
 "market": "코스피200",
-"score": 76.4,
+"score": 91.6,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-09-10"
+"signal_date": "2026-09-11"
+},
+{
+"code": "000150",
+"name": "두산",
+"market": "코스피200",
+"score": 85.5,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+{
+"code": "012630",
+"name": "HDC",
+"market": "코스피200",
+"score": 82.8,
+"rank": 3,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+{
+"code": "294870",
+"name": "IPARK현대산업개발",
+"market": "코스피200",
+"score": 79.5,
+"rank": 4,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+{
+"code": "316140",
+"name": "우리금융지주",
+"market": "코스피200",
+"score": 51.0,
+"rank": 5,
+"grade": "",
+"signal_date": "2026-09-11"
 }
 ],
 "sell": [
 {
-"code": "175330",
-"reason": "적선 5일 기울기 -3.9 — 상승탄력 꺾임",
+"code": "225570",
+"reason": "적선 5일 기울기 -7.4 — 상승탄력 꺾임",
 "severity": "청산",
-"signal_date": "2026-09-10"
-},
-{
-"code": "086790",
-"reason": "적선 5일 기울기 -3.5 — 상승탄력 꺾임",
-"severity": "청산",
-"signal_date": "2026-09-10"
+"signal_date": "2026-09-11"
 }
 ]
 }

@@ -5,7 +5,7 @@
 "entry": 10890,
 "entry_date": "2026-08-27",
 "peak": 11690,
-"days": 8,
+"days": 9,
 "score": 76.0,
 "grade": "",
 "signal_date": "2026-08-25"
@@ -16,31 +16,20 @@
 "entry": 339000,
 "entry_date": "2026-09-01",
 "peak": 342000,
-"days": 6,
+"days": 7,
 "score": 72.6,
 "grade": "",
 "signal_date": "2026-08-28"
 },
-"175330": {
-"name": "JB금융지주",
+"052690": {
+"name": "한전기술",
 "market": "코스피200",
-"entry": 30500,
-"entry_date": "2026-09-03",
-"peak": 31600,
-"days": 4,
-"score": 65.9,
+"entry": 149000,
+"entry_date": "2026-09-11",
+"peak": 149000,
+"days": 1,
+"score": 76.4,
 "grade": "",
-"signal_date": "2026-09-02"
-},
-"086790": {
-"name": "하나금융지주",
-"market": "코스피200",
-"entry": 139500,
-"entry_date": "2026-09-04",
-"peak": 139500,
-"days": 3,
-"score": 61.2,
-"grade": "",
-"signal_date": "2026-09-03"
+"signal_date": "2026-09-10"
 }
 }
