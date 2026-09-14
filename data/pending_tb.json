@@ -1,14 +1,17 @@
 {
-"buy": [
+"buy": [],
+"sell": [
 {
-"code": "175330",
-"name": "JB금융지주",
-"market": "코스피200",
-"score": 19.6,
-"rank": 3,
-"grade": "홈런",
-"signal_date": "2026-09-11"
+"code": "280360",
+"reason": "B 59.7 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-14"
+},
+{
+"code": "403870",
+"reason": "B 55.4 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-14"
 }
-],
-"sell": []
+]
 }

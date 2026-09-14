@@ -5,7 +5,7 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 50900,
-"days": 21,
+"days": 22,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -16,7 +16,7 @@
 "entry": 148500,
 "entry_date": "2026-09-03",
 "peak": 148500,
-"days": 2,
+"days": 3,
 "score": 59.0,
 "grade": "홈런",
 "signal_date": "2026-09-02"
@@ -27,7 +27,7 @@
 "entry": 11580,
 "entry_date": "2026-09-07",
 "peak": 11690,
-"days": 3,
+"days": 4,
 "score": 45.1,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -37,8 +37,8 @@
 "market": "코스피200",
 "entry": 138900,
 "entry_date": "2026-09-07",
-"peak": 139000,
-"days": 3,
+"peak": 141300,
+"days": 4,
 "score": 43.8,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -49,7 +49,7 @@
 "entry": 53600,
 "entry_date": "2026-09-10",
 "peak": 58900,
-"days": 2,
+"days": 3,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
@@ -60,7 +60,7 @@
 "entry": 53300,
 "entry_date": "2026-09-11",
 "peak": 54050,
-"days": 1,
+"days": 2,
 "score": 60.3,
 "grade": "홈런",
 "signal_date": "2026-09-10"
@@ -71,9 +71,20 @@
 "entry": 23700,
 "entry_date": "2026-09-11",
 "peak": 24650,
-"days": 1,
+"days": 2,
 "score": 24.4,
 "grade": "홈런",
 "signal_date": "2026-09-10"
+},
+"175330": {
+"name": "JB금융지주",
+"market": "코스피200",
+"entry": 31450,
+"entry_date": "2026-09-14",
+"peak": 32800,
+"days": 1,
+"score": 19.6,
+"grade": "홈런",
+"signal_date": "2026-09-11"
 }
 }

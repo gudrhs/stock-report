@@ -1,57 +1,36 @@
 {
 "buy": [
 {
-"code": "375500",
-"name": "DL이앤씨",
-"market": "코스피200",
-"score": 91.6,
+"code": "041510",
+"name": "에스엠",
+"market": "코스닥150",
+"score": 77.4,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-09-11"
+"signal_date": "2026-09-14"
 },
 {
-"code": "000150",
-"name": "두산",
-"market": "코스피200",
-"score": 85.5,
-"rank": 2,
-"grade": "",
-"signal_date": "2026-09-11"
-},
-{
-"code": "012630",
-"name": "HDC",
-"market": "코스피200",
-"score": 82.8,
+"code": "006730",
+"name": "서부T&D",
+"market": "코스닥150",
+"score": 53.4,
 "rank": 3,
 "grade": "",
-"signal_date": "2026-09-11"
-},
-{
-"code": "294870",
-"name": "IPARK현대산업개발",
-"market": "코스피200",
-"score": 79.5,
-"rank": 4,
-"grade": "",
-"signal_date": "2026-09-11"
-},
-{
-"code": "316140",
-"name": "우리금융지주",
-"market": "코스피200",
-"score": 51.0,
-"rank": 5,
-"grade": "",
-"signal_date": "2026-09-11"
+"signal_date": "2026-09-14"
 }
 ],
 "sell": [
 {
-"code": "225570",
-"reason": "적선 5일 기울기 -7.4 — 상승탄력 꺾임",
+"code": "005490",
+"reason": "30일선 이탈 (종가 321,500 < 328,500)",
 "severity": "청산",
-"signal_date": "2026-09-11"
+"signal_date": "2026-09-14"
+},
+{
+"code": "000150",
+"reason": "청선 9.2 — 8.0선 초과 급이탈",
+"severity": "청산",
+"signal_date": "2026-09-14"
 }
 ]
 }

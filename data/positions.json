@@ -1,35 +1,68 @@
 {
-"225570": {
-"name": "넥슨게임즈",
-"market": "코스닥150",
-"entry": 10890,
-"entry_date": "2026-08-27",
-"peak": 11690,
-"days": 9,
-"score": 76.0,
-"grade": "",
-"signal_date": "2026-08-25"
-},
 "005490": {
 "name": "POSCO홀딩스",
 "market": "코스피200",
 "entry": 339000,
 "entry_date": "2026-09-01",
 "peak": 342000,
-"days": 7,
+"days": 8,
 "score": 72.6,
 "grade": "",
 "signal_date": "2026-08-28"
 },
-"052690": {
-"name": "한전기술",
+"375500": {
+"name": "DL이앤씨",
 "market": "코스피200",
-"entry": 149000,
-"entry_date": "2026-09-11",
-"peak": 149000,
+"entry": 84100,
+"entry_date": "2026-09-14",
+"peak": 84100,
 "days": 1,
-"score": 76.4,
+"score": 91.6,
 "grade": "",
-"signal_date": "2026-09-10"
+"signal_date": "2026-09-11"
+},
+"000150": {
+"name": "두산",
+"market": "코스피200",
+"entry": 1307000,
+"entry_date": "2026-09-14",
+"peak": 1307000,
+"days": 1,
+"score": 85.5,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+"012630": {
+"name": "HDC",
+"market": "코스피200",
+"entry": 28250,
+"entry_date": "2026-09-14",
+"peak": 28250,
+"days": 1,
+"score": 82.8,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+"294870": {
+"name": "IPARK현대산업개발",
+"market": "코스피200",
+"entry": 24650,
+"entry_date": "2026-09-14",
+"peak": 24650,
+"days": 1,
+"score": 79.5,
+"grade": "",
+"signal_date": "2026-09-11"
+},
+"316140": {
+"name": "우리금융지주",
+"market": "코스피200",
+"entry": 35050,
+"entry_date": "2026-09-14",
+"peak": 36800,
+"days": 1,
+"score": 51.0,
+"grade": "",
+"signal_date": "2026-09-11"
 }
 }

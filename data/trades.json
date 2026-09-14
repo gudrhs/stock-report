@@ -4894,5 +4894,37 @@
 "reason": "B 58.6 < 60 이탈",
 "severity": "이탈",
 "cum": 21.61
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "052690",
+"name": "한전기술",
+"market": "코스피200",
+"entry_date": "2026-09-11",
+"exit_date": "2026-09-14",
+"entry": 149000,
+"exit": 138570,
+"pnl": -7.0,
+"days": 1,
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"cum": 2.27
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "225570",
+"name": "넥슨게임즈",
+"market": "코스닥150",
+"entry_date": "2026-08-27",
+"exit_date": "2026-09-14",
+"entry": 10890,
+"exit": 11530,
+"pnl": 5.88,
+"days": 9,
+"reason": "적선 5일 기울기 -7.4 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": 2.87
 }
 ]
