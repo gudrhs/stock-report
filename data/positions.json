@@ -1,34 +1,12 @@
 {
-"005490": {
-"name": "POSCO홀딩스",
-"market": "코스피200",
-"entry": 339000,
-"entry_date": "2026-09-01",
-"peak": 342000,
-"days": 8,
-"score": 72.6,
-"grade": "",
-"signal_date": "2026-08-28"
-},
 "375500": {
 "name": "DL이앤씨",
 "market": "코스피200",
 "entry": 84100,
 "entry_date": "2026-09-14",
-"peak": 84100,
-"days": 1,
+"peak": 88500,
+"days": 2,
 "score": 91.6,
-"grade": "",
-"signal_date": "2026-09-11"
-},
-"000150": {
-"name": "두산",
-"market": "코스피200",
-"entry": 1307000,
-"entry_date": "2026-09-14",
-"peak": 1307000,
-"days": 1,
-"score": 85.5,
 "grade": "",
 "signal_date": "2026-09-11"
 },
@@ -38,7 +16,7 @@
 "entry": 28250,
 "entry_date": "2026-09-14",
 "peak": 28250,
-"days": 1,
+"days": 2,
 "score": 82.8,
 "grade": "",
 "signal_date": "2026-09-11"
@@ -49,7 +27,7 @@
 "entry": 24650,
 "entry_date": "2026-09-14",
 "peak": 24650,
-"days": 1,
+"days": 2,
 "score": 79.5,
 "grade": "",
 "signal_date": "2026-09-11"
@@ -60,9 +38,31 @@
 "entry": 35050,
 "entry_date": "2026-09-14",
 "peak": 36800,
-"days": 1,
+"days": 2,
 "score": 51.0,
 "grade": "",
 "signal_date": "2026-09-11"
+},
+"041510": {
+"name": "에스엠",
+"market": "코스닥150",
+"entry": 86600,
+"entry_date": "2026-09-15",
+"peak": 87700,
+"days": 1,
+"score": 77.4,
+"grade": "",
+"signal_date": "2026-09-14"
+},
+"006730": {
+"name": "서부T&D",
+"market": "코스닥150",
+"entry": 11320,
+"entry_date": "2026-09-15",
+"peak": 11320,
+"days": 1,
+"score": 53.4,
+"grade": "",
+"signal_date": "2026-09-14"
 }
 }

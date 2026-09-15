@@ -4926,5 +4926,53 @@
 "reason": "적선 5일 기울기 -7.4 — 상승탄력 꺾임",
 "severity": "청산",
 "cum": 2.87
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "000150",
+"name": "두산",
+"market": "코스피200",
+"entry_date": "2026-09-14",
+"exit_date": "2026-09-15",
+"entry": 1307000,
+"exit": 1251000,
+"pnl": -4.28,
+"days": 1,
+"reason": "청선 9.2 — 8.0선 초과 급이탈",
+"severity": "청산",
+"cum": 2.43
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "005490",
+"name": "POSCO홀딩스",
+"market": "코스피200",
+"entry_date": "2026-09-01",
+"exit_date": "2026-09-15",
+"entry": 339000,
+"exit": 322500,
+"pnl": -4.87,
+"days": 8,
+"reason": "30일선 이탈 (종가 321,500 < 328,500)",
+"severity": "청산",
+"cum": 1.93
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "403870",
+"name": "HPSP",
+"market": "코스닥150",
+"entry_date": "2026-09-11",
+"exit_date": "2026-09-15",
+"entry": 53300,
+"exit": 51100,
+"pnl": -4.13,
+"days": 2,
+"reason": "B 55.4 < 60 이탈",
+"severity": "이탈",
+"cum": 21.11
 }
 ]

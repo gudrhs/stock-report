@@ -1,17 +1,23 @@
 {
-"buy": [],
-"sell": [
+"buy": [
 {
-"code": "280360",
-"reason": "B 59.7 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-14"
+"code": "031980",
+"name": "피에스케이홀딩스",
+"market": "코스닥150",
+"score": 63.1,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-09-15"
 },
 {
-"code": "403870",
-"reason": "B 55.4 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-14"
+"code": "375500",
+"name": "DL이앤씨",
+"market": "코스피200",
+"score": 45.9,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-09-15"
 }
-]
+],
+"sell": []
 }
