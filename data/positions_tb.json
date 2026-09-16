@@ -5,7 +5,7 @@
 "entry": 40100,
 "entry_date": "2026-08-07",
 "peak": 50900,
-"days": 23,
+"days": 24,
 "score": 48.9,
 "grade": "홈런",
 "signal_date": "2026-08-06"
@@ -27,7 +27,7 @@
 "entry": 11580,
 "entry_date": "2026-09-07",
 "peak": 11690,
-"days": 5,
+"days": 6,
 "score": 45.1,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -38,7 +38,7 @@
 "entry": 138900,
 "entry_date": "2026-09-07",
 "peak": 141300,
-"days": 5,
+"days": 6,
 "score": 43.8,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -49,7 +49,7 @@
 "entry": 53600,
 "entry_date": "2026-09-10",
 "peak": 58900,
-"days": 4,
+"days": 5,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
@@ -60,7 +60,7 @@
 "entry": 23700,
 "entry_date": "2026-09-11",
 "peak": 24650,
-"days": 3,
+"days": 4,
 "score": 24.4,
 "grade": "홈런",
 "signal_date": "2026-09-10"
@@ -70,10 +70,32 @@
 "market": "코스피200",
 "entry": 31450,
 "entry_date": "2026-09-14",
-"peak": 32800,
-"days": 2,
+"peak": 32950,
+"days": 3,
 "score": 19.6,
 "grade": "홈런",
 "signal_date": "2026-09-11"
+},
+"031980": {
+"name": "피에스케이홀딩스",
+"market": "코스닥150",
+"entry": 158900,
+"entry_date": "2026-09-16",
+"peak": 166800,
+"days": 1,
+"score": 63.1,
+"grade": "홈런",
+"signal_date": "2026-09-15"
+},
+"375500": {
+"name": "DL이앤씨",
+"market": "코스피200",
+"entry": 88100,
+"entry_date": "2026-09-16",
+"peak": 88100,
+"days": 1,
+"score": 45.9,
+"grade": "홈런",
+"signal_date": "2026-09-15"
 }
 }

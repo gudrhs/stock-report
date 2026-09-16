@@ -5,19 +5,8 @@
 "entry": 84100,
 "entry_date": "2026-09-14",
 "peak": 88500,
-"days": 2,
+"days": 3,
 "score": 91.6,
-"grade": "",
-"signal_date": "2026-09-11"
-},
-"012630": {
-"name": "HDC",
-"market": "코스피200",
-"entry": 28250,
-"entry_date": "2026-09-14",
-"peak": 28250,
-"days": 2,
-"score": 82.8,
 "grade": "",
 "signal_date": "2026-09-11"
 },
@@ -27,7 +16,7 @@
 "entry": 24650,
 "entry_date": "2026-09-14",
 "peak": 24650,
-"days": 2,
+"days": 3,
 "score": 79.5,
 "grade": "",
 "signal_date": "2026-09-11"
@@ -38,7 +27,7 @@
 "entry": 35050,
 "entry_date": "2026-09-14",
 "peak": 36800,
-"days": 2,
+"days": 3,
 "score": 51.0,
 "grade": "",
 "signal_date": "2026-09-11"
@@ -49,7 +38,7 @@
 "entry": 86600,
 "entry_date": "2026-09-15",
 "peak": 87700,
-"days": 1,
+"days": 2,
 "score": 77.4,
 "grade": "",
 "signal_date": "2026-09-14"
@@ -59,8 +48,8 @@
 "market": "코스닥150",
 "entry": 11320,
 "entry_date": "2026-09-15",
-"peak": 11320,
-"days": 1,
+"peak": 11680,
+"days": 2,
 "score": 53.4,
 "grade": "",
 "signal_date": "2026-09-14"

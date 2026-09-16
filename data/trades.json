@@ -4974,5 +4974,21 @@
 "reason": "B 55.4 < 60 이탈",
 "severity": "이탈",
 "cum": 21.11
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "012630",
+"name": "HDC",
+"market": "코스피200",
+"entry_date": "2026-09-14",
+"exit_date": "2026-09-16",
+"entry": 28250,
+"exit": 26272,
+"pnl": -7.0,
+"days": 2,
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"cum": 1.22
 }
 ]
