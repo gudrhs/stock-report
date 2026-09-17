@@ -1,33 +1,11 @@
 {
-"375500": {
-"name": "DL이앤씨",
-"market": "코스피200",
-"entry": 84100,
-"entry_date": "2026-09-14",
-"peak": 88500,
-"days": 3,
-"score": 91.6,
-"grade": "",
-"signal_date": "2026-09-11"
-},
-"294870": {
-"name": "IPARK현대산업개발",
-"market": "코스피200",
-"entry": 24650,
-"entry_date": "2026-09-14",
-"peak": 24650,
-"days": 3,
-"score": 79.5,
-"grade": "",
-"signal_date": "2026-09-11"
-},
 "316140": {
 "name": "우리금융지주",
 "market": "코스피200",
 "entry": 35050,
 "entry_date": "2026-09-14",
 "peak": 36800,
-"days": 3,
+"days": 4,
 "score": 51.0,
 "grade": "",
 "signal_date": "2026-09-11"
@@ -38,7 +16,7 @@
 "entry": 86600,
 "entry_date": "2026-09-15",
 "peak": 87700,
-"days": 2,
+"days": 3,
 "score": 77.4,
 "grade": "",
 "signal_date": "2026-09-14"
@@ -49,7 +27,7 @@
 "entry": 11320,
 "entry_date": "2026-09-15",
 "peak": 11680,
-"days": 2,
+"days": 3,
 "score": 53.4,
 "grade": "",
 "signal_date": "2026-09-14"

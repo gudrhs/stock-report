@@ -1,15 +1,4 @@
 {
-"089860": {
-"name": "롯데렌탈",
-"market": "코스피200",
-"entry": 40100,
-"entry_date": "2026-08-07",
-"peak": 50900,
-"days": 24,
-"score": 48.9,
-"grade": "홈런",
-"signal_date": "2026-08-06"
-},
 "280360": {
 "name": "롯데웰푸드",
 "market": "코스피200",
@@ -27,7 +16,7 @@
 "entry": 11580,
 "entry_date": "2026-09-07",
 "peak": 11690,
-"days": 6,
+"days": 7,
 "score": 45.1,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -38,7 +27,7 @@
 "entry": 138900,
 "entry_date": "2026-09-07",
 "peak": 141300,
-"days": 6,
+"days": 7,
 "score": 43.8,
 "grade": "홈런",
 "signal_date": "2026-09-04"
@@ -49,21 +38,10 @@
 "entry": 53600,
 "entry_date": "2026-09-10",
 "peak": 58900,
-"days": 5,
+"days": 6,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
-},
-"294870": {
-"name": "IPARK현대산업개발",
-"market": "코스피200",
-"entry": 23700,
-"entry_date": "2026-09-11",
-"peak": 24650,
-"days": 4,
-"score": 24.4,
-"grade": "홈런",
-"signal_date": "2026-09-10"
 },
 "175330": {
 "name": "JB금융지주",
@@ -71,7 +49,7 @@
 "entry": 31450,
 "entry_date": "2026-09-14",
 "peak": 32950,
-"days": 3,
+"days": 4,
 "score": 19.6,
 "grade": "홈런",
 "signal_date": "2026-09-11"
@@ -81,8 +59,8 @@
 "market": "코스닥150",
 "entry": 158900,
 "entry_date": "2026-09-16",
-"peak": 166800,
-"days": 1,
+"peak": 166900,
+"days": 2,
 "score": 63.1,
 "grade": "홈런",
 "signal_date": "2026-09-15"
@@ -93,9 +71,20 @@
 "entry": 88100,
 "entry_date": "2026-09-16",
 "peak": 88100,
-"days": 1,
+"days": 2,
 "score": 45.9,
 "grade": "홈런",
 "signal_date": "2026-09-15"
+},
+"001820": {
+"name": "삼화콘덴서",
+"market": "코스피200",
+"entry": 145200,
+"entry_date": "2026-09-17",
+"peak": 145200,
+"days": 1,
+"score": 64.2,
+"grade": "홈런",
+"signal_date": "2026-09-16"
 }
 }
