@@ -5,31 +5,9 @@
 "entry": 35050,
 "entry_date": "2026-09-14",
 "peak": 36800,
-"days": 4,
+"days": 5,
 "score": 51.0,
 "grade": "",
 "signal_date": "2026-09-11"
-},
-"041510": {
-"name": "에스엠",
-"market": "코스닥150",
-"entry": 86600,
-"entry_date": "2026-09-15",
-"peak": 87700,
-"days": 3,
-"score": 77.4,
-"grade": "",
-"signal_date": "2026-09-14"
-},
-"006730": {
-"name": "서부T&D",
-"market": "코스닥150",
-"entry": 11320,
-"entry_date": "2026-09-15",
-"peak": 11680,
-"days": 3,
-"score": 53.4,
-"grade": "",
-"signal_date": "2026-09-14"
 }
 }

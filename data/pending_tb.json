@@ -1,4 +1,60 @@
 {
-"buy": [],
-"sell": []
+"buy": [
+{
+"code": "000500",
+"name": "가온전선",
+"market": "코스피200",
+"score": 78.3,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-09-18"
+},
+{
+"code": "036540",
+"name": "SFA반도체",
+"market": "코스닥150",
+"score": 70.0,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-09-18"
+},
+{
+"code": "327260",
+"name": "RF머트리얼즈",
+"market": "코스닥150",
+"score": 55.2,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-09-18"
+},
+{
+"code": "004020",
+"name": "현대제철",
+"market": "코스피200",
+"score": 38.8,
+"rank": 5,
+"grade": "홈런",
+"signal_date": "2026-09-18"
+}
+],
+"sell": [
+{
+"code": "225570",
+"reason": "B 58.5 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-18"
+},
+{
+"code": "000880",
+"reason": "B 57.6 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-18"
+},
+{
+"code": "175330",
+"reason": "B 55.6 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-18"
+}
+]
 }

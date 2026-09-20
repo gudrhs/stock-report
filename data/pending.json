@@ -1,17 +1,14 @@
 {
-"buy": [],
-"sell": [
+"buy": [
 {
-"code": "041510",
-"reason": "장대음봉 -5.8%",
-"severity": "청산",
-"signal_date": "2026-09-17"
-},
-{
-"code": "006730",
-"reason": "적선 5일 기울기 -6.1 — 상승탄력 꺾임",
-"severity": "청산",
-"signal_date": "2026-09-17"
+"code": "000990",
+"name": "DB하이텍",
+"market": "코스피200",
+"score": 68.0,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-09-18"
 }
-]
+],
+"sell": []
 }

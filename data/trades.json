@@ -5054,5 +5054,37 @@
 "reason": "적선 5일 기울기 -13.5 — 상승탄력 꺾임",
 "severity": "청산",
 "cum": 1.35
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "006730",
+"name": "서부T&D",
+"market": "코스닥150",
+"entry_date": "2026-09-15",
+"exit_date": "2026-09-18",
+"entry": 11320,
+"exit": 11330,
+"pnl": 0.09,
+"days": 3,
+"reason": "적선 5일 기울기 -6.1 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": 1.36
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "041510",
+"name": "에스엠",
+"market": "코스닥150",
+"entry_date": "2026-09-15",
+"exit_date": "2026-09-18",
+"entry": 86600,
+"exit": 83200,
+"pnl": -3.93,
+"days": 3,
+"reason": "장대음봉 -5.8%",
+"severity": "청산",
+"cum": 0.96
 }
 ]
