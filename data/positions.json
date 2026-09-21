@@ -5,9 +5,20 @@
 "entry": 35050,
 "entry_date": "2026-09-14",
 "peak": 36800,
-"days": 5,
+"days": 6,
 "score": 51.0,
 "grade": "",
 "signal_date": "2026-09-11"
+},
+"000990": {
+"name": "DB하이텍",
+"market": "코스피200",
+"entry": 125200,
+"entry_date": "2026-09-21",
+"peak": 132800,
+"days": 1,
+"score": 68.0,
+"grade": "",
+"signal_date": "2026-09-18"
 }
 }

@@ -1,14 +1,4 @@
 {
-"buy": [
-{
-"code": "000990",
-"name": "DB하이텍",
-"market": "코스피200",
-"score": 68.0,
-"rank": 1,
-"grade": "",
-"signal_date": "2026-09-18"
-}
-],
+"buy": [],
 "sell": []
 }
