@@ -1,14 +1,21 @@
 {
 "buy": [
 {
-"code": "204270",
-"name": "제이앤티씨",
+"code": "053800",
+"name": "안랩",
 "market": "코스닥150",
-"score": 56.5,
-"rank": 6,
+"score": 32.4,
+"rank": 7,
 "grade": "홈런",
-"signal_date": "2026-09-21"
+"signal_date": "2026-09-22"
 }
 ],
-"sell": []
+"sell": [
+{
+"code": "031980",
+"reason": "B 58.6 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-09-22"
+}
+]
 }

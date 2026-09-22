@@ -1,4 +1,32 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "053800",
+"name": "안랩",
+"market": "코스닥150",
+"score": 78.4,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-09-22"
+},
+{
+"code": "281820",
+"name": "케이씨텍",
+"market": "코스피200",
+"score": 73.9,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-09-22"
+},
+{
+"code": "058470",
+"name": "리노공업",
+"market": "코스닥150",
+"score": 64.7,
+"rank": 3,
+"grade": "",
+"signal_date": "2026-09-22"
+}
+],
 "sell": []
 }
