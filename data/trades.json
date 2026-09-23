@@ -5134,5 +5134,37 @@
 "reason": "B 58.5 < 60 이탈",
 "severity": "이탈",
 "cum": 22.3
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "004020",
+"name": "현대제철",
+"market": "코스피200",
+"entry_date": "2026-09-21",
+"exit_date": "2026-09-23",
+"entry": 35650,
+"exit": 32085,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"cum": 21.08
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "031980",
+"name": "피에스케이홀딩스",
+"market": "코스닥150",
+"entry_date": "2026-09-16",
+"exit_date": "2026-09-23",
+"entry": 158900,
+"exit": 159500,
+"pnl": 0.38,
+"days": 5,
+"reason": "B 58.6 < 60 이탈",
+"severity": "이탈",
+"cum": 21.12
 }
 ]

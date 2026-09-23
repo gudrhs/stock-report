@@ -1,21 +1,30 @@
 {
 "buy": [
 {
-"code": "053800",
-"name": "안랩",
+"code": "030530",
+"name": "원익홀딩스",
 "market": "코스닥150",
-"score": 32.4,
-"rank": 7,
+"score": 61.1,
+"rank": 3,
 "grade": "홈런",
-"signal_date": "2026-09-22"
+"signal_date": "2026-09-23"
+},
+{
+"code": "033640",
+"name": "네패스",
+"market": "코스닥150",
+"score": 49.8,
+"rank": 5,
+"grade": "홈런",
+"signal_date": "2026-09-23"
 }
 ],
 "sell": [
 {
-"code": "031980",
-"reason": "B 58.6 < 60 이탈",
+"code": "375500",
+"reason": "B 55.4 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-09-22"
+"signal_date": "2026-09-23"
 }
 ]
 }

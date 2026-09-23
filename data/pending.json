@@ -1,32 +1,39 @@
 {
 "buy": [
 {
-"code": "053800",
-"name": "안랩",
+"code": "126340",
+"name": "비나텍",
 "market": "코스닥150",
-"score": 78.4,
+"score": 87.1,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-09-22"
+"signal_date": "2026-09-23"
 },
 {
-"code": "281820",
-"name": "케이씨텍",
+"code": "005930",
+"name": "삼성전자",
 "market": "코스피200",
-"score": 73.9,
-"rank": 2,
-"grade": "",
-"signal_date": "2026-09-22"
-},
-{
-"code": "058470",
-"name": "리노공업",
-"market": "코스닥150",
-"score": 64.7,
+"score": 69.2,
 "rank": 3,
 "grade": "",
-"signal_date": "2026-09-22"
+"signal_date": "2026-09-23"
+},
+{
+"code": "084370",
+"name": "유진테크",
+"market": "코스닥150",
+"score": 67.4,
+"rank": 4,
+"grade": "",
+"signal_date": "2026-09-23"
 }
 ],
-"sell": []
+"sell": [
+{
+"code": "000990",
+"reason": "적선 5일 기울기 -4.8 — 상승탄력 꺾임",
+"severity": "청산",
+"signal_date": "2026-09-23"
+}
+]
 }
