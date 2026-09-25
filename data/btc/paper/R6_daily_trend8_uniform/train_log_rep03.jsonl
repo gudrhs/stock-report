@@ -1,0 +1,34 @@
+{"month": "2017-01-01", "kind": "cold", "pool": 103783, "td": 0.7014352762699128, "accepted": true, "exposure": 0.6143250688705234, "switches_per_year": 28.670188332567754, "umax": 4.018803596496582, "secs": 5.08, "data_cut": "hist"}
+{"month": "2017-02-01", "kind": "finetune", "td": 0.7107311654090881, "accepted": true, "disagree": 0.0, "secs": 0.75, "data_cut": "hist"}
+{"month": "2017-03-01", "kind": "finetune", "td": 0.7155979442596435, "accepted": true, "disagree": 0.03333333333333333, "secs": 0.74, "data_cut": "hist"}
+{"month": "2017-04-01", "kind": "finetune", "td": 0.731196631193161, "accepted": true, "disagree": 0.0, "secs": 0.72, "data_cut": "hist"}
+{"month": "2017-05-01", "kind": "finetune", "td": 0.7232573509216309, "accepted": true, "disagree": 0.03333333333333333, "secs": 0.68, "data_cut": "hist"}
+{"month": "2017-06-01", "kind": "finetune", "td": 0.7404388475418091, "accepted": true, "disagree": 0.0, "secs": 0.65, "data_cut": "hist"}
+{"month": "2017-07-01", "kind": "finetune", "td": 0.7646299481391907, "accepted": true, "disagree": 0.0, "secs": 0.66, "data_cut": "hist"}
+{"month": "2017-08-01", "kind": "finetune", "td": 0.7902449440956115, "accepted": true, "disagree": 0.0, "secs": 0.7, "data_cut": "hist"}
+{"month": "2017-09-01", "kind": "finetune", "td": 0.8226546704769134, "accepted": true, "disagree": 0.0, "secs": 0.67, "data_cut": "hist"}
+{"month": "2017-10-01", "kind": "finetune", "td": 0.8363137912750244, "accepted": true, "disagree": 0.0, "secs": 0.72, "data_cut": "hist"}
+{"month": "2017-11-01", "kind": "finetune", "td": 0.8485097229480744, "accepted": true, "disagree": 0.03333333333333333, "secs": 0.73, "data_cut": "hist"}
+{"month": "2017-12-01", "kind": "finetune", "td": 0.8599225974082947, "accepted": true, "disagree": 0.0, "secs": 0.71, "data_cut": "hist"}
+{"month": "2018-01-01", "kind": "cold", "pool": 138823, "td": 0.8949791347980499, "accepted": true, "exposure": 0.773972602739726, "switches_per_year": 19.5, "umax": 7.9949235916137695, "secs": 4.63, "data_cut": "hist"}
+{"month": "2018-02-01", "kind": "finetune", "td": 0.9397726845741272, "accepted": true, "disagree": 0.3, "secs": 0.95, "data_cut": "hist"}
+{"month": "2018-03-01", "kind": "finetune", "td": 0.9845002603530884, "accepted": true, "disagree": 0.0, "secs": 0.88, "data_cut": "hist"}
+{"month": "2018-04-01", "kind": "finetune", "td": 1.017245055437088, "accepted": true, "disagree": 0.03333333333333333, "secs": 0.93, "data_cut": "hist"}
+{"month": "2018-05-01", "kind": "finetune", "td": 1.02305997133255, "accepted": true, "disagree": 0.0, "secs": 0.85, "data_cut": "hist"}
+{"month": "2018-06-01", "kind": "finetune", "td": 1.0228812956809998, "accepted": true, "disagree": 0.0, "secs": 0.92, "data_cut": "hist"}
+{"month": "2018-07-01", "kind": "finetune", "td": 1.0260207068920135, "accepted": true, "disagree": 0.06666666666666667, "secs": 0.81, "data_cut": "hist"}
+{"month": "2018-08-01", "kind": "finetune", "td": 1.0234899091720582, "accepted": true, "disagree": 0.03333333333333333, "secs": 1.01, "data_cut": "hist"}
+{"month": "2018-09-01", "kind": "finetune", "td": 1.0242135190963746, "accepted": true, "disagree": 0.0, "secs": 0.84, "data_cut": "hist"}
+{"month": "2018-10-01", "kind": "finetune", "td": 1.0084325087070465, "accepted": true, "disagree": 0.2, "secs": 0.95, "data_cut": "hist"}
+{"month": "2018-11-01", "kind": "finetune", "td": 1.0024303436279296, "accepted": true, "disagree": 0.0, "secs": 0.79, "data_cut": "hist"}
+{"month": "2018-12-01", "kind": "finetune", "td": 0.9950441706180573, "accepted": true, "disagree": 0.0, "secs": 0.9, "data_cut": "hist"}
+{"month": "2019-01-01", "kind": "cold", "pool": 173863, "td": 0.9573865568637848, "accepted": true, "exposure": 0.6205479452054794, "switches_per_year": 29.0, "umax": 6.646194934844971, "secs": 4.86, "data_cut": "hist"}
+{"month": "2019-02-01", "kind": "finetune", "td": 0.969061951637268, "accepted": true, "disagree": 0.0, "secs": 0.64, "data_cut": "hist"}
+{"month": "2019-03-01", "kind": "finetune", "td": 0.961152458190918, "accepted": true, "disagree": 0.0, "secs": 0.76, "data_cut": "hist"}
+{"month": "2019-04-01", "kind": "finetune", "td": 0.9475302052497864, "accepted": true, "disagree": 0.0, "secs": 0.59, "data_cut": "hist"}
+{"month": "2019-05-01", "kind": "finetune", "td": 0.9606545674800873, "accepted": true, "disagree": 0.03333333333333333, "secs": 0.72, "data_cut": "hist"}
+{"month": "2019-06-01", "kind": "finetune", "td": 0.960872403383255, "accepted": true, "disagree": 0.0, "secs": 0.78, "data_cut": "hist"}
+{"month": "2019-07-01", "kind": "finetune", "td": 0.9681391942501069, "accepted": true, "disagree": 0.16666666666666666, "secs": 0.82, "data_cut": "hist"}
+{"month": "2019-08-01", "kind": "finetune", "td": 0.9928653383255005, "accepted": true, "disagree": 0.13333333333333333, "secs": 0.75, "data_cut": "hist"}
+{"month": "2019-09-01", "kind": "finetune", "td": 1.0016381430625916, "accepted": true, "disagree": 0.0, "secs": 0.76, "data_cut": "hist"}
+{"month": "2019-10-01", "kind": "finetune", "td": 0.9935542583465576, "accepted": true, "disagree": 0.0, "secs": 0.77, "data_cut": "hist"}
