@@ -1,0 +1,356 @@
+{
+ "variants": {
+  "R6_daily_trend8_uniform": {
+   "name": "R6_daily_trend8_uniform",
+   "cfg": {
+    "name": "R6_daily_trend8_uniform",
+    "gamma": 0.967,
+    "features": "full22",
+    "c_mult": 2.0,
+    "hidden": [
+     32,
+     32
+    ],
+    "members": 5,
+    "batch": 256,
+    "cold_steps": 2000,
+    "cold_lr1": 0.001,
+    "cold_lr2": 0.0003,
+    "cold_split": 1500,
+    "ft_steps": 300,
+    "ft_lr": 0.0003,
+    "lambda_sp": 0.01,
+    "wd": 0.0001,
+    "tau": 0.01,
+    "noise": 0.1,
+    "aux_w": 0.25,
+    "clip": 5.0,
+    "recency_frac": 0.0,
+    "half_life_years": 2.0,
+    "phases": 16,
+    "fine_tune": true,
+    "online": false,
+    "permute": false,
+    "acts": [
+     0.0,
+     1.0
+    ],
+    "reward": "lin",
+    "lam": 0.0,
+    "stride": 6,
+    "gate": "p0",
+    "feat": [
+     "ret_42",
+     "ret_180",
+     "ma_50",
+     "ma_200",
+     "rsi_84",
+     "macdh_1d",
+     "dd_180",
+     "vol_regime"
+    ]
+   },
+   "cfg_hash": "ecb73e723384",
+   "code_hash": "711a992210ed",
+   "algo": "dqn",
+   "algo_hash": null,
+   "algo_files": [],
+   "frozen_hash": "c04025c6c199",
+   "frozen_files": [
+    "btc/research/paper.py",
+    "btc/walkforward.py",
+    "btc/evaluate.py",
+    "btc/stats.py",
+    "btc/config.py",
+    "btc/live.py"
+   ],
+   "pins": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6"
+   },
+   "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "machine": "x86_64",
+    "openblas_coretype": null,
+    "blas": "scipy-openblas 0.3.31.188.0",
+    "simd_found": [
+     "X86_V3",
+     "X86_V4",
+     "AVX512_ICL",
+     "AVX512_SPR"
+    ]
+   },
+   "git": {
+    "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+    "dirty": []
+   },
+   "reps": 5,
+   "start": "2026-09-25",
+   "first_decision": "2026-09-25T00:00:00Z 이후 처음 마감하는 00:00 UTC phase 0 봉(살아 있는 봉)",
+   "chain_from": "2017-01-01",
+   "checkpoints": [
+    "2027-03-25",
+    "2027-09-25"
+   ],
+   "final_checkpoint": "2027-09-25",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다.",
+   "policy": {
+    "cost": 0.0015,
+    "c_dec": 0.003,
+    "stride": 6,
+    "weights_round": 0.25,
+    "weights_band": 0.02,
+    "fill": "다음 4시간봉 시가",
+    "headline": "ΔSharpe 작은 쪽 중앙값 반복",
+    "train_cut": "T + n일 (모든 phase에 T 뒤 살아 있는 봉이 생기는 첫 날, n ≥ 1)",
+    "stop_rule": "판단봉 종가 + 2일까지 모델이 없으면 현금(목표 0) + 이유 기록",
+    "no_model": "현금"
+   },
+   "base_15m": "data/btc/btcusd_15m.csv.gz",
+   "base_sha256": "a9000c010dcb936b773f3f6c8a2016f34cc1ab92c990628a5b059f3adf917475",
+   "registered_at": "2026-09-25T12:41:47Z"
+  },
+  "R3_daily_trend8_log5": {
+   "name": "R3_daily_trend8_log5",
+   "cfg": {
+    "name": "R3_daily_trend8_log5",
+    "gamma": 0.967,
+    "features": "full22",
+    "c_mult": 2.0,
+    "hidden": [
+     32,
+     32
+    ],
+    "members": 5,
+    "batch": 256,
+    "cold_steps": 2000,
+    "cold_lr1": 0.001,
+    "cold_lr2": 0.0003,
+    "cold_split": 1500,
+    "ft_steps": 300,
+    "ft_lr": 0.0003,
+    "lambda_sp": 0.01,
+    "wd": 0.0001,
+    "tau": 0.01,
+    "noise": 0.1,
+    "aux_w": 0.25,
+    "clip": 5.0,
+    "recency_frac": 0.7,
+    "half_life_years": 2.0,
+    "phases": 16,
+    "fine_tune": true,
+    "online": false,
+    "permute": false,
+    "acts": [
+     0.0,
+     0.25,
+     0.5,
+     0.75,
+     1.0
+    ],
+    "reward": "log",
+    "lam": 0.0,
+    "stride": 6,
+    "gate": "p0",
+    "feat": [
+     "ret_42",
+     "ret_180",
+     "ma_50",
+     "ma_200",
+     "rsi_84",
+     "macdh_1d",
+     "dd_180",
+     "vol_regime"
+    ]
+   },
+   "cfg_hash": "e9e1c7811069",
+   "code_hash": "711a992210ed",
+   "algo": "dqn",
+   "algo_hash": null,
+   "algo_files": [],
+   "frozen_hash": "c04025c6c199",
+   "frozen_files": [
+    "btc/research/paper.py",
+    "btc/walkforward.py",
+    "btc/evaluate.py",
+    "btc/stats.py",
+    "btc/config.py",
+    "btc/live.py"
+   ],
+   "pins": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6"
+   },
+   "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "machine": "x86_64",
+    "openblas_coretype": null,
+    "blas": "scipy-openblas 0.3.31.188.0",
+    "simd_found": [
+     "X86_V3",
+     "X86_V4",
+     "AVX512_ICL",
+     "AVX512_SPR"
+    ]
+   },
+   "git": {
+    "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+    "dirty": []
+   },
+   "reps": 5,
+   "start": "2026-09-25",
+   "first_decision": "2026-09-25T00:00:00Z 이후 처음 마감하는 00:00 UTC phase 0 봉(살아 있는 봉)",
+   "chain_from": "2017-01-01",
+   "checkpoints": [
+    "2027-03-25",
+    "2027-09-25"
+   ],
+   "final_checkpoint": "2027-09-25",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다.",
+   "policy": {
+    "cost": 0.0015,
+    "c_dec": 0.003,
+    "stride": 6,
+    "weights_round": 0.25,
+    "weights_band": 0.02,
+    "fill": "다음 4시간봉 시가",
+    "headline": "ΔSharpe 작은 쪽 중앙값 반복",
+    "train_cut": "T + n일 (모든 phase에 T 뒤 살아 있는 봉이 생기는 첫 날, n ≥ 1)",
+    "stop_rule": "판단봉 종가 + 2일까지 모델이 없으면 현금(목표 0) + 이유 기록",
+    "no_model": "현금"
+   },
+   "base_15m": "data/btc/btcusd_15m.csv.gz",
+   "base_sha256": "a9000c010dcb936b773f3f6c8a2016f34cc1ab92c990628a5b059f3adf917475",
+   "registered_at": "2026-09-25T12:41:48Z"
+  },
+  "W2_dp_band": {
+   "name": "W2_dp_band",
+   "cfg": {
+    "name": "W2_dp_band",
+    "gamma": 0.97,
+    "features": "full22",
+    "c_mult": 2.0,
+    "hidden": [
+     32,
+     32
+    ],
+    "members": 5,
+    "batch": 256,
+    "cold_steps": 2000,
+    "cold_lr1": 0.001,
+    "cold_lr2": 0.0003,
+    "cold_split": 1500,
+    "ft_steps": 300,
+    "ft_lr": 0.0003,
+    "lambda_sp": 0.01,
+    "wd": 0.0001,
+    "tau": 0.01,
+    "noise": 0.1,
+    "aux_w": 0.25,
+    "clip": 5.0,
+    "recency_frac": 0.7,
+    "half_life_years": 2.0,
+    "phases": 16,
+    "fine_tune": true,
+    "online": false,
+    "permute": false,
+    "acts": [
+     0.0,
+     1.0
+    ],
+    "reward": "lin",
+    "lam": 0.0,
+    "stride": 6,
+    "gate": "p0",
+    "feat": [
+     "ret_42",
+     "ret_180",
+     "ma_50",
+     "ma_200",
+     "rsi_84",
+     "macdh_1d",
+     "dd_180",
+     "vol_regime"
+    ],
+    "algo": "dp_band",
+    "output": "weights",
+    "dp_horizon_days": 20,
+    "dp_ridge_alpha": 1.0,
+    "dp_mu0_frac": 0.5,
+    "dp_grid_n": 201,
+    "dp_grid_sd": 4.0,
+    "dp_cost": 0.0015,
+    "dp_gamma": 0.998,
+    "dp_tol": 1e-12
+   },
+   "cfg_hash": "8783efdf5151",
+   "code_hash": "711a992210ed",
+   "algo": "dp_band",
+   "algo_hash": "a7ac716b0faa",
+   "algo_files": [
+    "btc/research/algos/dp_band.py",
+    "btc/research/variants.py"
+   ],
+   "frozen_hash": "c04025c6c199",
+   "frozen_files": [
+    "btc/research/paper.py",
+    "btc/walkforward.py",
+    "btc/evaluate.py",
+    "btc/stats.py",
+    "btc/config.py",
+    "btc/live.py"
+   ],
+   "pins": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6"
+   },
+   "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "machine": "x86_64",
+    "openblas_coretype": null,
+    "blas": "scipy-openblas 0.3.31.188.0",
+    "simd_found": [
+     "X86_V3",
+     "X86_V4",
+     "AVX512_ICL",
+     "AVX512_SPR"
+    ]
+   },
+   "git": {
+    "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+    "dirty": []
+   },
+   "reps": 5,
+   "start": "2026-09-25",
+   "first_decision": "2026-09-25T00:00:00Z 이후 처음 마감하는 00:00 UTC phase 0 봉(살아 있는 봉)",
+   "chain_from": "2017-01-01",
+   "checkpoints": [
+    "2027-03-25",
+    "2027-09-25"
+   ],
+   "final_checkpoint": "2027-09-25",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다.",
+   "policy": {
+    "cost": 0.0015,
+    "c_dec": 0.003,
+    "stride": 6,
+    "weights_round": 0.25,
+    "weights_band": 0.02,
+    "fill": "다음 4시간봉 시가",
+    "headline": "ΔSharpe 작은 쪽 중앙값 반복",
+    "train_cut": "T + n일 (모든 phase에 T 뒤 살아 있는 봉이 생기는 첫 날, n ≥ 1)",
+    "stop_rule": "판단봉 종가 + 2일까지 모델이 없으면 현금(목표 0) + 이유 기록",
+    "no_model": "현금"
+   },
+   "base_15m": "data/btc/btcusd_15m.csv.gz",
+   "base_sha256": "a9000c010dcb936b773f3f6c8a2016f34cc1ab92c990628a5b059f3adf917475",
+   "registered_at": "2026-09-25T12:41:48Z"
+  }
+ }
+}
