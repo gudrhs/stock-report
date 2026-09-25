@@ -128,9 +128,10 @@ def evaluate(names, reps=5):
                  years={}, verdict=None)
         days = h["days"]
         for y in (2015, 2016):
-            sel = (days >= int(pd.Timestamp(f"{y}-01-01", tz="UTC").timestamp())) & \
-                  (days < int(pd.Timestamp(f"{y + 1}-01-01", tz="UTC").timestamp()))
-            v["years"][y] = dict(strategy=S.summary(h["r"][sel])["cagr"], bh=S.summary(bh["r"][sel])["cagr"])
+            # days 는 기간 끝 시각 — y년 수익은 끝 시각이 (y-01-01, y+1-01-01] 인 일별 수익의 누적 (연율화하지 않음)
+            sel = (days > int(pd.Timestamp(f"{y}-01-01", tz="UTC").timestamp())) & \
+                  (days <= int(pd.Timestamp(f"{y + 1}-01-01", tz="UTC").timestamp()))
+            v["years"][y] = dict(strategy=float(np.prod(1 + h["r"][sel]) - 1), bh=float(np.prod(1 + bh["r"][sel]) - 1))
         if flagged:
             v["verdict"] = "판정 불가 (모델 없음 비율 5% 초과)"
         else:
