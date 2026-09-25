@@ -170,7 +170,9 @@ def monthly_update(cfg, datas, T_k, seed, ens, anchor):
     return ens, anchor, entry
 
 
-def run_replication(cfg, r, datas=None, end=OOS_END):
+def run_replication(cfg, r, datas=None, end=OOS_END, all_bars=False):
+    """all_bars=True면 판단봉만이 아니라 phase 0의 모든 봉에서 U(또는 비중)를 저장 — 판단 시각 견고성 검사(B2)용.
+    학습·점검은 그대로라 판단봉 값은 기본 실행과 같습니다."""
     datas = datas or load_phases()
     d0 = datas[0]
     K = len(cfg.get("acts", (0.0, 1.0)))
@@ -179,7 +181,7 @@ def run_replication(cfg, r, datas=None, end=OOS_END):
         {0.0: np.full((d0.T, 1), np.nan, np.float32)}
     log, ens, anchor = [], None, None
     Ms = [m for m in months() if m < end]
-    mask = decision_mask(d0, cfg.get("stride", 1))
+    mask = decision_mask(d0, cfg.get("stride", 1)) if not all_bars else np.ones(d0.T, bool)
     for i, T_k in enumerate(Ms):
         Tk = int(T_k.timestamp())
         nxt = int(Ms[i + 1].timestamp()) if i + 1 < len(Ms) else int(end.timestamp())
@@ -224,8 +226,8 @@ def run_path(name, r):
     return os.path.join(RUNS, name, f"rep{r:02d}.npz")
 
 
-def save_run(cfg, r, res, ch=None):
-    path = run_path(cfg["name"], r)
+def save_run(cfg, r, res, ch=None, name=None):
+    path = run_path(name or cfg["name"], r)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     flat = {f"U_{cd:.4f}": v for cd, v in res["U"].items()}
     for k, v in res["last_state"].items():
@@ -276,27 +278,29 @@ def n_trials_total():
 
 
 def _job(args):
-    cfg, r = args
-    path = run_path(cfg["name"], r)
+    cfg, r = args[:2]
+    tag = args[2] if len(args) > 2 else ""
+    name = cfg["name"] + (f"__{tag}" if tag else "")
+    path = run_path(name, r)
     if os.path.exists(path):
-        return cfg["name"], r, "cached"
+        return name, r, "cached"
     t = time.time()
     ch = code_hash()                                  # 실행을 시작한 시점의 코드 (출처 기록)
     try:
-        res = run_replication(cfg, r)
+        res = run_replication(cfg, r, all_bars=(tag == "allbars"))
     except Exception:
         import traceback
-        return cfg["name"], r, "FAILED\n" + traceback.format_exc()
-    save_run(cfg, r, res, ch)
-    return cfg["name"], r, round(time.time() - t, 1)
+        return name, r, "FAILED\n" + traceback.format_exc()
+    save_run(cfg, r, res, ch, name=name)
+    return name, r, round(time.time() - t, 1)
 
 
-def run_many(cfgs, reps, workers=4):
+def run_many(cfgs, reps, workers=4, tag=""):
     load_phases()
     for c in cfgs:
-        if not c["name"].startswith("R0_"):          # 재현 확인용은 시험으로 세지 않음
+        if not c["name"].startswith("R0_"):          # 재현 확인용은 시험으로 세지 않음 (같은 설정 재실행은 해시로 중복 제거)
             log_trial(c)
-    jobs = [(c, r) for c in cfgs for r in range(reps)]
+    jobs = [(c, r, tag) for c in cfgs for r in range(reps)]
     with mp.get_context("spawn").Pool(workers) as pool:
         for out in pool.imap_unordered(_job, jobs):
             print("  완료", out, flush=True)
@@ -308,8 +312,10 @@ def main():
     ap.add_argument("names", nargs="+")
     ap.add_argument("--reps", type=int, default=5)
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--tag", default="", choices=["", "allbars"],
+                    help="allbars: 모든 봉에서 U 저장 (<이름>__allbars/ 에, 판단 시각 견고성 검사용)")
     a = ap.parse_args()
-    run_many([VARIANTS[n] for n in a.names], a.reps, a.workers)
+    run_many([VARIANTS[n] for n in a.names], a.reps, a.workers, a.tag)
 
 
 if __name__ == "__main__":
