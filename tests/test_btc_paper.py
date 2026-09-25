@@ -10,6 +10,7 @@ python -m unittest tests.test_btc_paper -v
   · 중단 복구(Crash): 새 달 상태 저장 뒤 판단 중 죽어도 판단이 사라지지 않고, 복구 결과가 한 번에 돌린 것과 같음
   · 운영 중단 규칙(StopRule): 학습 실패·고정 불일치·중간에 빠진 판단봉 → 종가 + 2일 뒤 현금 기록, 장부·판정 계속
   · 등록 거부(Register): 같은 이름에 다른 설정·반복 수 거부, 코드·패키지 지문이 바뀌면 step이 처리하지 않음
+  · 합의(Committee): C1 보조 트랙 — 반복들의 판단 다수결 장부·판정이 more_rl.committee + Window.run 과 같음
   · 미래 정보 없음(NoLookAhead): 판단봉 다음 시가 이후 가격을 모두 망가뜨려도 그 판단·체결가가 같음
   · 데이터 덧붙이기(Extend): 가짜 거래소 응답으로 15분봉 덧붙이기(빠진 분·늦은 분·덧붙이기만·달 파일), 조회 실패 시 계속
 학습 스텝·멤버·phase 수는 줄인 설정을 쓰되, 기준(run_replication)과 모의매매가 같은 설정을 씁니다.
@@ -274,6 +275,64 @@ class Parity(unittest.TestCase):
             with self.assertRaises(P.PaperError):
                 P.register("T_new", reps=1, start=self.LO, cfg=CFGS["T_R6"], paper_dir=self.tmp, require_clean=True)
         self.assertNotIn("T_new", P.load_registry(self.tmp)["variants"])
+
+
+class Committee(unittest.TestCase):
+    """C1 보조 트랙: 반복들의 판단을 다수결 — 장부·판정이 more_rl.committee(독립 구현) + Window.run 과 같음"""
+
+    LO, NOW = "2024-01-01", "2024-04-01T00:00Z"
+    N = 4                                   # 짝수 → 2:2 동점(직전 유지) 경로도 지남
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="paper_committee_")
+        cls.cfg = tiny("R6_daily_trend8_uniform", committee=cls.N)
+        P.register("T_C1", reps=cls.N, start=cls.LO, cfg=cls.cfg, paper_dir=cls.tmp,
+                   checkpoints=("2024-02-15", "2024-03-15"))
+        P.step(cls.NOW, offline=True, paper_dir=cls.tmp)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_register_rules(self):
+        ent = P.load_registry(self.tmp)["variants"]["T_C1"]
+        self.assertEqual(ent["verdict_rule"], P.COMMITTEE_VERDICT_RULE)
+        self.assertIn("다수결", ent["policy"]["headline"])
+        with self.assertRaises(P.PaperError):                          # 반복 수 ≠ 합의 수
+            P.register("T_C1b", reps=3, start=self.LO, cfg=self.cfg, paper_dir=self.tmp)
+        with self.assertRaises(P.PaperError):                          # 비율 보유는 합의 불가
+            P.register("T_C1c", reps=4, start=self.LO, cfg=tiny("R3_daily_trend8_log5", committee=4),
+                       paper_dir=self.tmp)
+
+    def test_ledger_and_verdict_match_independent(self):
+        from btc import stats as S
+        from btc.research.more_rl import committee
+        pd0 = P.phases_for(P.truncate(P.load_15m_all(self.tmp), P._ts(self.NOW)), 1)[0]
+        tgs = [P.rep_targets(pd0, P._read_decs(os.path.join(self.tmp, "T_C1"), r)) for r in range(self.N)]
+        sel = np.nonzero(np.all(np.isfinite(np.stack(tgs)), axis=0))[0]
+        votes = np.stack([t[sel] for t in tgs], axis=1)
+        self.assertTrue(np.any(votes.sum(1) == self.N / 2), "동점 봉이 있어야 유지 규칙을 확인함")
+        self.assertTrue(np.any((votes.sum(1) > 0) & (votes.sum(1) < self.N)), "반복들이 갈리는 봉이 있어야 함")
+        cpos = committee(votes, pd0.forced_hold[sel], long_at=self.N // 2 + 1, flat_at=self.N // 2 - 1)
+        tg = np.full(pd0.T, np.nan)
+        tg[sel] = cpos
+        np.testing.assert_array_equal(P.committee_targets(pd0, tgs), tg)
+        W = Window([pd0], self.LO, "2024-04-01", "test_btc_paper:committee")
+        res = W.run(tg, 0.0015)
+        eq, dates = ledger(self.tmp, "T_C1", "ledger_committee.csv")
+        self.assertEqual(dates[0], self.LO)
+        np.testing.assert_allclose(eq, res["eq"], rtol=0, atol=1e-12)
+        rep = P.report(self.NOW, paper_dir=self.tmp, write=False)["variants"]["T_C1"]
+        fin = rep["checkpoints"]["2024-03-15"]
+        W2 = Window([pd0], self.LO, "2024-03-15", "test_btc_paper:committee")
+        s = S.summary(W2.run(tg, 0.0015)["r"])
+        sb = S.summary(W2.run(baseline_targets(W2)["B0"], 0.0015)["r"])
+        self.assertEqual(fin["headline_rep"], "committee")
+        self.assertAlmostEqual(fin["headline"]["sharpe"], s["sharpe"], places=12)
+        want = "pass" if (s["sharpe"] > sb["sharpe"] and s["max_dd"] > sb["max_dd"]) else "fail"
+        self.assertEqual(rep["verdict"], want)
+        self.assertEqual(len(fin["reps"]), self.N)                     # 반복별 성과는 참고로 함께
 
 
 class TrainCut(unittest.TestCase):

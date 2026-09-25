@@ -78,6 +78,9 @@ VARIANTS = {c["name"]: c for c in [
     v("A1_actor_critic", algo="a2c", output="weights", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
       acts=(0.0, 0.25, 0.5, 0.75, 1.0), reward="log", gate="none", cost_train=0.003, seq_len=60, seq_batch=32,
       gae_lambda=0.95, ent_coef=0.01, vf_coef=0.5, adv_norm=True),
+    # C1. R6 반복 10개 다수결 합의 — 백테스트는 more_rl 이 R6 실행에서 계산(새 학습 없음). 이 항목은 보조 모의매매
+    #     등록용: R6와 같은 학습 설정 + committee=10 (paper.py 가 반복 10개의 판단을 다수결)
+    v("C1_r6_committee10", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0, committee=10),
     # P1. R6와 같은 모델, 판단만 평균 − 1.0×표본 표준편차 — 현금 대비 이득의 멤버 불일치 (pess_ref="cash", 해석 정정)
     v("P1_pessimistic_dqn", algo="pessdqn", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
       pess_kappa=1.0, pess_ddof=1, pess_ref="cash"),

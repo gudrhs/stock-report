@@ -65,6 +65,11 @@ screen.targets + evaluate.Window.run)와 **같은 코드·같은 시드·같은 
      evaluate.Window.run 과 같은 방식으로 처음부터 다시 계산합니다 — 저장된 판단만으로 결정되므로 멱등입니다.
      매수·보유 장부도 같이 만듭니다.
 
+합의 트랙 (cfg["committee"] = n, C1_r6_committee10 — '새 강화학습 4가지 묶음' 결과 뒤 보조 모의매매 조항)
+  반복 n개(같은 설정, 시드만 다름)를 위와 똑같이 돌리고, 판정 헤드라인만 반복들의 목표(0/1) 다수결 합의 전략입니다
+  (committee_targets: > n/2 보유, < n/2 현금, n/2 직전 유지, 강제 유지 봉에서 안 바꿈 — more_rl.committee 와 같은 규칙).
+  장부 ledger_committee.csv · fills_committee.csv 를 더 씁니다. 반복별 장부·성과는 참고로 그대로 둡니다.
+
 밀린 실행 따라잡기: 며칠을 건너뛰어도 step 한 번이 빠진 날을 순서대로 처리합니다. 판단은 그 봉 종가까지,
 학습은 고정된 학습 자르기까지의 데이터만 쓰므로 실시간으로 매일 돌린 것과 같습니다(tests/test_btc_paper.py 가 확인).
 같은 now로 두 번 돌리면 아무것도 바뀌지 않습니다.
@@ -148,6 +153,13 @@ VERDICT_RULE = (
     "아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. "
     "데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 "
     "이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다.")
+COMMITTEE_VERDICT_RULE = (
+    "사전 등록 판정 (success_criteria.md '새 강화학습 4가지 묶음' 결과 뒤 C1 보조 모의매매 조항): 반복 n개(C1은 R6 설정 "
+    "10개)의 판단 목표(0/1, 모델이 없어 현금 처리한 봉은 0표)를 판단봉마다 다수결 — 보유 표 > n/2 이면 보유, < n/2 이면 "
+    "현금, 정확히 n/2 이면 합의의 직전 포지션 유지(시작 현금), 강제 유지 봉에서는 바꾸지 않음. 이 합의 전략 하나를 "
+    "주 트랙과 같은 구간·체결·비용(다음 4시간봉 시가, 편도 0.15%)으로 계산해, 합의 샤프 > 매수·보유 샤프 이고 합의 "
+    "최대낙폭이 매수·보유보다 얕으면 'pass', 아니면 'fail'. 마지막 점검일 전에는 'pending'. 반복별 성과는 참고로만 "
+    "적음. 보조 트랙이며 주 후보(R6) 판정과 무관. 1년치라 방향성 확인입니다.")
 FROZEN = ("cfg_hash", "code_hash", "algo_hash", "frozen_hash", "pins", "reps", "start", "checkpoints", "base_sha256")
 HERE = os.path.dirname(os.path.abspath(__file__))
 CORE = os.path.dirname(HERE)
@@ -360,6 +372,12 @@ def register(name, reps=5, start=START, cfg=None, paper_dir=None, base_path=BASE
         cfg = VARIANTS[name]
     cfg = dict(cfg)
     cfg["name"] = name
+    com_n = int(cfg.get("committee") or 0)
+    if com_n:
+        if int(reps) != com_n:
+            raise PaperError(f"{name}: 합의(committee={com_n})는 반복 수가 {com_n}이어야 합니다 (--reps {com_n})")
+        if _is_weights(cfg) or tuple(float(x) for x in cfg.get("acts", (0.0, 1.0))) != (0.0, 1.0):
+            raise PaperError(f"{name}: 합의는 0/1 행동 가치 모델만 됩니다")
     st = _ts(start)
     st = st - st % DAY                                        # 시작일 00:00 UTC
     cfg_js = json.loads(json.dumps(cfg, default=list))
@@ -380,9 +398,11 @@ def register(name, reps=5, start=START, cfg=None, paper_dir=None, base_path=BASE
         first_decision=_iso(st) + " 이후 처음 마감하는 00:00 UTC phase 0 봉(살아 있는 봉)",
         chain_from=str(OOS_START.date()),
         checkpoints=[_date(_ts(c)) for c in checkpoints], final_checkpoint=_date(_ts(checkpoints[-1])),
-        verdict_rule=VERDICT_RULE,
+        verdict_rule=COMMITTEE_VERDICT_RULE if com_n else VERDICT_RULE,
         policy=dict(cost=COST, c_dec=C_DEC, stride=int(cfg.get("stride", 1)), weights_round=1.0 / W_ROUND,
-                    weights_band=0.02, fill="다음 4시간봉 시가", headline="ΔSharpe 작은 쪽 중앙값 반복",
+                    weights_band=0.02, fill="다음 4시간봉 시가",
+                    headline=(f"반복 {com_n}개 다수결 합의 (> n/2 보유, < n/2 현금, n/2 유지)" if com_n
+                              else "ΔSharpe 작은 쪽 중앙값 반복"),
                     train_cut="T + n일 (모든 phase에 T 뒤 살아 있는 봉이 생기는 첫 날, n ≥ 1)",
                     stop_rule=f"판단봉 종가 + {GRACE // DAY}일까지 모델이 없으면 현금(목표 0) + 이유 기록",
                     no_model="현금"),
@@ -1030,6 +1050,27 @@ def rep_targets(d0, decs):
     return tg
 
 
+def committee_targets(d0, tgs):
+    """
+    C1 합의 (btc.research.more_rl.committee 와 같은 규칙): 반복들의 목표(0/1)를 판단봉마다 다수결.
+    보유 표 > n/2 → 1, < n/2 → 0, 정확히 n/2 → 합의의 직전 포지션 (시작 0). 강제 유지 봉(체결 없음)에서는 바꾸지 않음.
+    모든 반복의 목표가 있는 봉에서만 정하고, 나머지는 NaN (장부는 모든 반복의 판단이 끝난 곳까지만 계산).
+    """
+    M = np.stack(tgs)
+    n = M.shape[0]
+    out = np.full(d0.T, np.nan)
+    idx = np.nonzero(np.all(np.isfinite(M), axis=0))[0]
+    if len(idx) and not np.all(np.isin(M[:, idx], (0.0, 1.0))):
+        raise PaperError("합의에는 0/1 목표만 쓸 수 있습니다")
+    prev = 0.0
+    for t in idx:
+        if not d0.forced_hold[t]:
+            v = float(M[:, t].sum())
+            prev = 1.0 if v > n / 2 else (0.0 if v < n / 2 else prev)
+        out[t] = prev
+    return out
+
+
 def rep_hi(d0, decs, lo, now, mask):
     """장부를 계산할 수 있는 끝(자정): 데이터·now·아직 판단 못 한 첫 판단봉 가운데 가장 이른 것"""
     close = d0.ts + BAR_SEC
@@ -1068,12 +1109,9 @@ def write_ledgers(ent, d0, now, paper_dir=None):
     lo = _ts(ent["start"])
     mask = walk.decision_mask(d0, int(cfg.get("stride", 1)))
     frac = _is_frac(cfg)
-    out, his = {}, []
-    for r in range(ent["reps"]):
-        decs = _read_decs(vdir, r)
-        hi = rep_hi(d0, decs, lo, now, mask)
-        his.append(hi)
-        res = window_run(d0, lo, hi, rep_targets(d0, decs), frac) if hi > lo else None
+    out, his, tgs = {}, [], []
+
+    def ledger(res, tag):
         rows, fills = [], []
         if res is not None:
             rows = [dict(date=_date(t), equity=_num(e)) for t, e in zip(res["days"], res["eq"])]
@@ -1082,12 +1120,25 @@ def write_ledgers(ent, d0, now, paper_dir=None):
                 fills.append(dict(close_utc=_iso(d0.ts[t] + BAR_SEC), fill_utc=_iso(d0.ts[t + 1]),
                                   fill_open=_num(d0.o[t + 1]), w_before=_num(res["w_pre"][j]),
                                   w_after=_num(res["pos"][j])))
-        _write_csv(os.path.join(vdir, f"ledger_rep{r:02d}.csv"), ["date", "equity"], rows)
-        _write_csv(os.path.join(vdir, f"fills_rep{r:02d}.csv"),
+        _write_csv(os.path.join(vdir, f"ledger_{tag}.csv"), ["date", "equity"], rows)
+        _write_csv(os.path.join(vdir, f"fills_{tag}.csv"),
                    ["close_utc", "fill_utc", "fill_open", "w_before", "w_after"], fills)
+
+    for r in range(ent["reps"]):
+        decs = _read_decs(vdir, r)
+        hi = rep_hi(d0, decs, lo, now, mask)
+        his.append(hi)
+        tgs.append(rep_targets(d0, decs))
+        res = window_run(d0, lo, hi, tgs[-1], frac) if hi > lo else None
+        ledger(res, f"rep{r:02d}")
         out[r] = dict(ledger_through=_date(hi) if res is not None else None,
                       equity=float(res["eq"][-1]) if res is not None else None)
     hi = min(his) if his else lo
+    if cfg.get("committee"):                          # C1: 다수결 합의 장부 (모든 반복의 판단이 끝난 곳까지)
+        res = window_run(d0, lo, hi, committee_targets(d0, tgs), False) if hi > lo else None
+        ledger(res, "committee")
+        out["committee"] = dict(ledger_through=_date(hi) if res is not None else None,
+                                equity=float(res["eq"][-1]) if res is not None else None)
     bh = window_run(d0, lo, hi, bh_targets(d0, lo, hi), False) if hi > lo else None
     _write_csv(os.path.join(vdir, "bh_ledger.csv"), ["date", "equity"],
                [dict(date=_date(t), equity=_num(e)) for t, e in zip(bh["days"], bh["eq"])] if bh is not None else [])
@@ -1189,7 +1240,10 @@ def step(now=None, offline=False, paper_dir=None, base_path=BASE_15M, df15=None,
             continue
         led = write_ledgers(ent, d0, now, paper_dir)
         for r, v in led.items():
-            out["variants"][name]["reps"][r].update(v)
+            if r == "committee":                      # C1 합의 장부 (반복이 아니라 변형 단위)
+                out["variants"][name]["committee"] = v
+            else:
+                out["variants"][name]["reps"][r].update(v)
     # status.json 에는 저장된 상태로 정해지는 값만 (같은 now로 다시 돌려도 바이트 단위로 같게)
     per_run = ("trained_now", "new_decisions")
     ext = read_ext(paper_dir)
@@ -1245,6 +1299,7 @@ def evaluate_variant(ent, d0, now, paper_dir=None):
     decs = [_read_decs(vdir, r) for r in range(ent["reps"])]
     tgs = [rep_targets(d0, x) for x in decs]
     hi_all = min(rep_hi(d0, x, lo, now, mask) for x in decs)
+    tgc = committee_targets(d0, tgs) if cfg.get("committee") else None
 
     def block(hi):
         if hi <= lo:
@@ -1254,6 +1309,14 @@ def evaluate_variant(ent, d0, now, paper_dir=None):
         if not bh.get("days"):
             return None
         ds = [x["sharpe"] - bh["sharpe"] for x in reps]
+        if tgc is not None:                           # C1: 헤드라인 = 다수결 합의 전략 (반복별 성과는 참고)
+            c = metrics(window_run(d0, lo, hi, tgc, False))
+            return dict(start=_date(lo), end=_date(hi), reps=reps, bh=bh, d_sharpe=ds, headline_rep="committee",
+                        committee=c,
+                        headline=dict(sharpe=c["sharpe"], max_dd=c["max_dd"], cagr=c["cagr"],
+                                      d_sharpe=c["sharpe"] - bh["sharpe"],
+                                      sharpe_gt_bh=bool(c["sharpe"] > bh["sharpe"]),
+                                      mdd_shallower=bool(c["max_dd"] > bh["max_dd"])))
         lm = _lower_median(ds)
         h = reps[lm]
         return dict(start=_date(lo), end=_date(hi), reps=reps, bh=bh, d_sharpe=ds, headline_rep=int(lm),
@@ -1368,7 +1431,9 @@ def main(argv=None):
                 if ss is None:
                     print(f"{n}: 아직 장부 없음 (판정 {v['verdict']})")
                     continue
-                print(f"{n}: {ss['start']}~{ss['end']} {ss['bh']['days']}일  헤드라인 rep{ss['headline_rep']} "
+                hr = ss["headline_rep"]
+                print(f"{n}: {ss['start']}~{ss['end']} {ss['bh']['days']}일  헤드라인 "
+                      f"{'합의' if hr == 'committee' else f'rep{hr}'} "
                       f"샤프 {ss['headline']['sharpe']:.2f} (매수·보유 {ss['bh']['sharpe']:.2f})  "
                       f"MDD {ss['headline']['max_dd'] * 100:.1f}% (매수·보유 {ss['bh']['max_dd'] * 100:.1f}%)  "
                       f"판정 {v['verdict']}")
