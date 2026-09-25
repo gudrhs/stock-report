@@ -19,6 +19,8 @@ https://gudrhs.github.io/stock-report/
 
 차트 지표(이동평균·거래량·RSI·MACD 등)를 4시간마다 보고 현금/비트코인을 고르는 강화학습 에이전트와
 그 워크포워드 백테스트입니다. 방법·실행법은 [btc/README.md](btc/README.md), 결과는 `btc.html`.
+결론: 2017~2026 표본외에서 매수·보유와 수익은 같고 낙폭만 조금 작았으며(샤프 1.03 vs 1.01), 통계적으로 유의한
+우위는 없었습니다. 200일선 필터가 위험 대비 더 나았습니다. 실시간 모의매매: `python -m btc.live run --venue upbit`.
 
 ---
 
