@@ -5,3 +5,6 @@ data/btc/runs/**/*.tmp.npz
 data/btc/live/
 __pycache__/
 *.pyc
+data/btc/research_runs/**/*.npz
+data/btc/research_runs/**/*.tmp.npz
+btc/research/out/**/*.npz
