@@ -212,6 +212,15 @@ class SoftminModel:
         return self.net.state("p")
 
 
+def proposed_cfg():
+    """variants.py 에 등록할 설정 (R11_direct_loggrowth + W1 키). 'tau'는 P0의 DQN 목표망 갱신률(0.01)과
+    이름이 겹쳐 SoftMin 온도는 'softmin_tau'로 둡니다."""
+    from ..variants import v, TREND8
+    return v("W1_softmin_direct", algo="softmin_direct", output="weights", stride=6, feat=TREND8, obj="log",
+             cost_train=0.003, turnover_pen=0.0, seq_len=63, seq_batch=32, groups=8, softmin_tau=0.2,
+             lambda_max=0.2)
+
+
 def monthly_update(cfg, datas, T_k, seed, ens, anchor):
     """1월(또는 첫 달)은 처음부터, 나머지 달은 지난달 모델에서 L2-SP 이어학습 — R11(monthly_update_direct)과 같은 흐름"""
     Tk = int(T_k.timestamp())
