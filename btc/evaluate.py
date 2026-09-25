@@ -93,9 +93,24 @@ class Window:
             sim = simulate(targets, d.o, d.c, cost, a, b, forced_hold=d.forced_hold)
         days, eq = daily_marks(d.ts, sim["mark"], a, b, lo=self.lo, hi=self.hi)
         r = eq[1:] / eq[:-1] - 1.0
-        return dict(days=days[1:], r=r, eq=eq, pos=sim["pos"][a:b], logr=sim["logr"][a:b],
+        logr = sim["logr"][a:b].copy()
+        if b + 1 < d.T and d.ts[b + 1] >= self.hi and b > a:
+            # 마지막 결정의 가격 항은 다음 시가(= hi 이후 가격) 대신 체결 봉 종가로 — 잠금 구간 가격 미사용
+            p_last = sim["pos"][b - 1]
+            p_prev = sim["pos"][b - 2] if b - 2 >= a else 0.0
+            logr[-1] = p_last * math.log(d.c[b] / d.o[b]) + abs(p_last - p_prev) * math.log(1.0 - cost)
+        return dict(days=days[1:], r=r, eq=eq, pos=sim["pos"][a:b], logr=logr,
                     trades=sim["trades"], a=a, b=b,
                     rebal=sim["rebal"][a:b] if "rebal" in sim else None)
+
+    def m(self, phase=0):
+        """결정봉별 시가→시가 로그수익 m[t] (구간 끝에서 hi 이후 가격이 필요하면 체결 봉 종가로 대신)"""
+        d = self.datas[phase]
+        a, b = self.rng[phase]
+        m = d.m[a:b].copy()
+        if b + 1 < d.T and d.ts[b + 1] >= self.hi and b > a:
+            m[-1] = math.log(d.c[b] / d.o[b])
+        return np.nan_to_num(m)
 
     def agent_targets(self, delta, c_dec, phase=0):
         d = self.datas[phase]
@@ -188,7 +203,7 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     days = bh["days"]
 
     # ── P0 반복 10개 ──
-    runs = [load_run("P0", r) for r in range(reps_p0)]
+    runs = [load_run("P0", r) for r in range(reps_p0)]            # 없으면 예외 — 조용히 건너뛰지 않음
     p0 = []
     for r, run in enumerate(runs):
         res = W.run(W.agent_targets(run["delta"][0][cd_p0], cd_p0), cost)
@@ -249,12 +264,14 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     out["phases"] = ph
 
     # ── 검정 ──
-    boot = S.stationary_bootstrap_diff(head["r"], bh["r"], mean_block=20, n_boot=10000, seed=1)
+    BOOT_SEED = 1                                   # H1과 H2 모든 비교에 같은 재표본 (같은 검정은 같은 p)
+    boot = S.stationary_bootstrap_diff(head["r"], bh["r"], mean_block=20, n_boot=10000, seed=BOOT_SEED)
     lw = S.lw_hac_test(head["r"], bh["r"])
     out["H1"] = dict(bootstrap=boot, lw=lw)
     h2 = []
     for k in ("B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7"):
-        bb = S.stationary_bootstrap_diff(head["r"], base[k]["r"], mean_block=20, n_boot=10000, seed=2)
+        bb = boot if k == "B0" else S.stationary_bootstrap_diff(head["r"], base[k]["r"], mean_block=20,
+                                                                 n_boot=10000, seed=BOOT_SEED)
         h2.append(dict(base=k, d_sharpe=bb["obs"], p=bb["p"], ci90=bb["ci90"]))
     adj = S.holm([x["p"] for x in h2])
     for x, pa in zip(h2, adj):
@@ -269,14 +286,10 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
         cdx = round(C.c_dec(cost, g["c_mult"]), 6)
         rs = []
         for r in range(reps_grid):
-            try:
-                run = load_run(tname, r)
-            except FileNotFoundError:
-                continue
+            run = load_run(tname, r)                                  # 반복 번호로 짝을 맞춤 — 빠지면 예외
             rs.append(W.run(W.agent_targets(run["delta"][0][cdx], cdx), cost))
-        if rs:
-            grid_r[g["name"]] = rs
-            grid_names.append(g["name"])
+        grid_r[g["name"]] = rs
+        grid_names.append(g["name"])
     out["grid"] = [dict(name=n, reps=len(v), sharpe_mean=float(np.mean([S.sharpe(x["r"]) for x in v])),
                         sharpe_reps=[S.sharpe(x["r"]) for x in v],
                         cagr_mean=float(np.mean([S.summary(x["r"])["cagr"] for x in v])),
@@ -287,13 +300,9 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     for key in C.ABLATIONS:
         rs = []
         for r in range(reps_abl):
-            try:
-                run = load_run(key, r)
-            except FileNotFoundError:
-                continue
+            run = load_run(key, r)
             rs.append(W.run(W.agent_targets(run["delta"][0][cd_p0], cd_p0), cost))
-        if rs:
-            abl[key] = rs
+        abl[key] = rs
     out["ablations"] = [dict(name=k, reps=len(v), sharpe_reps=[S.sharpe(x["r"]) for x in v],
                              sharpe_mean=float(np.mean([S.sharpe(x["r"]) for x in v])),
                              cagr_mean=float(np.mean([S.summary(x["r"])["cagr"] for x in v])),
@@ -305,7 +314,7 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
 
     # ── PBO·DSR (2017~2024) ──
     if len(grid_r) == 12:
-        cut = np.searchsorted(days, _ts("2025-01-01"), side="left")
+        cut = np.searchsorted(days, _ts("2025-01-01"), side="right")   # 2024-12-31을 덮는 수익까지
         M = np.column_stack([np.mean([x["r"][:cut] for x in grid_r[n]], axis=0) for n in grid_names])
         pb = S.pbo_cscv(M, S=16)
         out["pbo"] = {k: pb[k] for k in ("pbo", "slope", "intercept", "p_oos_loss", "n_splits", "block_len")}
@@ -316,16 +325,23 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
         best = grid_names[int(np.argmax([S.sharpe(M[:, j]) for j in range(M.shape[1])]))]
         bh_cut = bh["r"][:cut]
         srv_x = S.trials_sr_var(allM - bh_cut[:, None])          # 초과수익(전략 − 매수·보유) 기준
-        out["dsr"] = dict(N=N, sr_var=srv, p0=S.dsr(head["r"], N, srv),
-                          p0_excess=S.dsr(head["r"] - bh["r"], N, srv_x), sr_var_excess=srv_x,
-                          best_in_hindsight=dict(name=best, dsr=S.dsr(np.mean([x["r"] for x in grid_r[best]], axis=0), N, srv)),
-                          selector=S.dsr(sel["r"], N, srv) if sel else None)
+        # 사후 최고 변형도 P0처럼 '작은 쪽 중앙값 반복 하나'로, 2017~2024에서만 비교
+        bi = grid_r[best]
+        bi_lm = bi[lower_median([S.sharpe(x["r"][:cut]) - S.sharpe(bh_cut) for x in bi])]["r"][:cut]
+        i19 = int(np.searchsorted(days, _ts("2019-01-01"), side="right"))
+        out["dsr"] = dict(
+            N=N, sr_var=srv, sr_var_excess=srv_x,
+            # 판정에 쓰는 것은 '매수·보유 대비 초과수익'의 DSR — 절대 샤프(0 대비)는 장기 상승장에선 누구나 높음
+            p0_excess=S.dsr(head["r"] - bh["r"], N, srv_x),
+            p0_abs=S.dsr(head["r"], N, srv),
+            best_in_hindsight=dict(name=best, excess=S.dsr(bi_lm - bh_cut, N, srv_x), abs=S.dsr(bi_lm, N, srv)),
+            selector=dict(excess=S.dsr(sel["r"] - bh["r"][i19:], N, srv_x), abs=S.dsr(sel["r"], N, srv)) if sel else None)
 
     # ── 귀무모형 ──
     d0 = datas[0]
     ex, sw = S.exposure_switch_rate(head["pos"])
     day_id = ((d0.ts[a0:b0] + BAR_SEC - W.lo) // 86400).astype(int)
-    m = np.nan_to_num(d0.m[a0:b0])
+    m = W.m(0)
     if 0 < ex < 1 and sw > 0:
         n1 = S.null_markov(m, cost, ex, min(sw, 2 * min(ex, 1 - ex) * 0.999), n=1000, seed=3, day_id=day_id)
         out["N1"] = dict(percentile=S.null_percentile(S.sharpe(head["r"]), n1), median=float(np.median(n1)),
@@ -333,18 +349,13 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     pos_d = daily_position(head, day_id, len(days))
     out["N3"] = null_shift_bar(head["pos"], m, cost, day_id, len(days), n=2000, min_days=30, seed=4)
     n2 = []
+    Wd = Window(datas, lo, "2025-01-01", "N2 compare")
     for r in range(n_null2):
-        try:
-            run = load_run("N2", r)
-        except FileNotFoundError:
-            continue
-        cut_hi = min(W.hi, _ts("2025-01-01"))
-        Wn = Window(datas, lo, "2025-01-01", "N2") if W.hi > cut_hi else W
-        n2.append(S.sharpe(Wn.run(Wn.agent_targets(run["delta"][0][cd_p0], cd_p0), cost)["r"]))
-    if n2:
-        Wd = Window(datas, lo, "2025-01-01", "N2 compare")
-        hd = Wd.run(Wd.agent_targets(runs[hi_idx]["delta"][0][cd_p0], cd_p0), cost)
-        out["N2"] = dict(sharpes=n2, p0_dev_sharpe=S.sharpe(hd["r"]), beats_all=bool(S.sharpe(hd["r"]) > max(n2)))
+        run = load_run("N2", r)
+        n2.append(S.sharpe(Wd.run(Wd.agent_targets(run["delta"][0][cd_p0], cd_p0), cost)["r"]))
+    hd = Wd.run(Wd.agent_targets(runs[hi_idx]["delta"][0][cd_p0], cd_p0), cost)
+    out["N2"] = dict(sharpes=n2, n=len(n2), p0_dev_sharpe=S.sharpe(hd["r"]),
+                     beats_all=bool(len(n2) == n_null2 and S.sharpe(hd["r"]) > max(n2)))
 
     # ── 연도별·국면별·해석 ──
     out["years"] = by_year(days, {"agent": head["r"], "B0": bh["r"], "B2": base["B2"]["r"]},
@@ -356,14 +367,30 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     reps_pos = int(sum(x > 0 for x in dsr_vs_bh))
     ph_pos = int(sum(x["d_sharpe"] > 0 for x in ph))
     claim = dict(
-        holm_p=h2[0]["p_holm"], dsr=out.get("dsr", {}).get("p0"), reps_positive=reps_pos, reps=len(p0),
+        holm_p=h2[0]["p_holm"], dsr=out.get("dsr", {}).get("p0_excess"), reps_positive=reps_pos, reps=len(p0),
         phases_positive=ph_pos, phases=len(ph), n1_percentile=out.get("N1", {}).get("percentile"),
         n2_beats_all=out.get("N2", {}).get("beats_all"))
+    claim["n2_runs"] = out["N2"]["n"]
     claim["passed"] = bool(claim["holm_p"] is not None and claim["holm_p"] < 0.05
                            and (claim["dsr"] or 0) >= 0.95 and reps_pos >= 8 and ph_pos >= 12
                            and (claim["n1_percentile"] or 0) >= 0.95 and claim["n2_beats_all"])
     out["claim"] = claim
     out["b2_ge_agent"] = bool(S.sharpe(base["B2"]["r"]) >= S.sharpe(head["r"]))
+    out["bh_ge_agent"] = bool(S.sharpe(bh["r"]) >= S.sharpe(head["r"]))
+    # 연도별 부호 검정: 에이전트가 매수·보유보다 나은 해의 수 (이항, 단측)
+    yrs = [y for y in out["years"] if y["n_days"] >= 300]
+    k = sum(1 for y in yrs if y["agent"] > y["B0"])
+    n = len(yrs)
+    out["year_sign_test"] = dict(wins=k, years=n, p=float(sum(math.comb(n, j) for j in range(k, n + 1)) / 2 ** n) if n else None)
+    # 손익분기 비용: 샤프 차이(에이전트 − 매수·보유)가 0을 지나는 편도 비용 (선형 보간)
+    be_x = [(b["cost"], b["sharpe"] - b["bh_sharpe"]) for b in out["breakeven"]]
+    out["breakeven_cost"] = None
+    for (c0, d0_), (c1, d1_) in zip(be_x, be_x[1:]):
+        if d0_ >= 0 > d1_:
+            out["breakeven_cost"] = c0 + (c1 - c0) * d0_ / (d0_ - d1_)
+            break
+    if be_x and be_x[0][1] < 0:
+        out["breakeven_cost"] = 0.0                  # 비용 0에서도 매수·보유보다 못함
 
     # ── 차트용 계열 (일별 자산) ──
     out["series"] = dict(days=[int(x) for x in days],
@@ -372,12 +399,36 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
                          B2=np.cumprod(1 + base["B2"]["r"]).round(5).tolist(),
                          B7=np.cumprod(1 + base["B7"]["r"]).round(5).tolist(),
                          exposure=pos_d.round(3).tolist(),
-                         reps=[np.cumprod(1 + x["r"])[::7].round(4).tolist() for x in p0],
-                         selector=np.cumprod(1 + sel["r"]).round(5).tolist() if sel else None)
+                         reps=[np.cumprod(1 + x["r"])[::7].round(4).tolist() for x in p0])
+    s_full = None
+    if sel:
+        i19 = int(np.searchsorted(days, _ts("2019-01-01"), side="right"))
+        s_full = np.full(len(days), np.nan)
+        s_full[i19:] = sel["r"]
     out["subperiods"] = subperiods(days, {"agent": head["r"], "B0": bh["r"], "B2": base["B2"]["r"],
-                                          "S": sel["r"] if sel else None})
+                                          "B6": base["B6"]["r"], "S": s_full})
+    # 잠금 구간은 하락장이라 보유를 줄인 전략이 구조적으로 매수·보유를 이김 → 200일선·모멘텀·무작위정책과 비교
+    lb = [p for p in out["subperiods"] if p["name"] == "Lockbox"]
+    if lb and "N1" in out:
+        sel_lb = days > _ts(SUBPERIODS["Lockbox"][0])
+        la, lb_ = int(np.argmax(sel_lb)), len(days)
+        dmask = (day_id >= la) & (day_id < lb_)
+        if dmask.sum() > 100:
+            e2, s2 = S.exposure_switch_rate(head["pos"][dmask])
+            if 0 < e2 < 1 and s2 > 0:
+                n1_lb = S.null_markov(m[dmask], cost, e2, min(s2, 2 * min(e2, 1 - e2) * 0.999), n=1000, seed=5,
+                                      day_id=day_id[dmask] - la)
+                lb[0]["N1_percentile"] = S.null_percentile(S.sharpe(head["r"][sel_lb]), n1_lb)
     out["n_trials"] = n_trials()
     out["code_hash"] = sorted(x for x in _SEEN_CODE if x)
+    out["counts"] = dict(p0=len(p0), grid={k: len(v) for k, v in grid_r.items()},
+                         ablations={k: len(v) for k, v in abl.items()}, n2=out["N2"]["n"])
+    out["phase_d_sharpe"] = [x["d_sharpe"] for x in ph]
+    try:
+        with open(AUDIT, encoding="utf-8") as f:
+            out["lockbox_openings"] = sum(1 for l in f if "\topened\t" in l)
+    except FileNotFoundError:
+        out["lockbox_openings"] = 0
     return out
 
 
@@ -443,8 +494,8 @@ def selector(W, grid_r, datas, cost, days):
         for y in years:
             t_y = _ts(f"{y}-01-01")
             t_n = _ts(f"{y + 1}-01-01")
-            i0 = np.searchsorted(days, t_y - 730 * 86400)
-            i1 = np.searchsorted(days, t_y)
+            i0 = np.searchsorted(days, t_y - 730 * 86400, side="right")   # (t_y−2년, t_y] 에 끝나는 일별 수익
+            i1 = np.searchsorted(days, t_y, side="right")
             j0 = np.searchsorted(close_t, t_y - 730 * 86400)
             j1 = np.searchsorted(close_t, t_y)
             best, best_sr = p0name, -np.inf
@@ -468,23 +519,24 @@ def selector(W, grid_r, datas, cost, days):
         res = W.run(tg, cost)
         rs.append(res)
         picks.append(pick_r)
-    # 2019-01-01 이후만 보고
-    i19 = np.searchsorted(days, _ts("2019-01-01"))
+    # 2019-01-01 이후만 보고 (그 전은 P0과 같으므로 선택기 성적에 섞지 않음)
+    i19 = np.searchsorted(days, _ts("2019-01-01"), side="right")
     srs = [S.sharpe(x["r"][i19:]) for x in rs]
     p0s = [S.sharpe(grid_r[p0name][r]["r"][i19:]) for r in range(reps)]
     lm = lower_median(srs)
-    return dict(r=rs[lm]["r"], summary=dict(
+    return dict(r=rs[lm]["r"][i19:], summary=dict(
         picks=picks, sharpe_reps=srs, p0_sharpe_reps=p0s, headline_rep=lm,
         sharpe=srs[lm], p0_sharpe_same_window=float(np.median(p0s)),
         cagr=S.summary(rs[lm]["r"][i19:])["cagr"], max_dd=S.summary(rs[lm]["r"][i19:])["max_dd"]))
 
 
 def by_year(days, series, exposure):
-    yrs = pd.to_datetime(days, unit="s", utc=True).year
+    # days[i]는 r[i]가 끝나는 자정 → 그 수익이 속한 날은 하루 전 (기간 시작 기준으로 연도 배정)
+    yrs = pd.to_datetime(days - 86400, unit="s", utc=True).year
     out = []
     for y in sorted(set(yrs)):
         sel = yrs == y
-        row = dict(year=int(y), exposure=float(exposure[sel].mean()))
+        row = dict(year=int(y), n_days=int(sel.sum()), exposure=float(exposure[sel].mean()))
         for k, r in series.items():
             row[k] = float(np.prod(1 + r[sel]) - 1)
             row[k + "_sharpe"] = S.sharpe(r[sel]) if sel.sum() > 2 else None
@@ -502,7 +554,11 @@ def subperiods(days, series):
         for k, r in series.items():
             if r is None:
                 continue
-            s = S.summary(r[sel])
+            rr = r[sel]
+            rr = rr[~np.isnan(rr)]                       # 선택기 S는 2019년부터만
+            if len(rr) < 30:
+                continue
+            s = S.summary(rr)
             row[k] = dict(cagr=s["cagr"], sharpe=s["sharpe"], max_dd=s["max_dd"])
         out.append(row)
     return out
@@ -512,12 +568,17 @@ def by_regime(W, head, bh, datas):
     """추세(직전 180일 수익) 3분위·변동성 국면 3분위별 노출도와 초과수익"""
     d0 = datas[0]
     a, b = W.rng[0]
-    ret180 = d0.X[a:b, FI["ret_180"]]
+    # 추세 = 직전 180일(1080봉) 로그수익 (지표 ret_180은 180봉=30일이라 따로 계산)
+    lc = np.log(d0.c)
+    ret180 = np.full(b - a, np.nan)
+    idx = np.arange(a, b)
+    okk = idx >= 1080
+    ret180[okk] = lc[idx[okk]] - lc[idx[okk] - 1080]
     vr = d0.X[a:b, FI["vol_regime"]]
-    m = np.nan_to_num(d0.m[a:b])
+    m = W.m(0)
     out = {}
     for name, x in (("trend", ret180), ("vol", vr)):
-        q = np.quantile(x, [1 / 3, 2 / 3])
+        q = np.nanquantile(x, [1 / 3, 2 / 3])
         rows = []
         for j, (lo, hi) in enumerate(((-np.inf, q[0]), (q[0], q[1]), (q[1], np.inf))):
             sel = (x > lo) & (x <= hi)
@@ -538,7 +599,7 @@ def interpret(W, head, run, cd, datas):
         q = np.quantile(x, np.linspace(0, 1, 11))
         out[n] = [float(head["pos"][(x >= q[j]) & (x <= q[j + 1])].mean()) for j in range(10)]
     dl = run["delta"][0][cd][a:b]
-    km = 100 * np.nan_to_num(d0.m[a:b])
+    km = 100 * W.m(0)
     ok = ~np.isnan(dl)
     q = np.quantile(dl[ok], np.linspace(0, 1, 11))
     cal = []

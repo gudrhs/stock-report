@@ -549,3 +549,109 @@ class GateWindowTests(unittest.TestCase):
         ok2, info2 = W.finetune_ok(ens, ens, d, Tk + 30 * 86400)     # 한 달 데이터가 끊김
         self.assertFalse(ok2)
         self.assertEqual(info2["reason"], "short_window")
+
+
+class LiveRobustnessTests(unittest.TestCase):
+    """2차 리뷰(실시간 모의매매)에서 나온 문제 회귀 테스트"""
+
+    def _hourly(self, start="2021-01-01", end="2023-03-01"):
+        q = D.load_15m()
+        q = q[(q.index >= start) & (q.index < end)]
+        g = q.resample("1h", label="left", closed="left")
+        hr = pd.DataFrame({"open": g["open"].first(), "high": g["high"].max(), "low": g["low"].min(),
+                           "close": g["close"].last(), "volume": g["volume"].sum()}).dropna()
+        hr.insert(0, "ts", D.to_unix(hr.index))
+        return hr.reset_index(drop=True)
+
+    def _mock(self, hr, late_ts=None, late_by=0):
+        from btc import live as L
+
+        class Mock(L.Venue):
+            def fetch_hourly(self, n, now=None):
+                ok = hr["ts"] + 3600 <= now
+                if late_ts is not None:
+                    ok &= ~((hr["ts"] == late_ts) & (now < late_ts + 3600 + late_by))
+                return self.closed_only(hr[ok].tail(n), now)
+        return Mock()
+
+    def _trader(self, tag="p0_r0_2022-10-01"):
+        from btc import live as L
+        rng = np.random.default_rng(0)
+        ens = Ensemble(StackedMLP(3, [len(Fe.NAMES) + 1, 16, 16, 4], rng, last_scale=3.0), "full22")
+        return L.PaperTrader(ens, cost=0.0015, model_tag=tag, venue="mock"), ens
+
+    @unittest.skipUnless(os.path.exists(CACHE), "15분봉 캐시 없음")
+    def test_late_candle_keeps_the_order_already_placed(self):
+        from btc import live as L
+        hr = self._hourly()
+        t0 = int(pd.Timestamp("2022-11-01", tz="UTC").timestamp())
+        late = t0 + 20 * 3600 + 3 * 3600                  # 20~24시 봉의 마지막 시간봉이 10분 늦음 (재시도 3분 초과)
+        v = self._mock(hr, late_ts=late, late_by=600)
+        tr, ens = self._trader()
+        for bnd in range(t0, t0 + 6 * 86400, 4 * 3600):
+            L.process(tr, v, now=bnd + 20, backfill_hours=24 * 900, sleep=lambda s: None)
+        # 백테스트: 매 봉 판단·다음 시가 체결 — 늦은 봉은 판단만 못 했고(관망) 주문은 체결돼야 함
+        bars = L.hourly_to_4h(hr[hr["ts"] + 3600 <= t0 + 6 * 86400])
+        X, _ = Fe.compute(bars)
+        logs = [r for r in tr.log if r.get("decision") is not None]
+        ts = bars["ts"].to_numpy()
+        pos = {r["ts"]: r["decision"] for r in logs}
+        replayed = [a["ts"] for a in tr.alarms if a["alarm"] == "replayed_bar"]
+        self.assertEqual(len(replayed), 1)
+        i = int(np.searchsorted(ts, replayed[0]))
+        prev_decision = pos[int(ts[i - 1])]
+        # 늦은 봉 다음 봉의 기록: 보유(pos)는 직전 결정이 체결된 상태여야 함
+        nxt = [r for r in logs if r["ts"] == int(ts[i + 1])][0]
+        self.assertEqual(nxt["pos"], prev_decision)
+
+    def test_catch_up_retrains_every_missed_month_in_order(self):
+        from btc import live as L
+        months = L.month_starts_between(int(pd.Timestamp("2026-11-01", tz="UTC").timestamp()),
+                                        int(pd.Timestamp("2027-02-05", tz="UTC").timestamp()))
+        self.assertEqual([str(m.date()) for m in months], ["2026-12-01", "2027-01-01", "2027-02-01"])
+
+    @unittest.skipUnless(os.path.exists(CACHE), "15분봉 캐시 없음")
+    def test_retrain_failure_does_not_stop_trading(self):
+        from btc import live as L
+        hr = self._hourly()
+        tr, ens = self._trader(tag="p0_r0_2022-09-01")
+        calls = []
+
+        def boom(T):
+            calls.append(str(T.date()))
+            raise RuntimeError("network down")
+        t0 = int(pd.Timestamp("2022-10-01", tz="UTC").timestamp())
+        v = self._mock(hr)
+        L.process(tr, v, now=t0 - 4 * 3600 + 20, backfill_hours=24 * 900, sleep=lambda s: None)
+        out = L.process(tr, v, now=t0 + 20, sleep=lambda s: None, retrain_fn=boom)
+        self.assertEqual(calls, ["2022-10-01"])
+        self.assertTrue(any(a["alarm"] == "retrain_failed" for a in tr.alarms))
+        self.assertIsNotNone(out[-1]["decision"])              # 이전 모델로 계속 판단
+        self.assertIs(tr.ens, ens)
+
+    @unittest.skipUnless(os.path.exists(CACHE), "15분봉 캐시 없음")
+    def test_late_wakeup_does_not_trade_at_stale_prices(self):
+        from btc import live as L
+        hr = self._hourly()
+        tr, _ = self._trader()
+        t0 = int(pd.Timestamp("2022-11-01", tz="UTC").timestamp())
+        v = self._mock(hr)
+        L.process(tr, v, now=t0 + 20, backfill_hours=24 * 900, sleep=lambda s: None)
+        out = L.process(tr, v, now=t0 + 4 * 3600 + 3 * 3600, sleep=lambda s: None)   # 3시간 늦게 깸
+        self.assertIsNone(out[-1].get("decision"))
+        self.assertTrue(any(a["alarm"] == "late_decision" for a in tr.alarms))
+
+    def test_stale_data_blocks_entries_but_allows_exits(self):
+        from btc import live as L
+        rng = np.random.default_rng(2)
+        df = synth_bars(2600, seed=5)
+        for sign, p0, want in ((+1, 0, 0), (-1, 1, 0)):
+            net = StackedMLP(1, [23, 4, 4, 4], rng, last_scale=0.0)
+            net.params[-1][..., 1] = sign * 50.0              # U1−U0 = ±50 → 강한 매수/매도 신호
+            tr = L.PaperTrader(Ensemble(net, "full22"), cost=0.0015, model_tag="x")
+            for i in range(2599):
+                tr.on_bar(df.iloc[i], trade=False)
+            tr.acct.pos = p0
+            now = int(df["ts"].iloc[2599]) + 4 * 3600 + 3 * 4 * 3600       # 3봉 늦은 데이터
+            rec = tr.on_bar(df.iloc[2599], trade=True, now=now)
+            self.assertEqual(rec["decision"], want)

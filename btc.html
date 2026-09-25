@@ -135,14 +135,14 @@ pre{background:#11151b;border:1px solid var(--line);border-radius:10px;padding:1
 판단 규칙에는 비용만큼의 문턱이 저절로 생깁니다. 신경망 23→32→32→4, 5개 앙상블, numpy 직접 구현.<br><br>
 <b>검증</b> — 2017년 1월부터 매월 1일, 그때까지의 데이터만으로 재학습(1월은 처음부터, 나머지는 이어서)하고 그 달은 그 모델로만 판단.
 체결은 다음 봉 시가. 모든 설정은 결과를 보기 전에 고정했고(학습 스텝 수만 2014–16 검증 손실로 결정), 시험한 변형은 전부 세서 DSR·PBO에 반영합니다.
-2025-01-01 이후는 코드가 잠가 두었다가 모든 설정을 확정한 뒤 한 번만 열었습니다.
+2025-01-01 이후는 코드가 잠가 두었다가 모든 설정을 확정한 뒤에 열었습니다(열람 기록은 아래 한계 항목).
 자세한 내용: <a href="https://github.com/gudrhs/stock-report/blob/main/btc/README.md" style="color:#7cc0f5">btc/README.md</a>
 </div>
 
 <h2>알아둘 한계</h2>
 <div class=note id=limits>
 <ul>
-<li><b>잠금 구간이 완전히 깨끗하지 않습니다.</b> 설계 단계에서 그 기간의 시장 통계(매수·보유 CAGR −6%, 최대낙폭 −53%)를 봤습니다. 또 하락장에서는 보유 비중이 100% 미만인 전략이 구조적으로 매수·보유를 이기므로, 잠금 구간은 200일선 필터·모멘텀·무작위 정책과 비교해야 합니다.</li>
+<li id=lbnote></li><li><b>잠금 구간이 완전히 깨끗하지 않습니다.</b> 설계 단계에서 그 기간의 시장 통계(매수·보유 CAGR −6%, 최대낙폭 −53%)를 봤습니다. 또 하락장에서는 보유 비중이 100% 미만인 전략이 구조적으로 매수·보유를 이기므로, 잠금 구간은 200일선 필터·모멘텀·무작위 정책과 비교해야 합니다.</li>
 <li><b>진짜로 깨끗한 검증은 2026-09-25부터의 모의매매뿐</b>입니다. 사전 등록한 점검일은 2027-03-25, 2027-09-25.</li>
 <li>백테스트는 비트스탬프 달러 가격입니다. 업비트(원화)로 운용하면 환율·김치프리미엄이 더해집니다.</li>
 <li>소액 계좌 가정(시장 충격 없음, 전량 체결). 슬리피지는 편도 0.05%로 가정했습니다.</li>
@@ -151,9 +151,10 @@ pre{background:#11151b;border:1px solid var(--line);border-radius:10px;padding:1
 </div>
 
 <h2>실시간 모의매매</h2>
-<pre>python -m btc.live run --venue upbit     # 4시간마다 판단 (업비트 KRW-BTC, 실주문 없음)
-python -m btc.live once --venue upbit    # 한 번만 (cron·작업 스케줄러용)
-python -m btc.live retrain --src &lt;비트스탬프 1분봉 저장소&gt;   # 매월 1일</pre>
+<pre>git clone https://github.com/ff137/bitstamp-btcusd-minute-data
+python -m btc.live run --venue upbit --retrain-src bitstamp-btcusd-minute-data
+    # 4시간마다 판단 (업비트 KRW-BTC, 실주문 없음), 매월 1일 첫 판단 전 자동 재학습
+python -m btc.live status</pre>
 
 <div class=foot>
 데이터: 비트스탬프 BTC/USD 1분봉 (공개 저장소 ff137/bitstamp-btcusd-minute-data). 기술적 지표만 보고 기계적으로 판단한 결과이며 투자 권유가 아닙니다.
@@ -183,7 +184,7 @@ function legend(box,items){const d=document.createElement('div');d.className='le
   d.innerHTML=items.map(([c,n,dash])=>`<span><i style="background:${c};${dash?'opacity:.5':''}"></i>${esc(n)}</span>`).join('');box.appendChild(d)}
 
 /* ── 선 그래프 (로그축 선택, 십자선 툴팁) ── */
-function lineChart(box,{x,series,log=false,yfmt,xfmt,h=320,ylabel,band}){
+function lineChart(box,{x,series,log=false,yfmt,xfmt,h=320,ylabel,band,time=true,numx=false,xticks}){
   box.innerHTML='';
   legend(box,series.filter(s=>!s.faint).map(s=>[s.color,s.name]));
   const W=1100,H=h,m={l:58,r:112,t:10,b:28};
@@ -194,16 +195,18 @@ function lineChart(box,{x,series,log=false,yfmt,xfmt,h=320,ylabel,band}){
   series.forEach(s=>s.y.forEach(v=>{if(v!=null&&isFinite(v)&&(!log||v>0)){lo=Math.min(lo,tf(v));hi=Math.max(hi,tf(v))}}));
   if(band){lo=Math.min(lo,band[0]);hi=Math.max(hi,band[1])}
   const pad=(hi-lo)*0.04||1;lo-=pad;hi+=pad;
-  const X=i=>m.l+(W-m.l-m.r)*i/(x.length-1), Y=v=>m.t+(H-m.t-m.b)*(1-(tf(v)-lo)/(hi-lo));
+  const x0=x[0],x1=x[x.length-1];
+  const X=i=>m.l+(W-m.l-m.r)*(numx?(x[i]-x0)/((x1-x0)||1):i/(x.length-1)), Y=v=>m.t+(H-m.t-m.b)*(1-(tf(v)-lo)/(hi-lo));
   // 격자·축
   let ticks=[];
   if(log){for(let e=Math.floor(lo);e<=Math.ceil(hi);e++)for(const k of [1,2,5]){const v=k*10**e;if(Math.log10(v)>=lo&&Math.log10(v)<=hi)ticks.push(v)}}
   else{const st=niceStep((hi-lo)/5);for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)ticks.push(v)}
   ticks.forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:C.grid,'stroke-width':1},svg);
     const t=el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:C.axis},svg);t.textContent=yfmt(v)});
-  const yrs=[];x.forEach((t,i)=>{const d=new Date(t*1000);if(d.getUTCMonth()===0&&d.getUTCDate()===1)yrs.push(i)});
+  if(time){const yrs=[];x.forEach((t,i)=>{const d=new Date(t*1000);if(d.getUTCMonth()===0&&d.getUTCDate()===1)yrs.push(i)});
   yrs.forEach(i=>{el('line',{x1:X(i),x2:X(i),y1:m.t,y2:H-m.b,stroke:C.grid,'stroke-width':1},svg);
-    const t=el('text',{x:X(i)+3,y:H-10,'font-size':11,fill:C.axis},svg);t.textContent=new Date(x[i]*1000).getUTCFullYear()});
+    const t=el('text',{x:X(i)+3,y:H-10,'font-size':11,fill:C.axis},svg);t.textContent=new Date(x[i]*1000).getUTCFullYear()});}
+  else{x.forEach((v,i)=>{if(xticks&&!xticks(i))return;const t=el('text',{x:X(i),y:H-10,'font-size':11,fill:C.axis,'text-anchor':'middle'},svg);t.textContent=xfmt(v,true)})}
   // 선
   series.forEach(s=>{let d='';s.y.forEach((v,i)=>{if(v==null||(log&&v<=0))return;d+=(d?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1)});
     el('path',{d,fill:'none',stroke:s.color,'stroke-width':s.faint?1:2,'stroke-opacity':s.faint?0.28:1,'stroke-linejoin':'round'},svg)});
@@ -215,7 +218,8 @@ function lineChart(box,{x,series,log=false,yfmt,xfmt,h=320,ylabel,band}){
   const vl=el('line',{y1:m.t,y2:H-m.b,stroke:'#8b93a3','stroke-width':1,'stroke-dasharray':'3,3',visibility:'hidden'},svg);
   const hit=el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'},svg);
   const move=ev=>{const r=svg.getBoundingClientRect();const px=(ev.clientX-r.left)*W/r.width;
-    let i=Math.round((px-m.l)/(W-m.l-m.r)*(x.length-1));i=Math.max(0,Math.min(x.length-1,i));
+    let i;if(numx){let best=1e18;x.forEach((_,k)=>{const dd=Math.abs(X(k)-px);if(dd<best){best=dd;i=k}})}
+    else{i=Math.round((px-m.l)/(W-m.l-m.r)*(x.length-1))}i=Math.max(0,Math.min(x.length-1,i));
     vl.setAttribute('x1',X(i));vl.setAttribute('x2',X(i));vl.setAttribute('visibility','visible');
     tip.innerHTML=`<div class=d>${xfmt(x[i])}</div>`+series.filter(s=>!s.faint).map(s=>`<div><i style="background:${s.color}"></i>${esc(s.name)} <b>${yfmt(s.y[i])}</b></div>`).join('');
     tip.style.display='block';const bx=box.getBoundingClientRect();let lx=ev.clientX-bx.left+14;
@@ -258,17 +262,20 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
   $('upd').textContent='생성 '+(R.generated||'').slice(0,10);
   $('gen').textContent=`결과 생성 ${R.generated} · 시험 횟수 N=${R.n_trials} · 헤드라인 반복 r${R.headline_rep}`;
 
+  $('lbnote').innerHTML=full?`잠금 구간(2025-01 ~ 2026-09) 열람 기록: <b>${R.lockbox_openings??'?'}회</b> (data/btc/lockbox_audit.log)`:'이 화면은 2017–2024 결과입니다. 잠금 구간은 아직 열지 않았습니다.';
   // 판정
   const cl=R.claim||{};const dsr=R.dsr||{};
+  const conds=`판정 조건 — Holm p ${f2(cl.holm_p,3)} (&lt;0.05) · 초과수익 DSR ${f2(cl.dsr,3)} (≥0.95) · 반복 ${cl.reps_positive}/${cl.reps} (≥8) · 격자 ${cl.phases_positive}/${cl.phases} (≥12) · 무작위정책 백분위 ${cl.n1_percentile==null?'–':(cl.n1_percentile*100).toFixed(0)} (≥95) · 특징섞기 대조 ${cl.n2_runs}개 전부 상회 ${cl.n2_beats_all?'예':'아니오'}`;
+  const recs=(R.b2_ge_agent?`<div class=rec>더 단순한 200일선 필터(B2)가 같거나 더 나았으므로 단순 규칙을 권합니다.</div>`:'')+
+    (R.bh_ge_agent?`<div class=rec>그냥 사서 들고 있는 것(매수·보유)이 샤프 기준으로 같거나 더 나았습니다.</div>`:'');
   const dS=boot.obs,ci=boot.ci90||[null,null];
   let v;
   if(cl.passed){v=`<div class="verdict pass"><b>사전 등록한 판정 규칙을 모두 통과했습니다.</b> 강화학습 에이전트는 ${span} 표본외 구간에서 비용 차감 후 매수·보유 대비
-    샤프 차이 ${sg(dS)} (90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], Holm 보정 p = ${f2(cl.holm_p,3)}, DSR = ${f2(dsr.p0,3)}).
-    반복 ${cl.reps_positive}/${cl.reps}, 격자 ${cl.phases_positive}/${cl.phases}에서 양(+)이었습니다. 그래도 '최적'이라는 뜻은 아닙니다.</div>`}
+    샤프 차이 ${sg(dS)} (90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], Holm 보정 p = ${f2(cl.holm_p,3)}, 초과수익 DSR = ${f2(dsr.p0_excess,3)}).
+    그래도 '최적'이라는 뜻은 아닙니다.<div class=rec>${conds}</div>${recs}</div>`}
   else{v=`<div class="verdict fail"><b>강화학습 에이전트는 ${span} 표본외 구간에서 비용(편도 ${pct(R.cost,2)}) 차감 후 매수·보유 대비 통계적으로 유의한 초과성과를 보이지 못했습니다</b>
-    (ΔSharpe = ${sg(dS)}, 90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], p = ${f2(boot.p,3)}, DSR = ${f2(dsr.p0,3)}).`+
-    (R.b2_ge_agent?`<div class=rec>더 단순한 200일선 필터(B2)가 같거나 더 나았으므로 단순 규칙을 권합니다.</div>`:'')+
-    `<div class=rec>판정 조건: Holm p ${f2(cl.holm_p,3)} (&lt;0.05) · DSR ${f2(cl.dsr,3)} (≥0.95) · 반복 ${cl.reps_positive}/${cl.reps} (≥8) · 격자 ${cl.phases_positive}/${cl.phases} (≥12) · 무작위정책 백분위 ${cl.n1_percentile==null?'–':(cl.n1_percentile*100).toFixed(0)} (≥95) · 특징섞기 대조 전부 상회 ${cl.n2_beats_all?'예':'아니오'}</div></div>`}
+    (ΔSharpe = ${sg(dS)}, 90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], p = ${f2(boot.p,3)}, 초과수익 DSR = ${f2(dsr.p0_excess,3)}).`+
+    recs+`<div class=rec>${conds}</div></div>`}
   $('verdict').innerHTML=v;
 
   const card=(lb,n,s)=>`<div class=card><div class=lb>${lb}</div><div class=n>${n}</div><div class=s>${s}</div></div>`;
@@ -288,7 +295,7 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
     {name:'매수·보유 (B0)',short:'매수보유',y:S.B0,color:C.bh},
     {name:'강화학습 P0 (중앙 반복)',short:'RL',y:S.agent,color:C.ag},
     {name:'200일선 필터 (B2)',short:'200일선',y:S.B2,color:C.b2}];
-  if(S.selector)ser.push({name:'선택기 S',short:'선택기',y:S.selector,color:C.s});
+  ser.push({name:'변동성 목표 B7',short:'B7',y:S.B7,color:C.s});
   $('eq-sub').textContent='로그 축 · 시작 = 1 · 옅은 선 = 나머지 반복 9개';
   lineChart($('eqchart'),{x,series:ser,log:true,yfmt:v=>v==null?'–':(v>=10?v.toFixed(0):v>=1?v.toFixed(1):v.toFixed(2))+'배',xfmt:day,h:360});
   const mi=[];x.forEach((t,i)=>{const d=new Date(t*1000);if(i===x.length-1||new Date(x[i+1]*1000).getUTCMonth()!==d.getUTCMonth())mi.push(i)});
@@ -296,33 +303,38 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
   lineChart($('expchart'),{x,series:[{name:'보유 비중 (일평균)',short:'',y:S.exposure,color:C.ag}],yfmt:v=>(v*100).toFixed(0)+'%',xfmt:day,h:170,band:[0,1]});
 
   // 성과표
-  const rowOf=(nm,m,cls,tag)=>({_cls:cls,cells:[esc(nm)+(tag?`<span class=tag>${tag}</span>`:''),pct(m.cagr),f2(m.sharpe),f2(m.sortino),pct(m.max_dd),f2(m.calmar),pct(m.exposure,0),f2(m.switches_per_year,1),m.n_trades??'–',m.tuw_days??'–']});
+  const rowOf=(nm,m,cls,tag,rb)=>({_cls:cls,cells:[esc(nm)+(tag?`<span class=tag>${tag}</span>`:''),pct(m.cagr),f2(m.sharpe),f2(m.sortino),pct(m.max_dd),f2(m.calmar),pct(m.exposure,0),rb?f2(m.switches_per_year,0)+' (재조정)':f2(m.switches_per_year,1),rb?'–':(m.n_trades??'–'),m.tuw_days??'–']});
   const rows=[rowOf('매수·보유 (B0)',B.B0,'bh'),rowOf('강화학습 P0 — 중앙 반복',A,'hl')];
-  ['B1','B2','B3','B4','B5','B6','B7','B8'].forEach(k=>B[k]&&rows.push(rowOf(k+' '+B[k].label,B[k],'',k==='B8'?'사후정보':'')));
+  ['B7','B8','B1','B2','B3','B4','B5','B6'].forEach(k=>B[k]&&rows.push(rowOf(k+' '+B[k].label,B[k],'',k==='B8'?'사후정보':'',k==='B7'||k==='B8')));
   table('perftable',['전략','CAGR','샤프','소르티노','최대낙폭','칼마','보유비중','연 전환','거래 수','최장 수중(일)'],rows);
   $('perfnote').innerHTML=`<b>읽는 법</b> — 강화학습이 낙폭을 줄였다면 그게 '실력'인지 '덜 들고 있어서'인지 가려야 합니다. B7(변동성 목표)과 B8(에이전트와 같은 평균 비중을 늘 들고 있기)이 그 비교 대상입니다.
     B8은 에이전트의 사후 평균 비중을 쓰므로 실제로는 불가능한 기준입니다.`;
 
   // 구간별
   const sub=R.subperiods||[];
-  const subRows=[];sub.forEach(p=>{[['매수·보유','B0'],['강화학습 P0','agent'],['200일선','B2'],['선택기 S','S']].forEach(([n,k])=>{if(p[k])subRows.push({_cls:k==='agent'?'hl':'',cells:[p.name+' · '+n,pct(p[k].cagr),f2(p[k].sharpe),pct(p[k].max_dd)]})})});
-  table('subtable',['구간 · 전략','CAGR','샤프','최대낙폭'],subRows);
+  const subRows=[];sub.forEach(p=>{[['매수·보유','B0'],['강화학습 P0','agent'],['200일선 (B2)','B2'],['1개월 모멘텀 (B6)','B6'],['선택기 S (2019~)','S']].forEach(([n,k])=>{if(p[k])subRows.push({_cls:k==='agent'?'hl':(k==='B0'?'bh':''),cells:[p.name+' · '+n,pct(p[k].cagr),f2(p[k].sharpe),pct(p[k].max_dd),k==='agent'&&p.N1_percentile!=null?(p.N1_percentile*100).toFixed(0)+' / 100':'']})})});
+  table('subtable',['구간 · 전략','CAGR','샤프','최대낙폭','무작위 정책 대비 백분위'],subRows);
 
   // 연도별
-  table('yeartable',['연도','매수·보유','강화학습 P0','차이','200일선','평균 보유비중'],(R.years||[]).map(y=>({cells:[y.year,{v:sp(y.B0),c:cls(y.B0)},{v:sp(y.agent),c:cls(y.agent)},{v:sp(y.agent-y.B0),c:cls(y.agent-y.B0)},{v:sp(y.B2),c:cls(y.B2)},pct(y.exposure,0)]})));
+  const ppf=x=>x==null?'–':(x>0?'+':'')+(x*100).toFixed(1)+'%p';
+  table('yeartable',['연도','일수','매수·보유','강화학습 P0','차이','200일선','평균 보유비중'],(R.years||[]).map(y=>({cells:[y.year,y.n_days,{v:sp(y.B0),c:cls(y.B0)},{v:sp(y.agent),c:cls(y.agent)},{v:ppf(y.agent-y.B0),c:cls(y.agent-y.B0)},{v:sp(y.B2),c:cls(y.B2)},pct(y.exposure,0)]})));
+  if(R.year_sign_test){const st=R.year_sign_test;$('yeartable').insertAdjacentHTML('afterend',`<div class=note>연도별 부호 검정: 에이전트가 매수·보유보다 나은 해 ${st.wins}/${st.years} (단측 이항 p = ${f2(st.p,3)}, 300일 이상인 해만)</div>`)}
 
   // 반복
   const rp=R.reps||[];
   barChart($('repchart'),{labels:rp.map(r=>'r'+r.rep),values:rp.map(r=>r.d_sharpe),color:(i,v)=>i===R.headline_rep?C.ag:(v>0?'#8a5a44':'#4a5261'),fmt:v=>sg(v),mark:i=>i===R.headline_rep?'헤드라인(작은 쪽 중앙값)':'',title:'반복별 샤프 − 매수·보유 샤프'});
   const pos=rp.filter(r=>r.d_sharpe>0).length;
   const ph=R.phases||[];const php=ph.filter(p=>p.d_sharpe>0).length;
+  if(R.phase_d_sharpe)$('repnote').insertAdjacentHTML('beforebegin','<div class=chart id=phchart style="margin-top:12px"></div>');
+  if(R.phase_d_sharpe)barChart($('phchart'),{labels:R.phase_d_sharpe.map((_,i)=>'+'+(i*15)+'분'),values:R.phase_d_sharpe,color:(i,v)=>v>0?'#8a5a44':'#4a5261',fmt:v=>sg(v),title:'4시간봉 경계를 15분씩 민 16개 격자별 샤프 − 매수·보유 샤프 (헤드라인 반복)',h:190});
   $('repnote').innerHTML=`10번 중 <b>${pos}번</b>이 매수·보유보다 샤프가 높았습니다(판정 기준 ≥8). 4시간봉 경계를 15분씩 밀어 만든 16개 격자에서는 <b>${php}/${ph.length}</b>개가 양(+)이었습니다(기준 ≥12).
     같은 방법이라도 시드에 따라 결과가 이만큼 흔들립니다 — 가장 좋은 반복이 아니라 중앙값을 보는 이유입니다.`;
 
   // 비용
   const be=R.breakeven||[];
   lineChart($('bechart'),{x:be.map(b=>b.cost),series:[{name:'강화학습 P0',short:'RL',y:be.map(b=>b.sharpe),color:C.ag},{name:'매수·보유',short:'매수보유',y:be.map(b=>b.bh_sharpe),color:C.bh}],
-    yfmt:v=>f2(v),xfmt:c=>'편도 비용 '+(c*100).toFixed(2)+'%',h:230});
+    yfmt:v=>f2(v),xfmt:(c,ax)=>(ax?'':'편도 비용 ')+(c*100).toFixed(2)+'%',h:230,time:false,numx:true});
+  $('bechart').insertAdjacentHTML('beforeend',`<div class=legend>손익분기 비용(샤프 기준, 매수·보유와 같아지는 편도 비용): <b>${R.breakeven_cost==null?'시험한 범위 안에서 늘 우위':(R.breakeven_cost===0?'비용 0에서도 매수·보유보다 낮음':pct(R.breakeven_cost,2))}</b></div>`);
   table('costtable',['시나리오','편도 비용','판단 배수','P0 샤프','매수·보유 샤프','P0 CAGR','매수·보유 CAGR','반복 10개 중 샤프 우위'],(R.costs||[]).map(c=>({cells:[c.scenario,pct(c.cost,2),'×'+c.mult,f2(c.sharpe),f2(c.bh_sharpe),pct(c.cagr),pct(c.bh_cagr),c.d_sharpe_all_reps?c.d_sharpe_all_reps.filter(d=>d>0).length+'/10':'–']})));
 
   // 검정
@@ -331,24 +343,24 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
   const lw=H1.lw||{};
   $('testnote').innerHTML=`<b>H1</b> (사전 등록, 단측): P0 샤프 &gt; 매수·보유 샤프. 짝지은 정상 부트스트랩(평균 블록 20일, 10,000회) p = ${f2(boot.p,3)} ·
     Ledoit-Wolf HAC 교차확인 p = ${f2(lw.p_one_sided,3)} · PSR(0) = ${f2((R.psr||{}).sr0,3)} · 초과수익 PSR = ${f2((R.psr||{}).excess,3)} ·
-    DSR = ${f2(dsr.p0,3)} (시험 N = ${dsr.N??'–'})`;
+    초과수익 DSR = ${f2(dsr.p0_excess,3)} · 절대 샤프 DSR(0 대비) = ${f2(dsr.p0_abs,3)} (시험 N = ${dsr.N??'–'}; 장기 상승장에서는 절대 샤프 DSR은 매수·보유도 높게 나오므로 판정에는 초과수익 DSR을 씁니다)`;
 
   // 격자
   const g=R.grid||[];
-  table('gridtable',['변형 (γ · 지표 · 판단비용 배수)','반복','샤프 평균','CAGR 평균','최대낙폭 평균','보유비중'],g.map(r=>({_cls:r.name==='g0.97_full22_m2'?'hl':'',cells:[r.name.replace('g0_','γ=0 (다음 봉만) · ').replace('g0.9_','γ=0.9 · ').replace('g0.97_','γ=0.97 · ').replace('full22','지표 22').replace('min8','지표 8').replace('_m1',' · ×1').replace('_m2',' · ×2')+(r.name==='g0.97_full22_m2'?' = P0':''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.maxdd_mean),pct(r.exposure_mean,0)]})));
+  table('gridtable',['변형 (γ · 지표 · 판단비용 배수)','반복','샤프 평균','CAGR 평균','최대낙폭 평균','보유비중'],[{_cls:'bh',cells:['매수·보유 (비교 기준)','–',f2(B.B0.sharpe),pct(B.B0.cagr),pct(B.B0.max_dd),'100%']}].concat(g.map(r=>({_cls:r.name==='g0.97_full22_m2'?'hl':'',cells:[r.name.replace('g0_','γ=0 (다음 봉만) · ').replace('g0.9_','γ=0.9 · ').replace('g0.97_','γ=0.97 · ').replace('full22','지표 22').replace('min8','지표 8').replace('_m1',' · ×1').replace('_m2',' · ×2')+(r.name==='g0.97_full22_m2'?' = P0':''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.maxdd_mean),pct(r.exposure_mean,0)]}))));
   const sel=R.selector||{};const pbo=R.pbo||{};
   $('gridnote').innerHTML=`<b>선택기 S</b> — 매년 1월 1일, 그때까지 직전 24개월 성적만 보고 12개 중 하나를 골라 그해를 운용합니다(과거 정보만 사용).
-    2019년 이후 샤프 ${f2(sel.sharpe)} (같은 기간 P0 ${f2(sel.p0_sharpe_same_window)}), CAGR ${pct(sel.cagr)}, 최대낙폭 ${pct(sel.max_dd)}.<br>
+    2019년 이후만 보면 샤프 ${f2(sel.sharpe)} (같은 기간 P0 ${f2(sel.p0_sharpe_same_window)}), CAGR ${pct(sel.cagr)}, 최대낙폭 ${pct(sel.max_dd)} · 초과수익 DSR ${f2((dsr.selector||{}).excess,3)}.<br>
     <b>PBO</b>(과최적화 확률, 2017–24, 16블록 12,870분할) = <b>${f2(pbo.pbo,2)}</b>${pbo.pbo>0.5?' — 0.5를 넘으므로 이 격자에서 고르는 것은 잡음에 가깝고, 선택기는 무작위로 고른 것과 비슷하다고 봐야 합니다.':'.'}
-    · 사후에 가장 좋았던 변형(${esc((dsr.best_in_hindsight||{}).name||'–')})의 DSR = ${f2((dsr.best_in_hindsight||{}).dsr,3)} · 선택기 DSR = ${f2(dsr.selector,3)}`;
+    · 사후에 가장 좋았던 변형(${esc((dsr.best_in_hindsight||{}).name||'–')}, 2017–24)의 초과수익 DSR = ${f2((dsr.best_in_hindsight||{}).excess,3)} — 이렇게 '고른 뒤' 계산해도 기준에 못 미치면 격자 어디에도 확실한 우위가 없다는 뜻입니다.`;
   const ab=R.ablations||[];const AB={X1:'매월 이어학습 없이 1월에만 학습',X2:'봉마다 온라인 학습 (실시간 적응)',X3:'15분 밀린 격자 없이 한 격자만'};
-  table('abltable',['절제 실험','반복','샤프 평균','CAGR 평균','보유비중'],ab.map(r=>({cells:[r.name+' '+(AB[r.name]||''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.exposure_mean,0)]})));
+  table('abltable',['절제 실험','반복','샤프 평균','CAGR 평균','보유비중'],[{_cls:'bh',cells:['매수·보유','–',f2(B.B0.sharpe),pct(B.B0.cagr),'100%']},{_cls:'hl',cells:['P0 (비교 기준, 10반복 평균)',rp.length,f2(rp.reduce((a,b)=>a+b.sharpe,0)/rp.length),pct(rp.reduce((a,b)=>a+b.cagr,0)/rp.length),pct(rp.reduce((a,b)=>a+b.exposure,0)/rp.length,0)]}].concat(ab.map(r=>({cells:[r.name+' '+(AB[r.name]||''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.exposure_mean,0)]}))));
 
   // 귀무·대조
   const nr=[];
   if(R.N1)nr.push({cells:['N1 무작위 정책 1,000개 (같은 보유비중·전환율)','P0 샤프의 백분위',(R.N1.percentile*100).toFixed(0)+' / 100','기준 ≥95']});
   if(R.N2)nr.push({cells:['N2 특징을 시간상 섞어 학습한 워크포워드 '+R.N2.sharpes.length+'개 (2017–24)','P0 샤프 vs 최고값',f2(R.N2.p0_dev_sharpe)+' vs '+f2(Math.max(...R.N2.sharpes)),R.N2.beats_all?'전부 상회':'상회 못 함']});
-  if(R.N3)nr.push({cells:['N3 일별 보유를 30일 이상 원형 이동 2,000회','p',f2(R.N3.p,3),'']});
+  if(R.N3)nr.push({cells:['N3 4시간봉 보유를 30일 이상 원형 이동 2,000회 (같은 회계)','p',f2(R.N3.p,3),R.N3.p<0.05?'시점 선택이 우연보다 나음':'우연과 구별 안 됨']});
   if(CTL){const pc=CTL.runs.find(r=>r.kind==='regime');const ng=CTL.runs.filter(r=>r.kind==='garch');
     if(pc)nr.push({cells:['양성 대조: 추세 국면을 90% 맞히는 지표를 심은 합성 시장','ΔSharpe / p',sg(pc.d_sharpe)+' / '+f2(pc.p,3),pc.p<0.01?'통과 (잡아냄)':'실패']});
     if(ng.length)nr.push({cells:['음성 대조: 예측력 없는 GARCH 시장 '+ng.length+'개','ΔSharpe 평균 / 최대 DSR',sg(ng.reduce((a,b)=>a+b.d_sharpe,0)/ng.length)+' / '+f2(Math.max(...CTL.neg_dsr),2),Math.max(...CTL.neg_dsr)<0.95?'통과 (속지 않음)':'실패']});}
@@ -357,9 +369,11 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
   // 해석
   const it=R.interpret||{};const nm={ma_1200:'200일선 대비',rsi_84:'일봉 RSI',macdh_1d:'일봉 MACD 히스토그램',vol_regime:'변동성 국면'};
   const cols=[C.bh,C.ag,C.b2,C.s];const ks=Object.keys(nm).filter(k=>it[k]);
-  lineChart($('intchart'),{x:[1,2,3,4,5,6,7,8,9,10],series:ks.map((k,j)=>({name:nm[k],short:'',y:it[k],color:cols[j]})),yfmt:v=>(v*100).toFixed(0)+'%',xfmt:v=>v+'분위 (낮음→높음)',h:260,band:[0,1]});
+  lineChart($('intchart'),{x:[1,2,3,4,5,6,7,8,9,10],series:ks.map((k,j)=>({name:nm[k],short:'',y:it[k],color:cols[j]})),yfmt:v=>(v*100).toFixed(0)+'%',xfmt:(v,ax)=>ax?v:v+'분위 (낮음→높음)',h:260,band:[0,1],time:false});
   const cal=it.calibration||[];
-  lineChart($('calchart'),{x:cal.map((_,i)=>i+1),series:[{name:'예측 Δ (U1−U0)',short:'예측',y:cal.map(c=>c.pred),color:C.ag},{name:'실현 다음 봉 수익 ×100',short:'실현',y:cal.map(c=>c.real),color:C.bh}],yfmt:v=>f2(v),xfmt:v=>'Δ '+v+'분위',h:260});
+  lineChart($('calchart'),{x:cal.map((_,i)=>i+1),series:[{name:'예측 Δ (U1−U0)',short:'예측',y:cal.map(c=>c.pred),color:C.ag},{name:'실현 다음 봉 수익 ×100',short:'실현',y:cal.map(c=>c.real),color:C.bh}],yfmt:v=>f2(v),xfmt:(v,ax)=>ax?v:'Δ '+v+'분위',h:260,time:false});
+  const rg=R.regimes||{};const rgRows=[];[['trend','직전 180일 추세'],['vol','변동성 국면']].forEach(([k,n])=>(rg[k]||[]).forEach((r,j)=>rgRows.push({cells:[n+' '+['하위','중간','상위'][j]+' 1/3',pct(r.exposure,0),{v:pct(r.agent_bar_ret),c:cls(r.agent_bar_ret)},{v:pct(r.bh_bar_ret),c:cls(r.bh_bar_ret)}]})));
+  if(rgRows.length){$('calchart').parentNode.insertAdjacentHTML('afterend','<h3>국면별 <small style="color:#8b93a3;font-weight:400">연율화 산술 수익 (비용 전)</small></h3><div class=wrap id=rgtable></div>');table('rgtable',['국면','보유 비중','에이전트','매수·보유'],rgRows)}
 })();
 </script>
 </body></html>

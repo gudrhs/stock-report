@@ -107,18 +107,24 @@ python -m btc.data build --src bitstamp-btcusd-minute-data
 ### 실시간 모의매매
 
 ```bash
-python -m btc.live export                 # 워크포워드 반복 0의 최신 모델을 data/btc/models/ 로 (이미 들어 있음)
-python -m btc.live run --venue upbit      # 4시간마다 판단 (업비트 KRW-BTC, 비용 0.10%)
-python -m btc.live once --venue upbit     # 한 번만 (cron·작업 스케줄러로 4시간마다 00:00:20 UTC 등)
+git clone https://github.com/ff137/bitstamp-btcusd-minute-data     # 월간 재학습용 (백테스트와 같은 데이터)
+python -m btc.live run  --venue upbit --retrain-src bitstamp-btcusd-minute-data   # 권장
+python -m btc.live once --venue upbit --retrain-src bitstamp-btcusd-minute-data   # cron: UTC 0,4,8,12,16,20시 00분 20초
 python -m btc.live status
-python -m btc.live retrain --src bitstamp-btcusd-minute-data   # 매월 1일 (먼저 git pull)
+# 선택: --confirm-venue binance (10σ 급변 교차 확인), --gate-venue bitstamp (시작 때 판단 일치율 ≥85% 확인)
 ```
 
-- 처음 실행하면 1시간봉 12,000개(약 500일)를 받아 지표를 채운 뒤 마지막 봉부터 판단합니다.
+- 처음 실행하면 1시간봉 12,000개(약 500일)로 지표를 채우고, **다음 4시간봉부터** 판단합니다.
+- 매월 1일 00:00 UTC 봉을 판단하기 **전에** 자동 재학습합니다(백테스트와 같은 시점·같은 코드). 1월은 처음부터,
+  나머지 달은 이어서. 프로그램이 여러 달 꺼져 있었다면 빠진 달을 순서대로 모두 재학습합니다.
+  재학습이 실패하면 경고를 남기고 이전 모델로 계속 판단합니다.
+- 봉 마감 5분이 지나서 판단하게 되면 그 봉은 매매하지 않습니다(지난 가격으로 체결한 척하지 않기).
 - **실제 주문은 넣지 않습니다.** 판단·가상 체결·가상 자산만 `data/btc/live/`에 기록합니다.
+- 매수·보유와 기준전략 B0~B6도 같은 비용으로 나란히 모의 운용합니다.
 - 업비트는 원화, 백테스트는 달러(비트스탬프) 기준입니다. 지표는 가격 수준과 무관하게 만들었지만
-  환율·김치프리미엄은 백테스트에 반영되지 않습니다.
-- 매수·보유와 기준전략 B0~B6도 같은 비용으로 나란히 모의 운용해 비교합니다.
+  환율·김치프리미엄은 백테스트에 반영되지 않습니다. `--gate-venue bitstamp`로 두 거래소 판단 일치율을 확인하세요.
+- 설계서 §11 중 **아직 구현하지 않은 것**: 호가창 VWAP으로 실제 체결 비용(슬리피지) 측정, 지표 분포 이탈(PSI)
+  감시, 봉마다 온라인 학습(X2) 모의 트랙. 그래서 모의 기록의 슬리피지는 가정값(0.05%)입니다.
 
 ## 6. 알아둘 한계
 
