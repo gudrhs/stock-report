@@ -2,6 +2,9 @@
 
 python -m unittest tests.test_btc_more_rl -v
   · C1 합의: ≥6 보유, ≤4 현금, 5:5 직전 합의 유지(시작 현금), 0/1 아닌 표는 거부
+  · 강제 유지 봉에서는 합의도 바뀌지 않음 → 합의 = 실제로 시뮬레이션된 포지션 (들지 않은 보유를 5:5로 유지하지 않음)
+  · 문턱은 반올림 전 R6 값, 등록 문구의 반올림 값이면 판정이 달라지는 경우 표시
+  · 갱신한 시험 수 N: 기록에 없는 C1 등을 더하고, 그 N에서의 디플레이티드 검정도 계산
   · 반복별 표 = 그 반복의 k_policy 포지션 (U가 NaN이면 직전 포지션 유지 — 목표는 NaN)
   · 작은 쪽 중앙값(5개면 3번째, 10개면 5번째)·위쪽 중앙값(10개면 6번째)
   · 판정: 두 구간 모두 R6 기준·매수·보유보다 '높아야'(같으면 탈락), 합성 대조 없음 → 미완, 탈락 → 후보 아님
@@ -55,6 +58,36 @@ class TestCommittee(unittest.TestCase):
             p = 1.0 if k >= 6 else (0.0 if k <= 4 else p)
             ref.append(p)
         np.testing.assert_array_equal(a, ref)
+
+    def test_forced_hold_keeps_actual_position(self):
+        # 검토에서 찾은 경우: 첫 봉이 강제 유지면 6표여도 진입하지 않았으므로, 다음 5:5는 '현금 유지'
+        v = self.votes([6, 5, 5])
+        fh = np.array([True, False, False])
+        np.testing.assert_array_equal(M.committee(v, fh), [0.0, 0.0, 0.0])
+        np.testing.assert_array_equal(M.committee(v, fh * False), [1.0, 1.0, 1.0])
+        # 강제 유지 중에는 보유도 유지 (4표여도 청산하지 않음)
+        np.testing.assert_array_equal(M.committee(self.votes([6, 4, 5, 4]), np.array([False, True, False, False])),
+                                      [1.0, 1.0, 1.0, 0.0])
+        with self.assertRaises(ValueError):
+            M.committee(v, np.array([True, False]))
+
+    def test_forced_hold_matches_simulate(self):
+        # 합의 포지션을 목표로 env.simulate 에 넣으면 판단봉의 실제 포지션이 합의와 정확히 같아야 함
+        from btc.env import simulate
+        rng = np.random.default_rng(5)
+        T = 400
+        v = (rng.random((T, 10)) < rng.random((T, 1))).astype(float)
+        v[rng.random(T) < 0.3] = np.repeat([[1.0] * 5 + [0.0] * 5], 1, 0)   # 5:5 를 자주
+        fh = rng.random(T) < 0.1
+        c = 100 * np.exp(np.cumsum(0.01 * rng.standard_normal(T)))
+        o = np.concatenate([[100.0], c[:-1]])
+        pos = M.committee(v, fh)
+        sim = simulate(pos, o, c, 0.0015, 0, T - 1, forced_hold=fh)
+        held = np.asarray(sim["pos"], dtype=float)
+        # simulate 의 pos[t] = t 봉 목표를 t+1 시가에 체결한 뒤의 실제 보유 (강제 유지 봉은 목표 무시)
+        np.testing.assert_array_equal(held[:T - 1], pos[:T - 1])
+        # 고치기 전 규칙(강제 유지 무시)은 이 자료에서 실제 보유와 어긋남 — 시험이 그 경우를 담고 있는지 확인
+        self.assertFalse(np.array_equal(M.committee(v)[:T - 1], held[:T - 1]))
 
     def test_rejects_nonbinary(self):
         v = self.votes([6, 5])
@@ -141,11 +174,57 @@ class TestCriteria(unittest.TestCase):
         self.assertIs(c["candidate"], False)
         self.assertEqual(c["beats_bh"], {"main": False, "early": True})
 
+    def test_no_model_flag(self):
+        pw = self.pw(1.2, 1.149, 1.0, 2.0, 1.90, 1.22)
+        self.assertIs(M.criteria(pw, True, no_model_max=0.05)["candidate"], True)       # 5% 는 허용 (early.py 와 같음)
+        c = M.criteria(pw, True, no_model_max=0.051)
+        self.assertIsNone(c["candidate"])
+        self.assertTrue(c["no_model_flag"])
+        self.assertIn("판정 불가", c["verdict"])
+
     def test_controls(self):
         pw = self.pw(1.2, 1.149, 1.0, 2.0, 1.90, 1.22, p=0.01)
         self.assertIsNone(M.criteria(pw, None)["candidate"])
         self.assertIs(M.criteria(pw, False)["candidate"], False)
         self.assertTrue(M.criteria(pw, True)["p_vs_r6_below_005_both"])
+
+    def test_threshold_is_unrounded_and_flagged(self):
+        # 2015~2016 헤드라인 1.902: 등록 문구(1.90)로는 통과, 반올림 전 R6(1.9044)로는 탈락 → 탈락 + 표시
+        pw = self.pw(1.2, 1.148687, 1.0, 1.902, 1.904419, 1.22)
+        c = M.criteria(pw, True, registered={"main": 1.149, "early": 1.90}, ref_basis="x")
+        self.assertIs(c["candidate"], False)
+        self.assertTrue(c["verdict_differs_registered"])
+        self.assertEqual(c["beats_r6_registered"], {"main": True, "early": True})
+        self.assertIn("반올림", c["verdict"])
+        self.assertEqual(c["r6_threshold"], {"main": 1.148687, "early": 1.904419})
+        self.assertEqual(c["r6_threshold_basis"], "x")
+        # 둘 다 같은 결론이면 표시 없음
+        c = M.criteria(self.pw(1.2, 1.148687, 1.0, 2.0, 1.904419, 1.22), True, registered={"main": 1.149, "early": 1.90})
+        self.assertFalse(c["verdict_differs_registered"])
+        self.assertIs(c["candidate"], True)
+        # C1은 등록 숫자가 없음
+        self.assertIsNone(M.registered_refs("C1_r6_committee10"))
+        self.assertEqual(M.registered_refs("A1_actor_critic"), {"main": 1.149, "early": 1.90})
+        c = M.criteria(pw, True)
+        self.assertIsNone(c["beats_r6_registered"])
+        self.assertFalse(c["verdict_differs_registered"])
+
+    def test_n_trials_updated(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            p = os.path.join(td, "trials.jsonl")
+            with open(p, "w", encoding="utf-8") as f:
+                for n in ("R6_daily_trend8_uniform", "Q1_qrdqn_cvar", "A1_actor_critic", "P1_pessimistic_dqn"):
+                    f.write(json.dumps(dict(name=n, cfg_hash=n[:3])) + "\n")
+            self.assertEqual(M.n_trials_updated(base=60, trials=p), (61, ["C1_r6_committee10"]))
+            self.assertEqual(M.n_trials_updated(base=60, trials=os.path.join(td, "없음.jsonl"))[0], 64)
+        self.assertEqual(M.dsr_ns(61), (50, 200, 1000, 61))
+        self.assertEqual(M.dsr_ns(200), (50, 200, 1000))
+        self.assertEqual(M.dsr_ns(None), (50, 200, 1000))
+        g = M.dsr_gain(dict(obs=0.5, se=0.25), M.dsr_ns(61))
+        self.assertIn("N61", g)
+        self.assertLess(g["N50"]["threshold"], g["N61"]["threshold"])
 
     def test_needs_both_windows(self):
         with self.assertRaises(ValueError):
@@ -233,7 +312,7 @@ class TestWindowSynthetic(unittest.TestCase):
             cls.runs[("A1_actor_critic__early", r)] = dict(U={0.0: w.astype(np.float32)},
                                                            meta=dict(cfg=dict(stride=6, algo="a2c", output="weights",
                                                                               acts=[0.0, 0.25, 0.5, 0.75, 1.0])))
-        cls.out = M.evaluate_window(cls.W, "__early", lambda n, r: cls.runs[(n, r)])
+        cls.out = M.evaluate_window(cls.W, "__early", lambda n, r: cls.runs[(n, r)], M.dsr_ns(61))
 
     def test_bh_and_reference(self):
         o = self.out
@@ -269,9 +348,10 @@ class TestWindowSynthetic(unittest.TestCase):
             held.append(h)
         v = np.stack(held, 1)
         p, pos = 0.0, []
-        for row in v:
+        for row, f in zip(v, d.forced_hold[sel]):
             k = int(row.sum())
-            p = 1.0 if k >= 6 else (0.0 if k <= 4 else p)
+            if not f:                                            # 강제 유지 봉은 합의도 유지
+                p = 1.0 if k >= 6 else (0.0 if k <= 4 else p)
             pos.append(p)
         tg = np.full(d.T, np.nan)
         tg[sel] = pos
@@ -296,16 +376,21 @@ class TestWindowSynthetic(unittest.TestCase):
         for name in M.ORDER:
             pw = {k: wins[k]["methods"][name] for k in M.WINDOWS}
             ctl = M.controls_status(name, {})
-            methods[name] = dict(windows=pw, controls=ctl, criteria=M.criteria(pw, ctl["passed"]))
+            methods[name] = dict(windows=pw, controls=ctl,
+                                 criteria=M.criteria(pw, ctl["passed"], M.registered_refs(name), M.REF_BASIS[name]))
         for k in wins:
             wins[k]["r6"]["ref_check"] = M.ref_check(k, wins[k]["r6"]["lower_median5"])
-        out = _clean(dict(cost=M.COST, n_boot=M.N_BOOT, boot_seed=M.BOOT_SEED, n_trials=None,
+        out = _clean(dict(cost=M.COST, n_boot=M.N_BOOT, boot_seed=M.BOOT_SEED, n_trials=61,
+                          n_trials_added=["C1_r6_committee10"], dsr_ns=[50, 200, 1000, 61],
                           windows={k: {kk: vv for kk, vv in w.items() if kk != "methods"} for k, w in wins.items()},
                           methods=methods))
         txt = M.report(out)
         for name in M.ORDER:
             self.assertIn(name, txt)
         self.assertIn("판정", txt)
+        self.assertIn("N=50/200/1000/61", txt)
+        self.assertIn("반올림 전", txt)
+        self.assertIn("C1_r6_committee10 포함", txt)
 
 
 if __name__ == "__main__":

@@ -36,14 +36,17 @@ A1_actor_critic — 정책경사 액터-크리틱(A2C, 온-정책). btc/research
   · walk.run_replication은 한 달치 phase 0 판단봉을 시간 순서대로 한 번에 weights(X)로 넘깁니다.
     weights(X)는 행을 순서대로 처리합니다. 시작 w_prev = pos0 = 지난달 모델의 마지막 실행 비중(ens.last_pos),
     첫 달은 0(현금). 매 호출 pos0에서 다시 시작(멱등)하고, 끝나면 last_pos를 마지막 비중으로 둡니다.
-    지표가 NaN인 행은 판단을 보류하고 이전 비중을 유지합니다.
+    지표가 NaN인 행은 판단을 보류하고 이전 비중을 유지합니다. 그래서 저장된 비중에는 NaN이 없고 early.py의
+    no_model_share(저장 비중의 NaN 비율)는 A1에서 늘 0입니다 — 대신 그런 행 수를 따로 셉니다:
+    last_nonfinite(이번 호출), nonfinite_total(첫 달부터 누적 — 지난달 모델에서 이어받음). 월별 entry의
+    prev_nonfinite = 지난달(표본 밖) 실행에서 지표가 NaN이었던 판단봉 수, 마지막 달 것은 state()의 s_nonfinite에.
   · w_prev는 늘 5개 격자값 중 하나이므로 (행, w_prev) 5가지를 한 번에 순전파해 표로 만든 뒤 순서대로 조회합니다
     (행마다 순전파하는 것과 비트 단위로 같음 — 테스트).
   주의: 행이 시간 순서가 아니거나 여러 달을 섞어 넘기면 틀립니다. run_replication(all_bars=True)처럼 4시간봉을 모두
   넘기면 4시간마다 이어지는 다른 경로가 됩니다. 강제 유지(forced_hold)로 실제 체결이 목표와 달라져도 내부 w_prev는
   목표 기준으로 이어집니다 (dp_band와 같음). 학습은 확률적 정책, 실행은 기대 비중 반올림 — 명세대로의 차이입니다.
 
-기록 (월별 entry): kind, pool, pos0, loss(마지막 200/50걸음 평균), pg·vf·ent(엔트로피)·reward(하루 평균 g)·
+기록 (월별 entry): kind, pool, pos0, prev_nonfinite, loss(마지막 200/50걸음 평균), pg·vf·ent(엔트로피)·reward(하루 평균 g)·
   exposure(굴린 행동 평균)·turnover(하루 평균 |Δw|)·v_mean·adv_sd(표준화 전) — 모두 마지막 걸음들 평균.
 
   (walk.py 가 cfg["algo"] == "a2c" 이면 이 파일의 monthly_update 를 부름, cfg["output"] == "weights")
@@ -269,7 +272,7 @@ class A2CTrainer(DirectTrainer):
 class A2CModel:
     """월별 모델: 멤버 평균 기대 비중을 25%로 반올림해 실행하고, 그 비중을 다음 판단의 w_prev로 이어감"""
 
-    def __init__(self, net, fi, acts, pos0=0.0):
+    def __init__(self, net, fi, acts, pos0=0.0, nonfinite0=0):
         self.net = StackedMLP.__new__(StackedMLP)
         self.net.__dict__.update(net.__dict__)
         self.net.params = net.copy_params()
@@ -282,6 +285,9 @@ class A2CModel:
         self.pos0 = float(pos0)
         self.last_pos = float(pos0)
         self.last_w = np.zeros(0)
+        self.nonfinite0 = int(nonfinite0)       # 지난달까지 누적된 'NaN 지표 판단봉' 수
+        self.last_nonfinite = 0                 # 마지막 weights 호출에서 NaN 지표였던 행 수
+        self.nonfinite_total = self.nonfinite0
 
     def _ew(self, x, w_prev):
         """고른 지표 x (B, F)와 w_prev (B,) → 멤버 평균 기대 비중 Ē (B,)"""
@@ -310,14 +316,18 @@ class A2CModel:
         B = len(X)
         out = np.empty(B)
         p = int(np.abs(self.acts - self.pos0).argmin())
+        nf = 0
         if B:
             idx, fin, _ = self._table(X)
+            nf = int((~fin).sum())
             for i in range(B):
                 if fin[i]:
                     p = int(idx[i, p])
                 out[i] = self.acts[p]
         self.last_pos = float(out[-1]) if B else self.pos0
         self.last_w = out.copy()
+        self.last_nonfinite = nf
+        self.nonfinite_total = self.nonfinite0 + nf     # 멱등: 다시 불러도 누적이 두 번 더해지지 않음
         return out
 
     def state(self):
@@ -326,15 +336,19 @@ class A2CModel:
         st["fi"] = np.asarray(self.fi)
         st["pos"] = np.array([self.pos0, self.last_pos])
         st["last_w"] = np.asarray(self.last_w, np.float64)
+        st["nonfinite"] = np.array([self.last_nonfinite, self.nonfinite_total], np.int64)
         return st
 
 
 def proposed_cfg():
     """variants.py 에 등록할 설정 — R6_daily_trend8_uniform(stride 6, γ 0.967, TREND8, 균등 추출)에 A1 키만 더함.
-    reward='log'는 문서용(이 기법은 KTrainer 보상을 쓰지 않고 step_reward를 씀). 'tau'(P0의 목표망 갱신률)는 쓰지 않음."""
+    reward='log'는 문서용(이 기법은 KTrainer 보상을 쓰지 않고 step_reward — 비용 뺀 로그성장 — 를 씀).
+    gate='none': 이 플러그인은 점검을 하지 않으므로 기록(cfg_hash·trials.jsonl·저장 meta)도 그렇게 적음 — 코드 동작은
+    그대로 (walk.monthly_update의 플러그인 경로와 holdout._gate_short는 algo가 dqn이 아니면 gate를 보지 않음).
+    P0에서 물려받은 'tau'(목표망 갱신률)·'aux_w'(보조 머리)·'batch'(전이 표본 수)는 쓰지 않음 (구간 32개 × 60일이 한 배치)."""
     from ..variants import v, TREND8
     return v("A1_actor_critic", algo="a2c", output="weights", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
-             acts=ACTS, reward="log", cost_train=0.003, seq_len=60, seq_batch=32, gae_lambda=0.95, ent_coef=0.01,
+             acts=ACTS, reward="log", gate="none", cost_train=0.003, seq_len=60, seq_batch=32, gae_lambda=0.95, ent_coef=0.01,
              vf_coef=0.5, adv_norm=True)
 
 
@@ -345,18 +359,20 @@ def monthly_update(cfg, datas, T_k, seed, ens, anchor):
     """
     Tk = int(T_k.timestamp())
     pos0 = float(getattr(ens, "last_pos", 0.0)) if ens is not None else 0.0
+    prev_nf = int(getattr(ens, "last_nonfinite", 0)) if ens is not None else 0
+    nf0 = int(getattr(ens, "nonfinite_total", 0)) if ens is not None else 0
     tr = A2CTrainer(cfg, seed)
     n = tr.make_pool(datas, Tk, FIRST_TRAIN, WARMUP)
     if n == 0:
         raise RuntimeError(f"a2c: 학습 표본 풀이 비었습니다 (T_k={T_k})")
-    entry = dict(month=str(T_k.date()), pool=int(n), pos0=pos0)
+    entry = dict(month=str(T_k.date()), pool=int(n), pos0=pos0, prev_nonfinite=prev_nf)
     if T_k.month == 1 or ens is None:
         tr.init_fresh()
         losses = tr.fit_cold()
         entry.update(kind="cold", loss=float(np.mean(losses[-DIAG_COLD:])), accepted=True, **tr.diag_info(DIAG_COLD))
-        model = A2CModel(tr.net, tr.fi, tr.acts, pos0)
+        model = A2CModel(tr.net, tr.fi, tr.acts, pos0, nf0)
         return model, model.net.copy_params(), entry
     tr.init_from(ens.net.params)
     losses = tr.fit_finetune(anchor)
     entry.update(kind="finetune", loss=float(np.mean(losses[-DIAG_FT:])), accepted=True, **tr.diag_info(DIAG_FT))
-    return A2CModel(tr.net, tr.fi, tr.acts, pos0), anchor, entry
+    return A2CModel(tr.net, tr.fi, tr.acts, pos0, nf0), anchor, entry

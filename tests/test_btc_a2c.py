@@ -303,6 +303,7 @@ class Monthly(unittest.TestCase):
         self.assertEqual(log[0]["pos0"], 0.0)
         self.assertEqual(log[1]["pos0"], w1[-1])
         self.assertEqual(m2.pos0, m1.last_pos)
+        self.assertEqual([e["prev_nonfinite"] for e in log], [0, 0])
         # 멱등: 같은 배치를 다시 불러도 같은 결과
         np.testing.assert_array_equal(m2.weights(d.X[s2]), w2)
         # 행별 순전파 루프(표 없이)와 같음
@@ -315,6 +316,7 @@ class Monthly(unittest.TestCase):
         st = m2.state()
         self.assertTrue(all(isinstance(v, np.ndarray) for v in st.values()))
         np.testing.assert_array_equal(st["pos"], [m2.pos0, w2[-1]])
+        np.testing.assert_array_equal(st["nonfinite"], [0, 0])
 
     def test_weights_nan_rows_hold_and_pos0(self):
         d, _ = synth_phase()
@@ -329,12 +331,37 @@ class Monthly(unittest.TestCase):
         mdl = AC.A2CModel(tr.net, tr.fi, tr.acts, 0.5)
         w = mdl.weights(X)
         self.assertGreater(len(np.unique(w)), 1)
+        self.assertEqual((mdl.last_nonfinite, mdl.nonfinite_total), (0, 0))
         X[10, tr.fi[3]] = np.nan
-        w2 = AC.A2CModel(tr.net, tr.fi, tr.acts, 0.5).weights(X)
+        X[20, tr.fi[0]] = np.inf
+        X[30, 0 if 0 not in tr.fi else max(tr.fi) + 1] = np.nan      # 고르지 않은 지표의 NaN은 세지 않음
+        m2 = AC.A2CModel(tr.net, tr.fi, tr.acts, 0.5, nonfinite0=7)
+        w2 = m2.weights(X)
         self.assertEqual(w2[10], w2[9])
         np.testing.assert_array_equal(w2[:10], w[:10])
+        # 보류한 행 수를 따로 셈 (저장 비중엔 NaN이 없으므로) — 누적은 이어받은 값 + 이번 달, 다시 불러도 같음
+        self.assertEqual((m2.last_nonfinite, m2.nonfinite_total), (2, 9))
+        m2.weights(X)
+        self.assertEqual((m2.last_nonfinite, m2.nonfinite_total), (2, 9))
+        np.testing.assert_array_equal(m2.state()["nonfinite"], [2, 9])
         e = AC.A2CModel(tr.net, tr.fi, tr.acts, 0.5).weights(X[:0])
         self.assertEqual(len(e), 0)
+
+    def test_nonfinite_count_carried_across_months(self):
+        """지난달 실행에서 NaN 지표로 보류한 판단봉 수가 다음 달 entry(prev_nonfinite)·누적으로 넘어감"""
+        from btc.research.walk import monthly_update
+        d, _ = synth_phase()
+        cfg = a1_cfg(phases=1, members=2, cold_steps=20, cold_split=10, ft_steps=5)
+        T1, T2 = _ts("2015-01-01"), _ts("2015-02-01")
+        ens, anc, e1 = monthly_update(cfg, [d], T1, (0, 2015, 1, 0), None, None)
+        X = d.X[-40:].copy()
+        X[[3, 17], ens.fi[0]] = np.nan
+        ens.weights(X)
+        ens2, _, e2 = monthly_update(cfg, [d], T2, (0, 2015, 2, 0), ens, anc)
+        self.assertEqual((e1["prev_nonfinite"], e2["prev_nonfinite"]), (0, 2))
+        self.assertEqual(ens2.nonfinite_total, 2)
+        ens2.weights(d.X[-40:])
+        self.assertEqual((ens2.last_nonfinite, ens2.nonfinite_total), (0, 2))
 
     def test_training_no_leak_after_T_k(self):
         """T_k 이후(ts ≥ T_k) 가격·지표를 모두 바꿔도 학습된 파라미터·월 기록이 비트 단위로 같음 (처음부터·이어학습 달)"""
@@ -365,7 +392,7 @@ class Config(unittest.TestCase):
     def test_proposed_cfg_is_r6_plus_a1_keys(self):
         a1, r6 = AC.proposed_cfg(), VARIANTS["R6_daily_trend8_uniform"]
         diff = {k for k in set(a1) | set(r6) if a1.get(k) != r6.get(k)}
-        self.assertEqual(diff, {"name", "algo", "output", "acts", "reward", "cost_train", "seq_len", "seq_batch",
+        self.assertEqual(diff, {"name", "algo", "output", "acts", "reward", "gate", "cost_train", "seq_len", "seq_batch",
                                 "gae_lambda", "ent_coef", "vf_coef", "adv_norm"})
         for k in ("stride", "gamma", "feat", "recency_frac", "members", "hidden", "cold_steps", "cold_lr1", "cold_lr2",
                   "cold_split", "ft_steps", "ft_lr", "lambda_sp", "wd", "noise", "clip", "phases"):
@@ -373,6 +400,7 @@ class Config(unittest.TestCase):
         self.assertEqual((a1["stride"], a1["gamma"], a1["recency_frac"], a1["members"]), (6, 0.967, 0.0, 5))
         self.assertEqual((a1["cold_steps"], a1["ft_steps"], a1["hidden"]), (2000, 300, (32, 32)))
         self.assertEqual(tuple(a1["acts"]), (0.0, 0.25, 0.5, 0.75, 1.0))
+        self.assertEqual((a1["gate"], a1["reward"], a1["output"], a1["algo"]), ("none", "log", "weights", "a2c"))
         self.assertEqual((a1["gae_lambda"], a1["ent_coef"], a1["vf_coef"], a1["cost_train"]), (0.95, 0.01, 0.5, 0.003))
 
 

@@ -36,6 +36,22 @@ R6(R6_daily_trend8_uniform)와 같은 것 — 조정하지 않음
   · 부트스트랩의 a* 선택은 평균(위험 중립)으로 — 학습하는 분포는 '평균 기준 탐욕 정책'의 수익 분포이고,
     CVaR 는 실행 때 진입 판단에만 씁니다 (사전 등록 그대로).
 
+★ 알려진 한계 (2026-09-25 검토에서 확인, 결과 보기 전) — 기준선 R(mid, m) 때문에 CVaR 가 사실상 평균과 같아짐
+  위 목표식(사전 등록 과제에 적힌 그대로)은 KTrainer 처럼 무작위 기준선 R(mid, m) 을 뺍니다.
+  평균(DQN)에서는 모든 행동에 같은 값이라 무해하지만, 분포에서는 무해하지 않습니다.
+  acts (0, 1), mid ½, 'lin' 이면 현금은 −½κm, 보유는 +½κm 를 배우므로 현금도 보유만큼 '위험'하고
+  현금의 하위 꼬리는 BTC 가 오른 날입니다. α = 0.5 이면 즉시 보상 부분에서 정확히
+      CVaR_0.5(+½κm) − CVaR_0.5(−½κm) = (하위 절반 평균 + 상위 절반 평균)·½κ = κ·E[m] = 평균 차이
+  (분포 모양과 무관, 11분위수 규칙 [1,1,1,1,1,½,0,…]/5.5 에서도 같음). γ > 0 의 부트스트랩 잡음이 있어도
+  CVaR 차이는 평균 차이 근처에 머뭅니다. 즉 기본값(qr_base = "mid")의 Q1 은 '위험 중립 QR-DQN + R6 식 판단'에 가깝고,
+  사전 등록 문구 '하위 50% 평균 … (비관적 진입)'의 의도를 시험하지 못합니다.
+  대안: cfg["qr_base"] = "cash" 이면 기준선으로 현금의 확정 수익 R(0, m) (= 0, 모든 보상 종류) 을 빼서
+  '행동의 절대 수익' 분포를 배웁니다. 평균 기준 a* 와 평균 판단은 바뀌지 않고(모든 행동에 같은 이동),
+  CVaR 가 무위험 현금 대비 보유의 하방 꼬리를 벌점으로 줍니다.
+  코드 기본값은 "mid"(적힌 식)로 두되, 등록 설정은 "cash" 입니다: 2026-09-25 Q1 을 한 번도 돌리기 전에
+  success_criteria.md 에 해석 정정('비관적 진입' 의도대로 무위험 현금 기준)을 기록했습니다. "mid" 판은 돌리지 않습니다.
+  tests/test_btc_qrdqn.py 의 BaselineEffect 가 두 경우를 모두 확인합니다.
+
 누출 방지: 표본 풀·보상·다음 상태는 KTrainer.make_pool 그대로 (다음 날 시가가 T_k 이전인 표본만).
 
   (walk.py 가 cfg["algo"] == "qrdqn" 이면 이 파일의 monthly_update 를 부름. cfg["output"] 없음 → values(X, cost))
@@ -83,8 +99,9 @@ def quantile_huber(theta, y, tau, kh=1.0):
 class QREnsemble(KEnsemble):
     """판단 가치 = 멤버별 CVaR_α(정렬한 분위수) 의 멤버 평균. inputs·state 는 KEnsemble 과 같음"""
 
-    def __init__(self, net, feat_names, acts, n_quant=N_QUANT, alpha=CVAR_ALPHA):
+    def __init__(self, net, feat_names, acts, n_quant=N_QUANT, alpha=CVAR_ALPHA, base_kind="mid"):
         super().__init__(net, feat_names, acts)
+        self.base_kind = base_kind
         self.N = int(n_quant)
         self.alpha = float(alpha)
         self.wc = cvar_weights(self.N, self.alpha)
@@ -109,6 +126,7 @@ class QREnsemble(KEnsemble):
         st = super().state()
         st["n_quant"] = np.array(self.N)
         st["cvar_alpha"] = np.array(self.alpha)
+        st["qr_base"] = np.frombuffer(self.base_kind.encode(), dtype=np.uint8)
         return st
 
 
@@ -121,6 +139,9 @@ class QRTrainer(KTrainer):
         self.alpha = float(cfg.get("cvar_alpha", CVAR_ALPHA))
         self.kh = float(cfg.get("huber_k", 1.0))
         self.tau_q = taus(self.N).astype(np.float32)
+        self.base_kind = cfg.get("qr_base", "mid")                 # "mid" = 사전 등록 식 그대로, "cash" = 절대 수익
+        if self.base_kind not in ("mid", "cash"):
+            raise ValueError(f"qr_base {self.base_kind!r}")
 
     # ── 망 ──
     def _new_net(self):
@@ -132,7 +153,7 @@ class QRTrainer(KTrainer):
         net.__dict__.update(self.net.__dict__)
         net.params = self.net.copy_params()
         net._cache = None
-        return QREnsemble(net, self.feat_names, self.acts, self.N, self.alpha)
+        return QREnsemble(net, self.feat_names, self.acts, self.N, self.alpha, self.base_kind)
 
     def _Z(self, out):
         K, N = self.K, self.N
@@ -148,7 +169,9 @@ class QRTrainer(KTrainer):
         lnc = (KAPPA * np.log1p(-cost))[..., None, None]                     # (M,B,1,1)
         pen = np.abs(A[None, :] - A[:, None])[None, None] * lnc               # (M,B,K_from,K_to)
         R = reward(c.get("reward", "lin"), A[None, None, :], m[..., None], c.get("lam", 0.0))
-        R0 = reward(c.get("reward", "lin"), np.float32(self._mid), m, c.get("lam", 0.0))[..., None]
+        # 기준선: "mid" 는 KTrainer 와 같은 R(mid, m) (사전 등록 식), "cash" 는 현금의 확정 수익 R(0, m) (= 0)
+        a0 = np.float32(self._mid) if self.base_kind == "mid" else np.float32(0.0)
+        R0 = reward(c.get("reward", "lin"), a0, m, c.get("lam", 0.0))[..., None]
         base = KAPPA * (R - R0)                                                # (M,B,K)
         if g > 0:
             Zon = self._Z(self.net.forward(X1, cache=False))                  # (M,B,K,N)
@@ -194,10 +217,10 @@ class QRTrainer(KTrainer):
 
 
 def proposed_cfg():
-    """variants.py 에 등록할 설정 (R6_daily_trend8_uniform + Q1 키)"""
+    """variants.py 에 등록할 설정 (R6_daily_trend8_uniform + Q1 키). 기준선은 해석 정정대로 현금 (qr_base="cash")"""
     from ..variants import v, TREND8
     return v("Q1_qrdqn_cvar", algo="qrdqn", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
-             n_quantiles=11, cvar_alpha=0.5, huber_k=1.0)
+             n_quantiles=11, cvar_alpha=0.5, huber_k=1.0, qr_base="cash")
 
 
 def monthly_update(cfg, datas, T_k, seed, ens, anchor):

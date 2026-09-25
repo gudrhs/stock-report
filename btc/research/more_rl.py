@@ -20,6 +20,8 @@ C1 합의 (등록 문구: "6개 이상이 보유면 보유, 4개 이하면 현�
     U가 NaN(모델 없음)인 봉은 k_policy가 그 반복의 직전 포지션을 유지하므로, 그 반복이 실제로 들고 있는 포지션이 표가 됨
     (첫 모델 전에는 현금 = 0표)
   · 보유 표 ≥ 6 → 보유, ≤ 4 → 현금, 정확히 5 → 합의의 직전 포지션 유지 (시작은 현금). 0/1 전략으로 시뮬레이션
+  · '직전 포지션' = 합의가 실제로 든 포지션: 강제 유지 봉(forced_hold)에서는 체결이 없으므로(env.simulate) 합의도
+    k_policy 처럼 바꾸지 않습니다 — 들지 않은 보유를 5:5로 '유지'하는 일이 없게
 
 헤드라인과 R6 기준
   · Q1·A1·P1: 반복 5개 가운데 매수·보유 대비 샤프 차이의 작은 쪽 중앙값 반복 (evaluate.lower_median)
@@ -27,6 +29,9 @@ C1 합의 (등록 문구: "6개 이상이 보유면 보유, 4개 이하면 현�
   · C1의 R6 기준 = R6 반복 0~9 샤프의 중앙값 (np.median, 10개면 5·6번째 평균)
     C1의 R6 대비 p값은 한 반복의 일별 수익이 필요해, 두 가운데 반복 중 샤프가 높은 쪽(위쪽 중앙값, 6번째)과 비교합니다
     (보수적 선택 — 결과 보기 전 여기서 고정)
+  · 문턱은 '다시 계산한 반올림 전 R6 값'입니다 (등록 문구의 1.149·1.90은 이 값을 반올림해 적은 것).
+    반올림한 등록값으로 판정하면 결과가 달라지는 경우(예: 2015~2016 헤드라인이 1.90 초과 1.9044 이하)는
+    criteria 의 verdict_differs_registered 로 표시하고 출력에 적습니다. 판정 자체는 반올림 전 값(더 엄격)으로 합니다
 
 판정 (두 구간 모두)
   · 헤드라인 샤프 > R6 기준, 그리고 헤드라인 샤프 > 매수·보유 샤프 → 성적 조건 통과
@@ -34,7 +39,10 @@ C1 합의 (등록 문구: "6개 이상이 보유면 보유, 4개 이하면 현�
     대조 결과가 아직 없으면 '미완'(candidate = None)으로 적습니다
   · 함께 보고: R6 대비 p, 매수·보유 대비 p (btc.stats.stationary_bootstrap_diff, 일별 수익, 시드 1, 4000번),
     샤프·CAGR·최대낙폭·노출·회전율, 샤프 차이의 디플레이티드 검정 (robust.py 와 같은 식, N 50·200·1000,
-    시험 간 샤프 표준편차 0.109) — 매수·보유 대비(요청대로)와 R6 대비(등록 문구) 둘 다
+    시험 간 샤프 표준편차 0.109) — 매수·보유 대비(요청대로)와 R6 대비(등록 문구) 둘 다.
+    등록 문구 '시험 수 N 갱신'에 따라 갱신한 N(아래)에서의 값도 함께 적습니다
+  · 시험 수 N = walk.n_trials_total() + (trials.jsonl 에 이름이 없는 이 묶음의 방식 수).
+    C1은 학습하지 않아 walk.run_many 가 기록하지 않으므로 여기서 1을 더합니다 ('네 가지 모두 시험 수에 더합니다')
   · 개선 후보는 보조 모의매매 트랙으로만. 주 후보는 R6 유지
 
   BTC_LOCKBOX_OPEN=1 python -m btc.research.more_rl evaluate
@@ -54,7 +62,7 @@ import numpy as np
 from .. import stats as S
 from ..evaluate import Window, lower_median
 from .rl import k_policy, trend_filter, allowed_matrix
-from .walk import load_run, run_path, decision_mask, n_trials_total, RUNS
+from .walk import load_run, run_path, decision_mask, n_trials_total, RUNS, TRIALS
 
 COST, C_DEC = 0.0015, 0.003
 REF = "R6_daily_trend8_uniform"
@@ -147,21 +155,29 @@ def rep_targets(d, cfg, run, a, b):
     return tg, frac, held, sel, float(nan.mean())
 
 
-def committee(votes, long_at=VOTE_LONG, flat_at=VOTE_FLAT, start=0.0):
+def committee(votes, forced_hold=None, long_at=VOTE_LONG, flat_at=VOTE_FLAT, start=0.0):
     """
     votes: (판단봉 수, 반복 수) 0/1 포지션 → 합의 포지션 (판단봉 수,).
     보유 표 ≥ long_at → 1, ≤ flat_at → 0, 그 사이(10표면 정확히 5) → 직전 합의 유지 (시작 start)
+    forced_hold: (판단봉 수,) — 참인 봉은 체결이 없으므로(env.simulate) 합의도 바꾸지 않음 (k_policy 와 같은 처리).
+      그래서 '직전 합의' = 합의가 실제로 들고 있는 포지션
     """
     votes = np.asarray(votes, dtype=float)
     if votes.ndim != 2:
         raise ValueError("votes 는 (판단봉, 반복) 2차원이어야 합니다")
+    if forced_hold is not None:
+        forced_hold = np.asarray(forced_hold, dtype=bool)
+        if forced_hold.shape != (len(votes),):
+            raise ValueError("forced_hold 길이가 판단봉 수와 다릅니다")
     if not np.all((votes == 0.0) | (votes == 1.0)):
         raise ValueError("합의에는 0/1 포지션만 씁니다 (NaN·비율 불가)")
     n_long = votes.sum(axis=1)
     out = np.empty(len(n_long))
     p = float(start)
     for t, k in enumerate(n_long):
-        if k >= long_at:
+        if forced_hold is not None and forced_hold[t]:
+            pass
+        elif k >= long_at:
             p = 1.0
         elif k <= flat_at:
             p = 0.0
@@ -197,6 +213,14 @@ def boot(ra, rb):
     return S.stationary_bootstrap_diff(ra, rb, n_boot=N_BOOT, seed=BOOT_SEED)
 
 
+def dsr_ns(n_trials=None):
+    """고정 격자 50·200·1000 + 갱신한 시험 수 N (격자에 없을 때만)"""
+    ns = tuple(DSR_N)
+    if n_trials and int(n_trials) not in ns:
+        ns = ns + (int(n_trials),)
+    return ns
+
+
 def dsr_gain(bt, ns=DSR_N, sd=DSR_SD):
     """
     샤프 '차이'에 대한 디플레이티드 검정 (robust.py 와 같은 식): 필요한 차이 = sd·√365·E[max SR](분산 1/365, N)
@@ -211,30 +235,48 @@ def dsr_gain(bt, ns=DSR_N, sd=DSR_SD):
     return out
 
 
-def compare(res, ref_res, ref_sharpe, bh_res, bh_sharpe):
-    """한 구간에서 헤드라인 결과를 R6 기준·매수·보유와 비교"""
+def compare(res, ref_res, ref_sharpe, bh_res, bh_sharpe, ns=DSR_N):
+    """한 구간에서 헤드라인 결과를 R6 기준·매수·보유와 비교. ns: 디플레이티드 검정의 시험 수들"""
     m = metrics(res)
     bb, br = boot(res["r"], bh_res["r"]), boot(res["r"], ref_res["r"])
     m.update(ref_sharpe=float(ref_sharpe), bh_sharpe=float(bh_sharpe),
              d_vs_r6=m["sharpe"] - float(ref_sharpe), d_vs_bh=bb["obs"],
              p_vs_r6=br["p"], d_boot_vs_r6=br["obs"], se_vs_r6=br["se"],
              p_vs_bh=bb["p"], se_vs_bh=bb["se"], ci90_vs_bh=bb["ci90"], ci90_vs_r6=br["ci90"],
-             dsr_gain_vs_bh=dsr_gain(bb), dsr_gain_vs_r6=dsr_gain(br))
+             dsr_gain_vs_bh=dsr_gain(bb, ns), dsr_gain_vs_r6=dsr_gain(br, ns))
     return m
 
 
 # ══════════ 판정 ══════════
-def criteria(per_window, controls_passed):
+NO_MODEL_MAX = 0.05                              # early.py 와 같은 규칙: 모델 없는 판단봉 비율이 5% 넘는 반복이 있으면 판정 불가
+
+
+def criteria(per_window, controls_passed, registered=None, ref_basis=None, no_model_max=None):
     """
     per_window: {"main": {sharpe, ref_sharpe, bh_sharpe, p_vs_r6}, "early": {...}} (두 구간 모두 있어야 함)
     controls_passed: True / False / None(대조 결과 없음)
+    registered: {"main": 1.149, "early": 1.90} — 등록 문구에 반올림해 적힌 R6 값 (Q1·A1·P1). 판정은 ref_sharpe
+      (다시 계산한 반올림 전 값)로 하고, 이 값으로 했다면 성적 조건이 달라지는지만 verdict_differs_registered 로 표시.
+      C1처럼 등록값이 없으면 None
+    ref_basis: 문턱이 무엇인지 적는 설명 (결과 파일·출력용)
+    no_model_max: 두 구간 반복들 가운데 가장 큰 '모델 없음' 비율. NO_MODEL_MAX 초과면 판정 불가(candidate None)
+      — 2026-09-25 해석 정정 조항(결과 보기 전)에서 early.py 규칙을 이 묶음에도 적용하기로 함
     """
     if set(per_window) != set(WINDOWS):
         raise ValueError(f"두 구간 {sorted(WINDOWS)} 이 모두 있어야 합니다: {sorted(per_window)}")
     beats_r6 = {k: bool(v["sharpe"] > v["ref_sharpe"]) for k, v in per_window.items()}
     beats_bh = {k: bool(v["sharpe"] > v["bh_sharpe"]) for k, v in per_window.items()}
     perf = all(beats_r6.values()) and all(beats_bh.values())
-    if not perf:
+    if registered is not None:
+        beats_reg = {k: bool(v["sharpe"] > float(registered[k])) for k, v in per_window.items()}
+        perf_reg = all(beats_reg.values()) and all(beats_bh.values())
+        differs = bool(perf_reg != perf)
+    else:
+        beats_reg, differs = None, False
+    flagged = no_model_max is not None and no_model_max > NO_MODEL_MAX
+    if flagged:
+        cand, verdict = None, f"판정 불가 (모델 없음 비율 {no_model_max * 100:.1f}% > {NO_MODEL_MAX * 100:.0f}%)"
+    elif not perf:
         cand, verdict = False, "개선 후보 아님"
     elif controls_passed is None:
         cand, verdict = None, "성적 조건 통과 — 합성 대조 결과 없음 (미완)"
@@ -244,8 +286,43 @@ def criteria(per_window, controls_passed):
         cand, verdict = True, "개선 후보 (보조 모의매매 트랙으로만, 주 후보는 R6 유지)"
     ps = [v.get("p_vs_r6") for v in per_window.values()]
     sig = None if any(p is None for p in ps) else bool(all(p < 0.05 for p in ps))
+    if differs:
+        verdict += (" (주의: 등록 문구의 반올림 값 기준이었다면 성적 조건 "
+                    + ("통과" if not perf else "탈락") + " — 판정은 반올림 전 값 기준)")
+    thresholds = {k: float(v["ref_sharpe"]) for k, v in per_window.items()}
     return dict(beats_r6=beats_r6, beats_bh=beats_bh, performance_ok=bool(perf), controls_passed=controls_passed,
-                candidate=cand, verdict=verdict, p_vs_r6_below_005_both=sig)
+                candidate=cand, verdict=verdict, p_vs_r6_below_005_both=sig,
+                r6_threshold=thresholds, r6_threshold_basis=ref_basis, r6_registered=registered,
+                beats_r6_registered=beats_reg, verdict_differs_registered=differs,
+                no_model_max=no_model_max, no_model_flag=bool(flagged))
+
+
+REF_BASIS = {COMMITTEE: "R6 반복 0~9 샤프의 중앙값 (다시 계산, 반올림 전)",
+             **{n: "R6 반복 0~4 작은 쪽 중앙값 샤프 (다시 계산, 반올림 전 — 등록 문구 1.149·1.90은 이 값의 반올림)"
+                for n in METHODS}}
+
+
+def registered_refs(name):
+    """등록 문구에 숫자로 적힌 R6 기준 (Q1·A1·P1만; C1의 중앙값은 등록 문구에 숫자가 없음)"""
+    return None if name == COMMITTEE else {k: v[0] for k, v in REF_REGISTERED.items()}
+
+
+def n_trials_updated(base=None, trials=TRIALS, names=ORDER):
+    """
+    갱신한 시험 수 N = walk.n_trials_total() + (trials.jsonl 에 이름이 없는 이 묶음 방식 수).
+    C1은 학습하지 않아 run_many 가 기록하지 않음 → 여기서 더함. 반환 (N, 더한 이름 목록). base 계산 실패면 (None, [])
+    """
+    if base is None:
+        try:
+            base = n_trials_total()
+        except Exception:
+            return None, []
+    logged = set()
+    if trials and os.path.exists(trials):
+        with open(trials, encoding="utf-8") as f:
+            logged = {json.loads(l).get("name", "").split("__")[0] for l in f if l.strip()}
+    added = [n for n in names if n not in logged]
+    return int(base) + len(added), added
 
 
 def load_controls(paths=CONTROL_FILES):
@@ -268,8 +345,11 @@ def controls_status(name, controls):
 
 
 # ══════════ 한 구간 ══════════
-def evaluate_window(W, tag, loader=load_run):
-    """W: evaluate.Window. tag: 실행 이름 꼬리표('' 또는 '__early'). loader(이름, r) → walk.load_run 과 같은 dict"""
+def evaluate_window(W, tag, loader=load_run, ns=DSR_N):
+    """
+    W: evaluate.Window. tag: 실행 이름 꼬리표('' 또는 '__early'). loader(이름, r) → walk.load_run 과 같은 dict.
+    ns: 디플레이티드 검정의 시험 수들 (dsr_ns)
+    """
     d = W.datas[0]
     a, b = W.rng[0]
     bh_tg = np.full(d.T, np.nan)
@@ -301,7 +381,7 @@ def evaluate_window(W, tag, loader=load_run):
         reps = [run_rep(name, r) for r in range(REPS)]
         srs = [x["sharpe"] for x in reps]
         lm = headline_index(srs, sb)
-        v = compare(reps[lm]["res"], r6[lm6]["res"], s6[lm6], bh, sb)
+        v = compare(reps[lm]["res"], r6[lm6]["res"], s6[lm6], bh, sb, ns)
         v.update(sharpe_reps=srs, headline_rep=int(lm), fractional=bool(reps[lm]["frac"]),
                  no_model_share=[x["nan_share"] for x in reps])
         out["methods"][name] = v
@@ -311,14 +391,15 @@ def evaluate_window(W, tag, loader=load_run):
     if any(not np.array_equal(x["sel"], sel) for x in r6) or any(x["held"] is None or x["frac"] for x in r6):
         raise ValueError("R6 반복들의 판단봉이 다르거나 0/1 포지션이 아닙니다 — 합의 불가")
     votes = np.stack([x["held"] for x in r6], axis=1)
-    cpos = committee(votes)
+    cpos = committee(votes, d.forced_hold[sel])
     tg = np.full(d.T, np.nan)
     tg[sel] = cpos
     res = W.run(tg, COST)
-    v = compare(res, r6[up10]["res"], med10, bh, sb)
+    v = compare(res, r6[up10]["res"], med10, bh, sb, ns)
     n_long = votes.sum(axis=1)
     v.update(ref_rule="R6 반복 0~9 샤프의 중앙값", p_ref_rep=up10,
              tie_share=float(np.mean(n_long == REF_REPS / 2)),
+             forced_hold_bars=int(d.forced_hold[sel].sum()),
              unanimous_share=float(np.mean((n_long == 0) | (n_long == REF_REPS))),
              committee_long_share=float(cpos.mean()) if len(cpos) else float("nan"))
     out["methods"][COMMITTEE] = v
@@ -333,25 +414,28 @@ def ref_check(key, value):
 
 def evaluate(loader=load_run, exists=None, datas=None, controls=None):
     check_runs(exists)                                 # 데이터를 읽기 전에 먼저
+    n_trials, added = n_trials_updated()
+    ns = dsr_ns(n_trials)
     if datas is None:
         from ..walkforward import load_phases
         datas = load_phases()
     wins = {}
     for key, (lo, hi, tag, what) in WINDOWS.items():
         W = Window(datas, lo, hi, what)                # 2017~2026 은 BTC_LOCKBOX_OPEN=1 필요 (evaluate.guard)
-        wins[key] = evaluate_window(W, tag, loader)
+        wins[key] = evaluate_window(W, tag, loader, ns)
         wins[key]["r6"]["ref_check"] = ref_check(key, wins[key]["r6"]["lower_median5"])
     controls = load_controls() if controls is None else controls
     methods = {}
     for name in ORDER:
         pw = {k: wins[k]["methods"][name] for k in WINDOWS}
         ctl = controls_status(name, controls)
-        methods[name] = dict(windows=pw, controls=ctl, criteria=criteria(pw, ctl["passed"]))
-    try:
-        n_trials = n_trials_total()
-    except Exception:
-        n_trials = None
+        nm = [max(v["no_model_share"]) if name != COMMITTEE else max(wins[k]["r6"]["no_model_share"])
+              for k, v in pw.items()]
+        methods[name] = dict(windows=pw, controls=ctl,
+                             criteria=criteria(pw, ctl["passed"], registered_refs(name), REF_BASIS[name],
+                                               no_model_max=float(max(nm))))
     return dict(cost=COST, c_dec=C_DEC, n_boot=N_BOOT, boot_seed=BOOT_SEED, dsr_sd=DSR_SD, n_trials=n_trials,
+                n_trials_added=added, dsr_ns=list(ns),
                 windows={k: {kk: vv for kk, vv in w.items() if kk != "methods"} for k, w in wins.items()},
                 methods=methods)
 
@@ -361,7 +445,11 @@ def report(out):
     pct = lambda x: "—" if x is None else f"{x * 100:.1f}%"
     f2 = lambda x: "—" if x is None else f"{x:.2f}"
     lines = [f"새 강화학습 4가지 묶음 판정 (편도 {out['cost'] * 100:.2f}%, 하루 판단, 다음 봉 시가 체결, "
-             f"부트스트랩 {out['n_boot']}번·시드 {out['boot_seed']}, 시험 수 N={out['n_trials']})"]
+             f"부트스트랩 {out['n_boot']}번·시드 {out['boot_seed']}, 시험 수 N={out['n_trials']}"
+             + (f" — 기록에 없던 {', '.join(out['n_trials_added'])} 포함" if out.get("n_trials_added") else "") + ")",
+             "R6 기준 문턱 = 다시 계산한 반올림 전 값 (Q1·A1·P1: 반복 0~4 작은 쪽 중앙값, C1: 반복 0~9 중앙값). "
+             "등록 문구의 1.149·1.90은 그 반올림"]
+    ns = [int(n) for n in (out.get("dsr_ns") or DSR_N)]
     for key, w in out["windows"].items():
         r6, bh = w["r6"], w["bh"]
         rc = r6["ref_check"]
@@ -370,14 +458,14 @@ def report(out):
                      f"{'' if rc['matches'] else ' — 다름! 실행을 확인하세요'}), 반복 0~9 중앙값 {r6['median10']:.3f} "
                      f"[{', '.join(f'{s:.2f}' for s in r6['sharpe_reps'])}]")
         lines.append(f"  {'이름':<22}{'샤프':>6}{'R6 기준':>8}{'차이':>7}{'p(R6)':>7}{'p(보유)':>8}"
-                     f"{'CAGR':>8}{'최대낙폭':>9}{'노출':>6}{'회전/년':>8}  DSR(보유 대비, N=50/200/1000)")
+                     f"{'CAGR':>8}{'최대낙폭':>9}{'노출':>6}{'회전/년':>8}  DSR(보유 대비, N={'/'.join(str(n) for n in ns)})")
         for name in ORDER:
             v = out["methods"][name]["windows"][key]
             g = v["dsr_gain_vs_bh"]
             reps = v.get("sharpe_reps")
             lines.append(f"  {name:<22}{v['sharpe']:>6.2f}{v['ref_sharpe']:>8.3f}{v['d_vs_r6']:>+7.2f}{v['p_vs_r6']:>7.2f}"
                          f"{v['p_vs_bh']:>8.2f}{pct(v['cagr']):>8}{pct(v['max_dd']):>9}{pct(v['exposure']):>6}"
-                         f"{v['turnover']:>8.1f}  " + "/".join(f"{g[f'N{n}']['dsr']:.2f}" for n in DSR_N)
+                         f"{v['turnover']:>8.1f}  " + "/".join(f"{g[f'N{n}']['dsr']:.2f}" for n in ns if f"N{n}" in g)
                          + (f"  반복 {min(reps):.2f}~{max(reps):.2f}" if reps else
                             f"  5:5 비율 {pct(v['tie_share'])}"))
     lines.append("\n판정 (두 구간 모두 R6 기준·매수·보유보다 높고, 합성 대조 통과)")

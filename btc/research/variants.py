@@ -70,4 +70,15 @@ VARIANTS = {c["name"]: c for c in [
     # W2. 능형회귀 추세 예측 + 정확한 동적계획 무거래 띠 (결정론적 진단; 같은 예측의 부호 규칙은 후보 아님)
     v("W2_dp_band", algo="dp_band", output="weights", stride=6, feat=TREND8, dp_horizon_days=20, dp_ridge_alpha=1.0,
       dp_mu0_frac=0.5, dp_grid_n=201, dp_grid_sd=4.0, dp_cost=0.0015, dp_gamma=0.998, dp_tol=1e-12),
+    # ── 새 강화학습 4가지 묶음 (success_criteria.md, 결과 보기 전 등록 + 같은 날 결과 전 해석 정정). C1 은 R6 합의라 설정 없음 ──
+    # Q1. 분포형 QR-DQN, 판단은 CVaR 0.5 — 기준선은 무위험 현금 (qr_base="cash", 해석 정정)
+    v("Q1_qrdqn_cvar", algo="qrdqn", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
+      n_quantiles=11, cvar_alpha=0.5, huber_k=1.0, qr_base="cash"),
+    # A1. 정책경사 액터-크리틱 (A2C), 0~100% 5단계, 비용 뺀 로그성장 보상, 상태 있는 비중 출력
+    v("A1_actor_critic", algo="a2c", output="weights", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
+      acts=(0.0, 0.25, 0.5, 0.75, 1.0), reward="log", gate="none", cost_train=0.003, seq_len=60, seq_batch=32,
+      gae_lambda=0.95, ent_coef=0.01, vf_coef=0.5, adv_norm=True),
+    # P1. R6와 같은 모델, 판단만 평균 − 1.0×표본 표준편차 — 현금 대비 이득의 멤버 불일치 (pess_ref="cash", 해석 정정)
+    v("P1_pessimistic_dqn", algo="pessdqn", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
+      pess_kappa=1.0, pess_ddof=1, pess_ref="cash"),
 ]}
