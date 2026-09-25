@@ -112,7 +112,7 @@ def run_tg(W, tg, frac):
 
 def rolling_windows(days, r, rb, years=2, step_days=30):
     """2년 창을 한 달씩 옮기며 (시작일, 전략 샤프, 매수·보유 샤프)"""
-    n = int(round(365.25 * years))
+    n = int(365.25 * years + 0.5)                      # 731일 (round(730.5)는 짝수 반올림으로 730이 되던 오류 정정)
     out = []
     for s in range(0, len(r) - n + 1, step_days):
         out.append((int(days[s]), S.sharpe(r[s:s + n]), S.sharpe(rb[s:s + n])))
@@ -211,7 +211,16 @@ def robust(names):
             v["B3"] = dict(n_windows=len(rw), share_above=share, passed=bool(share >= 0.60),
                            worst=min((x[1] - x[2], x[0]) for x in rw))
             boot = S.stationary_bootstrap_diff(head["r"], bh["r"], n_boot=4000, seed=1)
+            # 샤프 '차이' 자체에 대한 디플레이티드 검정: 시험 N개의 최대 차이 기대값(시험 간 샤프 표준편차 sd)을 넘는지.
+            # 기존 dsr_excess는 (전략 − 매수·보유) 수익 계열의 샤프라 '평균 수익이 더 큰가'를 재므로 따로 둡니다.
+            from math import sqrt
+            gain_tests = {}
+            for n_eff in (50, 200, 1000):
+                for sd in (0.060, 0.109):
+                    thr = sd * sqrt(365.0) * S.expected_max_sharpe(1.0 / 365.0, n_eff)
+                    gain_tests[f"N{n_eff}_sd{sd}"] = dict(threshold=thr, dsr=S.norm_cdf((boot["obs"] - thr) / boot["se"]))
             v["headline"] = dict(rep=lm5, sharpe=S.sharpe(head["r"]), p_vs_bh=boot["p"], d_vs_bh=boot["obs"],
+                                 se_vs_bh=boot["se"], dsr_gain=gain_tests,
                                  d_vs_B2=S.sharpe(head["r"]) - S.sharpe(rules["B2"]["r"]),
                                  d_vs_B5=S.sharpe(head["r"]) - S.sharpe(rules["B5"]["r"]),
                                  dsr_excess=S.dsr(head["r"] - bh["r"], N, srv))
@@ -264,7 +273,11 @@ def main():
         if v.get("headline"):
             h = v["headline"]
             print(f"  참고: 헤드라인 샤프 {h['sharpe']:.2f}, 매수·보유 대비 {h['d_vs_bh']:+.2f} (p={h['p_vs_bh']:.2f}), "
-                  f"200일선 대비 {h['d_vs_B2']:+.2f}, 일봉 MACD 대비 {h['d_vs_B5']:+.2f}, DSR {h['dsr_excess']:.2f}")
+                  f"200일선 대비 {h['d_vs_B2']:+.2f}, 일봉 MACD 대비 {h['d_vs_B5']:+.2f}, "
+                  f"DSR(평균 수익 기준) {h['dsr_excess']:.2f}")
+            g = h["dsr_gain"]
+            print("  샤프 차이의 디플레이티드 검정 (필요한 차이 / DSR): " + ", ".join(
+                f"N={k.split('_')[0][1:]}·sd {k.split('_sd')[1]}: {v['threshold']:.2f} / {v['dsr']:.2f}" for k, v in g.items()))
 
 
 if __name__ == "__main__":

@@ -23,3 +23,13 @@
 2026-09-25T11:27:57Z	opened	research-screen:W1_softmin_direct
 2026-09-25T11:50:16Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
 2026-09-25T11:51:24Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
+2026-09-25T11:53:28Z	opened	verify-b123-independent
+2026-09-25T11:53:51Z	opened	verify-b3check
+2026-09-25T11:53:51Z	opened	verify-placebo-probe
+2026-09-25T11:54:14Z	opened	verify-w2b2
+2026-09-25T11:54:53Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:55:42Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:55:51Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:59:17Z	opened	verify-audit:dsr-grid (scratch, read-only)
+2026-09-25T11:59:58Z	opened	verify-audit:dsr-delta (scratch, read-only)
+2026-09-25T12:04:24Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
