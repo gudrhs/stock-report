@@ -139,6 +139,12 @@ def monthly_update_direct(cfg, datas, T_k, seed, ens, anchor):
 def monthly_update(cfg, datas, T_k, seed, ens, anchor):
     if cfg.get("algo") == "direct":
         return monthly_update_direct(cfg, datas, T_k, seed, ens, anchor)
+    if cfg.get("algo") not in (None, "dqn"):
+        # 추가 기법은 btc/research/algos/<algo>.py 에 monthly_update(cfg, datas, T_k, seed, ens, anchor)로 둡니다.
+        # 반환하는 모델은 values(X, cost) → (B,K) U (행동 가치) 또는, cfg["output"]=="weights"면 weights(X) → (B,)
+        import importlib
+        mod = importlib.import_module(f".algos.{cfg['algo']}", __package__)
+        return mod.monthly_update(cfg, datas, T_k, seed, ens, anchor)
     Tk = int(T_k.timestamp())
     entry = dict(month=str(T_k.date()))
     tr = KTrainer(cfg, seed)
@@ -168,7 +174,7 @@ def run_replication(cfg, r, datas=None, end=OOS_END):
     datas = datas or load_phases()
     d0 = datas[0]
     K = len(cfg.get("acts", (0.0, 1.0)))
-    direct = cfg.get("algo") == "direct"
+    direct = cfg.get("algo") == "direct" or cfg.get("output") == "weights"
     U = {cd: np.full((d0.T, K), np.nan, np.float32) for cd in C_DECS} if not direct else \
         {0.0: np.full((d0.T, 1), np.nan, np.float32)}
     log, ens, anchor = [], None, None

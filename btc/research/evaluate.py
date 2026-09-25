@@ -69,7 +69,7 @@ def variant_results(W, name, reps, cost_dec):
     for r in range(reps):
         run = load_run(name, r)
         sel = np.arange(a, b)[mask[a:b]]
-        if cfg.get("algo") == "direct":                          # 샤프 직접 최적화: 비중을 그대로 사용
+        if cfg.get("algo") == "direct" or cfg.get("output") == "weights":   # 비중을 직접 내는 정책: 그대로 사용
             tg = np.full(d.T, np.nan)
             tg[sel] = np.round(run["U"][0.0][sel, 0] * 4) / 4       # 25% 단위로 (잔거래 억제)
             res = W.run(tg, COST, weights=True)
