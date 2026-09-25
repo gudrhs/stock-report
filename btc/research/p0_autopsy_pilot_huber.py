@@ -71,50 +71,61 @@ class HuberTrainer(Trainer):
         return float(loss), grads, float(hubk(d).mean())
 
 
-def main():
+def frozen_cold_run(datas, cfg, hd, r, yrs_bar, a, b):
+    """매년 1월 새 모델(시드 (r, 연, 1, 0))을 그해 내내 그대로 사용 — 이어학습·게이트 없음"""
+    d0 = datas[0]
+    t0 = time.time()
+    dl = np.full(d0.T, np.nan, np.float32)
+    gates = {}
+    for y in YEARS:
+        Tk = ts(f"{y}-01-01")
+        tr = HuberTrainer(cfg, (r, y, 1, 0), delta=hd)
+        tr.make_pool(datas, Tk, FIRST_TRAIN, WARMUP)
+        tr.init_fresh()
+        tr.fit_cold()
+        ens = tr.ensemble()
+        ok, info = sanity_ok(ens, d0, Tk)
+        gates[y] = dict(ok=ok, exposure=info.get("exposure"), switches=info.get("switches_per_year"))
+        i0, i1 = decision_range(d0, Tk, ts(f"{y + 1}-01-01"))
+        dl[i0:i1] = ens.delta(d0.X[i0:i1], CD)[0]
+    res = run_targets(d0, agent_targets(d0, dl.astype(float)), COST)
+    x = dl[a:b].astype(float)
+    pos = res["pos"]
+    per_year = {}
+    for y in YEARS:
+        sel = yrs_bar == y
+        per_year[y] = dict(mean_delta=float(np.nanmean(x[sel])), sell_zone=float(np.mean(x[sel] < -TH)),
+                           exposure=float(pos[sel].mean()),
+                           ret=sub_stats(res["days"], res["r"], f"{y}-01-01", f"{y + 1}-01-01" if y < 2026 else HI)["ret"])
+    return dict(delta=hd, rep=r, cfg=cfg["name"], gates=gates, per_year=per_year,
+                full=sub_stats(res["days"], res["r"], LO, HI),
+                dev=sub_stats(res["days"], res["r"], LO, "2025-01-01"),
+                lockbox=sub_stats(res["days"], res["r"], "2025-01-01", HI),
+                exposure=float(pos.mean()), secs=round(time.time() - t0, 1))
+
+
+def run_pilot(configs, fname):
     datas = load_phases()
     d0 = datas[0]
     a, b = window_range(d0, LO, HI)
     yrs_bar = pd.to_datetime(d0.ts[a:b] + BAR_SEC, unit="s", utc=True).year.to_numpy()
     bh = run_targets(d0, bh_targets(d0), COST)
-    out = dict(deltas=DELTAS, reps=REPS, runs=[])
-    for hd in DELTAS:
+    out = dict(configs=[(c["name"], hd) for c, hd in configs], reps=REPS, runs=[])
+    for cfg, hd in configs:
         for r in REPS:
-            t0 = time.time()
-            dl = np.full(d0.T, np.nan, np.float32)
-            gates = {}
-            for y in YEARS:
-                Tk = ts(f"{y}-01-01")
-                tr = HuberTrainer(C.P0, (r, y, 1, 0), delta=hd)
-                tr.make_pool(datas, Tk, FIRST_TRAIN, WARMUP)
-                tr.init_fresh()
-                tr.fit_cold()
-                ens = tr.ensemble()
-                ok, info = sanity_ok(ens, d0, Tk)
-                gates[y] = dict(ok=ok, exposure=info.get("exposure"), switches=info.get("switches_per_year"))
-                i0, i1 = decision_range(d0, Tk, ts(f"{y + 1}-01-01"))
-                dl[i0:i1] = ens.delta(d0.X[i0:i1], CD)[0]
-            res = run_targets(d0, agent_targets(d0, dl.astype(float)), COST)
-            x = dl[a:b].astype(float)
-            pos = res["pos"]
-            per_year = {}
-            for y in YEARS:
-                sel = yrs_bar == y
-                per_year[y] = dict(mean_delta=float(np.nanmean(x[sel])), sell_zone=float(np.mean(x[sel] < -TH)),
-                                   exposure=float(pos[sel].mean()),
-                                   ret=sub_stats(res["days"], res["r"], f"{y}-01-01", f"{y + 1}-01-01" if y < 2026 else HI)["ret"])
-            row = dict(delta=hd, rep=r, gates=gates, per_year=per_year,
-                       full=sub_stats(res["days"], res["r"], LO, HI),
-                       dev=sub_stats(res["days"], res["r"], LO, "2025-01-01"),
-                       lockbox=sub_stats(res["days"], res["r"], "2025-01-01", HI),
-                       exposure=float(pos.mean()), secs=round(time.time() - t0, 1))
+            row = frozen_cold_run(datas, cfg, hd, r, yrs_bar, a, b)
             out["runs"].append(row)
-            print(f"δ={hd:g} r{r}: Sharpe {row['full']['sharpe']:.3f} MDD {row['full']['max_dd']:.3f} "
-                  f"exp {row['exposure']:.2f} gates_ok {sum(g['ok'] for g in gates.values())}/10 {row['secs']}s", flush=True)
+            print(f"{cfg['name']} δ={hd:g} r{r}: Sharpe {row['full']['sharpe']:.3f} MDD {row['full']['max_dd']:.3f} "
+                  f"exp {row['exposure']:.2f} gates_ok {sum(g['ok'] for g in row['gates'].values())}/10 {row['secs']}s",
+                  flush=True)
     out["bh"] = dict(full=sub_stats(bh["days"], bh["r"], LO, HI), dev=sub_stats(bh["days"], bh["r"], LO, "2025-01-01"),
                      lockbox=sub_stats(bh["days"], bh["r"], "2025-01-01", HI))
-    with open(os.path.join(OUT, "pilot_huber.json"), "w") as f:
+    with open(os.path.join(OUT, fname), "w") as f:
         json.dump(out, f, indent=1, default=float)
+
+
+def main():
+    run_pilot([(C.P0, hd) for hd in DELTAS], "pilot_huber.json")
 
 
 if __name__ == "__main__":
