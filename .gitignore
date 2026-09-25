@@ -9,3 +9,7 @@ data/btc/research_runs/**/*.npz
 data/btc/research_runs/**/*.tmp.npz
 btc/research/out/**/*.npz
 btc/research/out/**/*.txt
+# BTC 3단계 모의매매 — 달별 모델 보관본(감사용, 재현 가능)·쓰다 만 파일은 올리지 않음 (state/repNN.pkl 은 올림)
+data/btc/paper/**/models/
+data/btc/paper/**/*.tmp
+data/btc/paper/**/*.tmp.*

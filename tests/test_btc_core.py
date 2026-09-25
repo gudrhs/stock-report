@@ -334,7 +334,25 @@ class GuardTests(unittest.TestCase):
 
 
 # ──────────────────────── 실시간 ────────────────────────
-class LiveTests(unittest.TestCase):
+class _IsolatedModelDir:
+    """live.process 는 기본 모델 폴더(data/btc/models)의 p0_latest.npz 로 모델을 바꿔 끼웁니다.
+    저장소에 실제 P0 모델이 들어온 뒤로는 시험이 그 모델을 집어 결과가 달라지므로, 시험마다 빈 임시 폴더를 씁니다."""
+
+    def setUp(self):
+        super().setUp()
+        from unittest import mock
+        from btc import live
+        self._model_tmp = tempfile.TemporaryDirectory()
+        self._model_patch = mock.patch.object(live, "MODEL_DIR", self._model_tmp.name)
+        self._model_patch.start()
+
+    def tearDown(self):
+        self._model_patch.stop()
+        self._model_tmp.cleanup()
+        super().tearDown()
+
+
+class LiveTests(_IsolatedModelDir, unittest.TestCase):
     def test_hourly_to_4h_and_in_progress_guard(self):
         from btc import live as L
         t0 = int(pd.Timestamp("2023-01-01", tz="UTC").timestamp())
@@ -354,7 +372,7 @@ class LiveTests(unittest.TestCase):
         self.assertEqual(int(bars2.set_index("ts").loc[t0 + 8 * 3600, "gap_before"]), 1)
 
 
-class LiveReplayTests(unittest.TestCase):
+class LiveReplayTests(_IsolatedModelDir, unittest.TestCase):
     """과거 1시간봉을 실시간처럼 흘려 넣은 모의매매 == 같은 봉의 백테스트 (판단·체결·자산 100% 일치)"""
 
     @unittest.skipUnless(os.path.exists(CACHE), "15분봉 캐시 없음")
@@ -419,7 +437,7 @@ class LiveReplayTests(unittest.TestCase):
         np.testing.assert_allclose(eq_live[1:], sim["mark"][a + 1:b], rtol=1e-12)
 
 
-class ReviewRegressionTests(unittest.TestCase):
+class ReviewRegressionTests(_IsolatedModelDir, unittest.TestCase):
     """코드 리뷰에서 나온 문제들이 다시 생기지 않게"""
 
     def test_missing_minute_rows_count_as_dead_bars(self):
@@ -551,7 +569,7 @@ class GateWindowTests(unittest.TestCase):
         self.assertEqual(info2["reason"], "short_window")
 
 
-class LiveRobustnessTests(unittest.TestCase):
+class LiveRobustnessTests(_IsolatedModelDir, unittest.TestCase):
     """2차 리뷰(실시간 모의매매)에서 나온 문제 회귀 테스트"""
 
     def _hourly(self, start="2021-01-01", end="2023-03-01"):

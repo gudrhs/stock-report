@@ -178,11 +178,11 @@ class Parity(unittest.TestCase):
     def test_ledger_matches_window_run(self):
         pd0 = P.phases_for(P.truncate(P.load_15m_all(self.tmp), P._ts(self.HI)), 1)[0]
         for (n, r), x in self.ref.items():
-            eq = np.array([float(z["equity"]) for z in P._read_csv(
-                os.path.join(self.tmp, n, f"ledger_rep{r:02d}.csv")) if z["date"] <= self.HI])
-            dates1 = [z.split(",")[0] for z in self.led1[os.path.join(n, f"ledger_rep{r:02d}.csv")].decode().split()[1:]]
+            rows = self.led1[os.path.join(n, f"ledger_rep{r:02d}.csv")].decode().split()[1:]   # 4월 1일 00:00 실행의 장부
+            dates1 = [z.split(",")[0] for z in rows]
+            eq = np.array([float(z.split(",")[1]) for z in rows])
             self.assertEqual(dates1[0], self.LO)
-            self.assertEqual(dates1[-1], self.HI)                      # 4월 1일 00:00 실행: 4월 1일 봉 미판단 → 장부 끝
+            self.assertEqual(dates1[-1], self.HI)                      # 4월 1일 봉 미판단 → 장부 끝
             np.testing.assert_allclose(eq, x["res"]["eq"], rtol=0, atol=1e-12)
             _, _, _, decs = paper_arrays(self.tmp, n, r, CFGS[n])
             res = P.window_run(pd0, P._ts(self.LO), P._ts(self.HI), P.rep_targets(pd0, decs), P._is_frac(CFGS[n]))
@@ -190,8 +190,8 @@ class Parity(unittest.TestCase):
             self.assertTrue(np.array_equal(res["eq"], x["res"]["eq"]))
         bh = self.W.run(baseline_targets(self.W)["B0"], 0.0015)
         for n in CFGS:
-            eq, _ = ledger(self.tmp, n, "bh_ledger.csv")
-            np.testing.assert_allclose(eq[:len(bh["eq"])], bh["eq"], rtol=0, atol=1e-12)
+            rows = self.led1[os.path.join(n, "bh_ledger.csv")].decode().split()[1:]
+            np.testing.assert_allclose([float(z.split(",")[1]) for z in rows], bh["eq"], rtol=0, atol=1e-12)
         # 판단이 실제로 바뀌는 구간이어야 의미 있는 비교
         for key in (("T_R6", 0), ("T_R3", 0)):
             self.assertGreater(len(np.unique(self.ref[key]["res"]["pos"].round(6))), 1, key)
@@ -269,6 +269,11 @@ class Parity(unittest.TestCase):
         self.assertIn("btc/research/paper.py", ent["frozen_files"])
         self.assertIn("btc/evaluate.py", ent["frozen_files"])
         self.assertIn("commit", ent["git"])
+        # CLI 등록은 고정 대상 파일이 커밋과 다르면 거부 (CI가 그 커밋을 꺼내 돌리므로)
+        with mock.patch.object(P, "git_info", lambda cfg: dict(commit="abc", dirty=["btc/research/rl.py"])):
+            with self.assertRaises(P.PaperError):
+                P.register("T_new", reps=1, start=self.LO, cfg=CFGS["T_R6"], paper_dir=self.tmp, require_clean=True)
+        self.assertNotIn("T_new", P.load_registry(self.tmp)["variants"])
 
 
 class TrainCut(unittest.TestCase):
@@ -399,13 +404,16 @@ class CatchUp(unittest.TestCase):
             shutil.rmtree(b, ignore_errors=True)
 
     def test_recheck_detects_unpadded(self):
-        """묶음 채우기를 끄면(달 중간 묶음 크기가 달라짐) 달 마감 때 recheck_mismatch 경고가 나야 함 — 검사 자체의 민감도"""
+        """달 중간 판단을 한 행씩(묶음 크기 1 — 행렬곱 대신 행렬·벡터 곱) 계산하면 달 마감 때 recheck_mismatch 경고가
+        나야 함 — 검사 자체의 민감도"""
         tmp = tempfile.mkdtemp(prefix="paper_rc_")
         try:
             P.register("T_R6", reps=1, start="2017-03-27", cfg=CFGS["T_R6"], paper_dir=tmp)
-            with mock.patch.object(P, "_future_slots", lambda *a: 0):
-                P.step("2017-04-02T00:20Z", offline=True, paper_dir=tmp)       # 4월 1·2일 판단: 묶음 2개 (백테스트는 30개)
-                out = P.step("2017-05-02T00:30Z", offline=True, paper_dir=tmp)  # 4월 마감 호출 → 비교
+            orig = P._outputs
+            one_by_one = lambda ens, X, direct: np.concatenate([orig(ens, X[i:i + 1], direct) for i in range(len(X))])
+            with mock.patch.object(P, "_outputs", one_by_one):
+                P.step("2017-04-02T00:20Z", offline=True, paper_dir=tmp)
+            out = P.step("2017-05-02T00:30Z", offline=True, paper_dir=tmp)  # 4월 마감 호출 → 비교
             self.assertIn("recheck_mismatch", [x["alarm"] for x in out["alarms"]])
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
@@ -476,7 +484,8 @@ class StopRule(unittest.TestCase):
             self.assertEqual([x["close_utc"][:10] for x in cash], ["2017-04-01", "2017-04-02", "2017-04-03"])
             self.assertTrue(all(x["reason"] == "retrain_failed" and float(x["target"]) == 0.0 and x["model_month"] == ""
                                 for x in cash))
-            st = json.load(open(os.path.join(tmp, "status.json"), encoding="utf-8"))
+            with open(os.path.join(tmp, "status.json"), encoding="utf-8") as f:
+                st = json.load(f)
             self.assertEqual(st["variants"]["T_R6"]["reps"]["0"]["ledger_through"], "2017-04-04")
             out = P.step("2017-04-10T00:20Z", offline=True, paper_dir=tmp)       # 학습 복구 → 그 뒤 봉은 모델로
             self.assertEqual(out["variants"]["T_R6"]["reps"][0]["trained_through"], "2017-04-01")
