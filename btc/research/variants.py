@@ -61,4 +61,13 @@ VARIANTS = {c["name"]: c for c in [
     # 12. R6(균등 추출) + R3(비율 보유 0~100%·로그성장 보상)
     v("R12_daily_trend8_uniform_log5", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
       acts=(0.0, 0.25, 0.5, 0.75, 1.0), reward="log"),
+    # ── 인터넷 조사로 고른 기법 (btc/research/rl_effective_methods.md; 사후, 시험 수에 포함) ──
+    # W1. R11 직접 정책 + DeePM식 최악 구간 가중(SoftMin, τ=0.2, λ≤0.2). 검토 지적으로 손실을 척도 k로 나눠
+    #     λ=0에서 R11과 정확히 같게(loss_div_k) — 실행 전에 확정.
+    v("W1_softmin_direct", algo="softmin_direct", output="weights", stride=6, feat=TREND8, obj="log",
+      cost_train=0.003, turnover_pen=0.0, seq_len=63, seq_batch=32, groups=8, softmin_tau=0.2,
+      lambda_max=0.2, loss_div_k=True),
+    # W2. 능형회귀 추세 예측 + 정확한 동적계획 무거래 띠 (결정론적 진단; 같은 예측의 부호 규칙은 후보 아님)
+    v("W2_dp_band", algo="dp_band", output="weights", stride=6, feat=TREND8, dp_horizon_days=20, dp_ridge_alpha=1.0,
+      dp_mu0_frac=0.5, dp_grid_n=201, dp_grid_sd=4.0, dp_cost=0.0015, dp_gamma=0.998, dp_tol=1e-12),
 ]}

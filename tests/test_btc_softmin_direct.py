@@ -2,9 +2,13 @@
 
 python -m unittest tests.test_btc_softmin_direct -v
   · 손실 전체(목적 + L2 + L2-SP)의 유한차분 기울기 검사 (float64, 상대오차 < 1e-4)
-  · λ = 0 이면 direct.py 'log' 목적 × √365/σ_ref 와 같음 (값·기울기)
+  · λ = 0 이면 direct.py 'log' 목적 × √365/σ_ref 와 같음 (값·기울기),
+    대안 loss_div_k=True 이면 λ = 0 에서 direct.py 기울기와 (배율 없이) 같음
+  · λ = 0.2 에서 손실 값 = 반복문으로 따로 짠 공식 (nn.forward·softmin_objective 안 씀)
   · SoftMin 극한: τ → ∞ 이면 평균, τ → 0 이면 최솟값
   · λ 규칙, 월별 상수(σ_ref·λ)가 T_k 이후 가격에 영향받지 않음(누출 없음)
+  · P_BH 정확식 = 표본 평균의 극한, λ 는 반복 씨앗과 무관(같은 달이면 같은 값)
+  · 학습 전체(처음부터 달·이어학습 달)가 T_k 이후 가격·지표를 모두 바꿔도 파라미터가 비트 단위로 같음
   · walk.monthly_update 플러그인 경로로 2달(처음부터 + 이어서) 실행, 비중 ∈ [0, 1]
 """
 import os
@@ -163,6 +167,67 @@ class Objective(unittest.TestCase):
         for gd, gs in zip(cd.g, cs.g):
             np.testing.assert_allclose(gs, k * gd, rtol=2e-3, atol=1e-5 * float(np.abs(k * gd).max()))
 
+    def test_value_matches_independent_formula(self):
+        """λ = 0.2 에서 멤버별 손실 = 반복문 공식 (로짓은 직접 짠 순전파, SoftMin 도 직접)"""
+        tr, X, m = self._trainer64(M=2, G=3, K=2, L=6, lam=0.2, seed=4)
+        m = m + np.repeat(np.linspace(-0.03, 0.03, tr.G), 2)[:, None]       # 묶음마다 성적이 달라 적이 작동
+        loss, _, info = tr.loss_grads(X, m)
+        self.assertGreater(info["q"].max(), 0.5)
+        params = tr.net.copy_params()
+        n, L = m.shape
+        K = n // tr.G
+        c = tr.cfg["cost_train"]
+        for j in range(len(loss)):
+            h = X.reshape(n * L, -1)
+            for i in range(0, len(params), 2):
+                h = h @ params[i][j] + params[i + 1][j]
+                if i < len(params) - 2:
+                    h = np.maximum(h, 0.0)
+            w = (1.0 / (1.0 + np.exp(-h[:, 0]))).reshape(n, L)
+            g = np.zeros((n, L))
+            for a in range(n):
+                for t in range(L):
+                    g[a, t] = np.log(1.0 + w[a, t] * (np.exp(m[a, t]) - 1.0))
+                    if t > 0:
+                        g[a, t] += np.log(1.0 - c * abs(w[a, t] - w[a, t - 1]))
+            S = lambda x: x.mean() / tr.sigma_ref * np.sqrt(365.0)
+            z = [S(g[b * K:(b + 1) * K]) for b in range(tr.G)]
+            sm = -tr.tau * np.log(np.mean(np.exp(-np.array(z) / tr.tau)))
+            self.assertAlmostEqual(loss[j] / (-S(g) - tr.lam * sm), 1.0, places=12)
+
+    def test_loss_div_k_lambda0_equals_direct_gradients(self):
+        """대안(기본 꺼짐) loss_div_k=True, λ = 0 → direct.py 'log' 와 같은 값·기울기 (k 배가 아님)"""
+        cfg = w1_cfg(wd=1e-4, lambda_sp=1e-2, noise=0.0, loss_div_k=True)
+        rng = np.random.default_rng(6)
+        n, L = 32, 63
+        X = rng.standard_normal((n, L, len(TREND8))).astype(np.float32)
+        m = (0.035 * rng.standard_normal((n, L))).astype(np.float32)
+
+        class Cap:
+            def step(self, g):
+                self.g = g
+
+        dt = DirectTrainer(cfg, (0, 1))
+        dt.init_fresh()
+        dt.L = L
+        dt._seqs = lambda k: (X, m)
+        dt.anchor = [p + 0.05 for p in dt.net.copy_params()]
+        st = SD.SoftminTrainer(cfg, (0, 1))
+        st.init_fresh()
+        st.net.set_params(dt.net.copy_params())
+        st.L = L
+        st._seqs = lambda k: (X, m)
+        st.anchor = dt.anchor
+        st.sigma_ref, st.lam = 0.031, 0.0
+        cd, cs = Cap(), Cap()
+        vd = dt.step(cd)
+        vs = st.step(cs)
+        self.assertAlmostEqual(vs / vd, 1.0, places=4)
+        for gd, gs in zip(cd.g, cs.g):
+            np.testing.assert_allclose(gs, gd, rtol=2e-3, atol=1e-5 * float(np.abs(gd).max()))
+        # 기본(명세)은 꺼짐
+        self.assertFalse(SD.proposed_cfg().get("loss_div_k", False))
+
 
 class Config(unittest.TestCase):
     def test_proposed_cfg_is_r11_plus_w1_keys(self):
@@ -192,6 +257,68 @@ class Monthly(unittest.TestCase):
             vals.append((tr.sigma_ref, tr.P_bh, tr.sm_bh, tr.lam))
         np.testing.assert_allclose(vals[0], vals[1], rtol=0, atol=0)
         self.assertTrue(0 < vals[0][0] < 0.2 and 0 < vals[0][3] <= 0.2)
+
+    def test_lambda_deterministic_and_p_bh_exact(self):
+        """λ·P_BH·SoftMin_BH 는 반복 씨앗과 무관, P_BH 정확식 = 큰 표본 평균"""
+        T_k = _ts("2015-01-01")
+        Tk = int(T_k.timestamp())
+        d, _ = synth_phase()
+        cfg = w1_cfg(phases=1, bh_batches=64)
+        trs = []
+        for seed in ((0, 2015, 1, 0), (3, 2015, 1, 0)):
+            tr = SD.SoftminTrainer(cfg, seed)
+            tr.make_pool([d], Tk, SD.FIRST_TRAIN, SD.WARMUP)
+            trs.append(tr)
+        a, b = trs
+        self.assertEqual((a.P_bh, a.sm_bh, a.lam), (b.P_bh, b.sm_bh, b.lam))
+        # 정확식 검증 1: 구간 평균 수익을 반복문으로 직접
+        j = np.linspace(0, len(a.starts) - 1, 50).astype(int)
+        for i in j:
+            k, t = a.starts[i]
+            idx = t + a.S * np.arange(a.L)
+            self.assertAlmostEqual(a._seq_mean_m()[i], np.log(d.o[idx + a.S + 1] / d.o[idx + 1]).mean(), places=12)
+        # 정확식 검증 2: 큰 표본의 w=1 점수 평균과 일치 (표본 오차 범위)
+        mm = a._m_seqs(200000, np.random.default_rng(0))
+        P = np.sqrt(365.0) / a.sigma_ref * mm.mean(axis=1)
+        self.assertLess(abs(P.mean() - a.P_bh), 4 * P.std() / np.sqrt(len(P)))
+
+    def test_training_no_leak_after_T_k(self):
+        """T_k 이후(ts ≥ T_k) 가격·지표를 모두 바꿔도 학습된 파라미터·월 기록이 비트 단위로 같음 (처음부터 달·이어학습 달)"""
+        from btc.research.walk import monthly_update
+        from btc.env import PhaseData
+        d0, _ = synth_phase(seed=3)                     # = _series("regime", 3, n=7000)
+        T1, T2 = _ts("2015-01-01"), _ts("2015-02-01")
+        cfg = w1_cfg(phases=2, cold_steps=30, cold_split=20, ft_steps=10, bh_batches=16)
+
+        def perturbed(cut):
+            from test_btc_controls import _series
+            from btc import features as Fe
+            df, _ = _series("regime", 3, n=7000)
+            late = df["ts"].to_numpy() >= cut
+            f = np.exp(np.cumsum(np.where(late, np.random.default_rng(9).normal(0, 0.2, len(df)), 0.0)))
+            for c in ("open", "high", "low", "close"):
+                df[c] = df[c] * f
+            X, sig = Fe.compute(df)
+            X = np.where(late[:, None], np.random.default_rng(1).standard_normal(X.shape), X)
+            return PhaseData(df, X, sig)
+
+        def run(d, months):
+            ens, anc, log = None, None, []
+            for T in months:
+                ens, anc, e = monthly_update(cfg, [d, d], T, (0, T.year, T.month, 0), ens, anc)
+                log.append(e)
+            return ens, log
+
+        for months in ((T1,), (T1, T2)):
+            cut = int(months[-1].timestamp())
+            e0, l0 = run(d0, months)
+            e1, l1 = run(perturbed(cut), months)
+            self.assertTrue(all(np.array_equal(p, q) for p, q in zip(e0.net.params, e1.net.params)), months)
+            self.assertEqual(l0, l1)
+        # 민감도: T_k 한 달 전부터 바꾸면 달라져야 함 (검사가 실제로 무언가를 봄)
+        e0, _ = run(d0, (T1,))
+        e2, _ = run(perturbed(int(_ts("2014-12-01").timestamp())), (T1,))
+        self.assertFalse(all(np.array_equal(p, q) for p, q in zip(e0.net.params, e2.net.params)))
 
     def test_walk_plugin_two_months(self):
         from btc.research.walk import monthly_update

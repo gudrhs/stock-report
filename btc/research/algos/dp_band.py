@@ -36,6 +36,28 @@ btc/research/rl_effective_methods.md §3 W2의 사전 등록 설계를 그대로
   주의: 행이 시간 순서가 아니거나, 여러 달을 섞어 넘기면 결과가 틀립니다. 강제 유지(forced_hold)로 실제
   체결이 목표와 달라지는 드문 경우에도 내부 포지션은 목표 기준으로 이어집니다.
 
+기록 (월별 entry, JSON)
+  · 문턱: q_in·q_out은 유한하면 float, 무한대면 문자열 '+inf'/'-inf' (None을 쓰지 않음 — 항상 보유와 항상 현금을
+    구분하기 위해). policy_regime = 'band'(둘 다 유한) | 'always_long'(−inf,−inf) | 'never_long'(+inf,+inf) |
+    'enter_never_exit'(q_in 유한, q_out=−inf) | 'exit_never_enter'(q_in=+inf, q_out 유한) | 'hold_prev'(+inf,−inf).
+    policy_exposure / policy_rt_per_year = 적합한 AR(1) 격자 사슬의 정상분포에서 이 정책의 노출·연 왕복 (모형 기준).
+  · 예측 복원용: fi, feat_mu, feat_sd, ridge_beta, c0 (+ 정책이 단조가 아니면 grid_lo/hi/n·pi_str).
+    paths_from_log(log, d0)로 저장된 기록만으로 매달 p·DP 포지션·부호 규칙 포지션을 다시 만들 수 있습니다
+    (DP 포지션은 run_replication의 U와 비트 단위로 같음 — 테스트). 부호 규칙 비교(사전 등록 예측
+    'Sharpe ≥ 부호 규칙 + 0.05, 회전 ≤ 절반')는 btc.research.dp_band_controls --part sign 으로 봅니다.
+  · prev_oos: 지난달(표본 밖) p·DP·부호 포지션 목록. 마지막 달은 다음 entry가 없으므로 state()의
+    last_p/last_w/last_sign(저장 파일의 s_last_*)에 남습니다.
+
+읽을 때 주의 (검토에서 확인된 점)
+  · 반복(rep) 5개는 비트 단위로 같습니다: 이 기법은 seed를 쓰지 않고, walk.run_replication은 r에 따라 seed만
+    바꾸고 같은 datas·같은 phase 0을 평가합니다. 따라서 --reps 1로 돌리면 충분하고, screen의 S1('모든 rep > BH')과
+    rep 하한 중앙값은 rep 1개와 같은 정보입니다.
+  · 가짜 거래율: 예측력이 없는 GARCH 가격 경로에서 '가격으로 계산한' TREND8을 쓰면 릿지(α=1, 합 기준, 표본 1e4~1e5개
+    → 사실상 OLS)가 끈질긴 잡음을 추세로 맞춰 p의 표준편차가 μ0의 몇 배가 되고, DP는 그것을 '최적으로' 거래합니다
+    (검토 재현: 연 +3.6회 추가 왕복, 기준 1회). 사전 등록 음성 대조('순수 잡음 지표' = 독립 N(0,1))는 통과하지만,
+    실제 BTC 결과의 타이밍 이득은 반드시 dp_band_controls --part neg 의 'price' 가짜 거래율·가짜 Sharpe 이득
+    (드리프트를 맞춘 합성 경로)과 나란히 읽어야 합니다. 사양은 바꾸지 않습니다 (더 센 수축은 새 등록 시험).
+
 cfg: algo='dp_band', output='weights', stride=6, phases, feat(없으면 TREND8), 그리고 아래 dp_* 키(기본값 = 사전 등록값).
 """
 import math
@@ -44,7 +66,7 @@ import numpy as np
 
 from ...env import BAR_SEC
 from ...features import WARMUP
-from ...walkforward import FIRST_TRAIN
+from ...walkforward import FIRST_TRAIN, OOS_END, decision_range
 from ..rl import feat_index
 from ..variants import TREND8
 from ..walk import decision_mask
@@ -244,17 +266,84 @@ def _path_stats(w, days):
     return dict(exposure=float(w.mean()) if len(w) else float("nan"), round_trips_per_year=turns / 2.0 / years)
 
 
-def _f(x):
-    """기록용 float (무한대는 None — JSON 호환)"""
+def fmt_q(x):
+    """기록용 문턱: 유한하면 float, 무한대면 '+inf'/'-inf' 문자열 (부호를 잃지 않으면서 JSON 호환)"""
     x = float(x)
-    return x if math.isfinite(x) else None
+    if math.isfinite(x):
+        return x
+    return "+inf" if x > 0 else "-inf"
+
+
+def parse_q(x):
+    """fmt_q의 역. None(옛 기록)은 NaN"""
+    if x is None:
+        return float("nan")
+    if isinstance(x, str):
+        return float(x.replace("+", ""))            # '+inf' → inf, '-inf' → −inf
+    return float(x)
+
+
+def policy_regime(q_in, q_out):
+    """문턱 조합 → 정책 형태 이름 (모듈 설명의 '기록' 참고)"""
+    fin_in, fin_out = math.isfinite(q_in), math.isfinite(q_out)
+    if fin_in and fin_out:
+        return "band"
+    if q_in == -math.inf and q_out == -math.inf:
+        return "always_long"
+    if q_in == math.inf and q_out == math.inf:
+        return "never_long"
+    if fin_in and q_out == -math.inf:
+        return "enter_never_exit"
+    if q_in == math.inf and fin_out:
+        return "exit_never_enter"
+    if q_in == math.inf and q_out == -math.inf:
+        return "hold_prev"
+    return "other"                                  # 예: q_in = −inf 이고 q_out 유한 (q_out ≤ q_in 위반, 없어야 함)
+
+
+def policy_chain(grid, P, pi, kappa):
+    """
+    격자 마르코프 사슬에서 정책 pi의 장기 평균 (모형 기준).
+    결합 상태 (p칸 i, 이전 포지션 prev) → (j, a = pi[i, prev]). 반환 dict(exposure, gain(하루 기대 순성장),
+    rt_per_year). 흡수 부류가 둘 이상이라 정상분포가 하나가 아니면(예: hold_prev) 값 대신 None을 돌려줍니다.
+    (dp_band_controls의 해석적 g*도 이 함수를 씁니다 — 독립 검증은 그쪽의 정책 반복·몬테카를로 탐색.)
+    """
+    G = len(grid)
+    T = np.zeros((2 * G, 2 * G))
+    rew = np.zeros(2 * G)
+    turn = np.zeros(2 * G)
+    for prev in (0, 1):
+        act = pi[:, prev].astype(int)
+        rows = np.arange(G) * 2 + prev
+        for av in (0, 1):
+            sel = act == av
+            T[np.ix_(rows[sel], np.arange(G) * 2 + av)] = P[sel]
+        rew[rows] = act * np.asarray(grid, float) - kappa * np.abs(act - prev)
+        turn[rows] = np.abs(act - prev)
+    A = T.T - np.eye(2 * G)
+    A[-1] = 1.0
+    b = np.zeros(2 * G)
+    b[-1] = 1.0
+    none = dict(exposure=None, gain=None, rt_per_year=None)
+    try:
+        st = np.linalg.solve(A, b)
+    except np.linalg.LinAlgError:
+        return none
+    # 정상분포가 하나가 아니면(흡수 부류 둘 이상) 풀이가 틀어짐 → 정상성·비음수 확인
+    if not (np.all(np.isfinite(st)) and st.min() > -1e-9 and np.abs(T.T @ st - st).max() < 1e-8):
+        return none
+    act_all = np.empty(2 * G)                       # 노출 = 그날 고른 행동(다음 봉부터 들고 있는 포지션)
+    for prev in (0, 1):
+        act_all[np.arange(G) * 2 + prev] = pi[:, prev]
+    return dict(exposure=float(np.clip(st @ act_all, 0.0, 1.0)), gain=float(st @ rew),
+                rt_per_year=max(float(st @ turn), 0.0) * 365.0 / 2.0)
 
 
 # ══════════ 모델 ══════════
 class DPBandModel:
     """월별 모델: 릿지 예측 p → 히스테리시스 정책. weights(X)는 상태가 있음 (모듈 설명 참고)"""
 
-    def __init__(self, fi, mu, sd, beta, c0, ar, band, pos0=0.0):
+    def __init__(self, fi, mu, sd, beta, c0, ar, band, pos0=0.0, sign_pos0=0.0):
         self.fi = np.asarray(fi)
         self.mu, self.sd, self.beta, self.c0 = mu, sd, beta, float(c0)
         self.ar = ar                                            # (a, φ, s)
@@ -262,6 +351,8 @@ class DPBandModel:
         self.q_in, self.q_out, self.mono = band["q_in"], band["q_out"], band["mono"]
         self.pos0 = float(pos0)
         self.last_pos = float(pos0)
+        self.sign_pos0 = float(sign_pos0)                        # 부호 규칙(진단)은 자기 포지션을 따로 이어감
+        self.last_sign_pos = float(sign_pos0)
         self.last = None                                         # 마지막 weights 호출의 (p, 포지션, 부호 규칙)
 
     def forecast(self, X):
@@ -278,24 +369,30 @@ class DPBandModel:
         """한 달치 판단봉을 시간 순서대로 → 포지션 (B,) ∈ {0, 1}. 매번 pos0에서 시작(멱등), last_pos 갱신"""
         p = self.forecast(X)
         w = self._band(p, self.pos0)
-        s = sign_path(p, self.pos0)
+        s = sign_path(p, self.sign_pos0)
         self.last_pos = float(w[-1]) if len(w) else self.pos0
+        self.last_sign_pos = float(s[-1]) if len(s) else self.sign_pos0
         self.last = (p, w, s)
         return w
 
     def sign_weights(self, X):
         """부호 규칙 포지션 (진단용, 후보 아님)"""
-        return sign_path(self.forecast(X), self.pos0)
+        return sign_path(self.forecast(X), self.sign_pos0)
 
     def state(self):
+        """마지막 달의 모델 + 그 달 판단(last_p/last_w/last_sign — 다음 entry가 없어 여기에만 남음)"""
         a, phi, s = self.ar
+        p, w, sg = self.last if self.last is not None else (np.zeros(0), np.zeros(0), np.zeros(0))
         return dict(fi=np.asarray(self.fi), feat_mu=np.asarray(self.mu), feat_sd=np.asarray(self.sd),
                     beta=np.asarray(self.beta), c0=np.array([self.c0]), ar=np.array([a, phi, s]),
                     grid=np.asarray(self.grid), pi=np.asarray(self.pi),
-                    q=np.array([self.q_in, self.q_out]), pos=np.array([self.pos0, self.last_pos]))
+                    q=np.array([self.q_in, self.q_out]), pos=np.array([self.pos0, self.last_pos]),
+                    sign_pos=np.array([self.sign_pos0, self.last_sign_pos]),
+                    last_p=np.asarray(p, np.float64), last_w=np.asarray(w, np.float64),
+                    last_sign=np.asarray(sg, np.float64))
 
 
-def fit_month(cfg, datas, Tk, pos0=0.0):
+def fit_month(cfg, datas, Tk, pos0=0.0, sign_pos0=0.0):
     """T_k(초) 시점의 모델 하나를 처음부터 맞춤. 반환 (모델, 진단 dict)"""
     hp = hparams(cfg)
     fi = feat_index(list(cfg.get("feat") or TREND8))
@@ -319,35 +416,45 @@ def fit_month(cfg, datas, Tk, pos0=0.0):
         raise RuntimeError(f"dp_band: AR(1)에 쓸 연속 날짜 쌍이 {len(cons)}개뿐입니다")
     a, phi, s, clipped = fit_ar1(p[cons], p[cons + 1])
     band = solve_band(a, phi, s, hp)
-    model = DPBandModel(fi, mu, sd, beta, c0, (a, phi, s), band, pos0)
+    model = DPBandModel(fi, mu, sd, beta, c0, (a, phi, s), band, pos0, sign_pos0)
     days = float(len(p))
     w_in = model._band(p, 0.0)
     s_in = sign_path(p, 0.0)
     q_in, q_out = band["q_in"], band["q_out"]
+    fin_band = math.isfinite(q_in) and math.isfinite(q_out)
+    ch = policy_chain(band["grid"], band["P"], band["pi"], band["kappa"])
     info = dict(
         n_samples=int(len(y)), n_phases=len(datas), label_end_max=int(ends.max()),
+        fi=[int(i) for i in fi], feat_mu=[float(v) for v in mu], feat_sd=[float(v) for v in sd],
         ridge_beta=[float(b) for b in beta], ybar=yb, mu0=mu0, c0=c0,
         n_ar=int(len(cons)), ar_a=a, ar_phi=phi, ar_s=s, phi_clipped=clipped,
         p_stat_mean=a / (1 - phi), p_stat_sd=s / math.sqrt(1 - phi * phi),
         vi_iters=int(band["iters"]), vi_resid=float(band["resid"]), vi_converged=bool(band["resid"] < hp["dp_tol"]),
-        q_in=_f(q_in), q_out=_f(q_out), policy_monotone=band["mono"],
-        band_center=_f(0.5 * (q_in + q_out)), band_half=_f(0.5 * (q_in - q_out)),
+        q_in=fmt_q(q_in), q_out=fmt_q(q_out), policy_regime=policy_regime(q_in, q_out),
+        policy_monotone=band["mono"],
+        band_center=0.5 * (q_in + q_out) if fin_band else None, band_half=0.5 * (q_in - q_out) if fin_band else None,
+        policy_exposure=ch["exposure"], policy_rt_per_year=ch["rt_per_year"], policy_gain=ch["gain"],
+        grid_lo=float(band["grid"][0]), grid_hi=float(band["grid"][-1]), grid_n=int(len(band["grid"])),
         p_last=float(p[-1]), p_last_sd=float((p[-1] - a / (1 - phi)) / (s / math.sqrt(1 - phi * phi))),
         insample_dp=_path_stats(w_in, days), insample_sign=_path_stats(s_in, days),
     )
+    if not band["mono"]:                                          # 격자 조회가 필요할 때만 정책표를 기록
+        info["pi_str"] = ["".join(str(int(v)) for v in band["pi"][:, c]) for c in (0, 1)]
     return model, info
 
 
 def _prev_oos(ens):
-    """지난달 모델이 실제로 판단한 한 달(표본 밖) 요약 — 부호 규칙과 비교 (진단용)"""
+    """지난달 모델이 실제로 판단한 한 달(표본 밖) — p·DP·부호 포지션 전체와 요약 (진단용)"""
     if ens is None or getattr(ens, "last", None) is None:
         return None
     p, w, s = ens.last
     tw = float(np.abs(np.diff(np.concatenate([[ens.pos0], w]))).sum())
-    ts_ = float(np.abs(np.diff(np.concatenate([[ens.pos0], s]))).sum())
+    ts_ = float(np.abs(np.diff(np.concatenate([[ens.sign_pos0], s]))).sum())
     return dict(n=int(len(p)), p_mean=float(np.nanmean(p)) if len(p) else None,
                 dp_exposure=float(w.mean()) if len(w) else None, sign_exposure=float(s.mean()) if len(s) else None,
-                dp_turns=tw, sign_turns=ts_, agree=float((w == s).mean()) if len(w) else None)
+                dp_turns=tw, sign_turns=ts_, agree=float((w == s).mean()) if len(w) else None,
+                p=[float(v) if np.isfinite(v) else None for v in p],
+                dp=[float(v) for v in w], sign=[float(v) for v in s])
 
 
 def monthly_update(cfg, datas, T_k, seed, ens, anchor):
@@ -355,11 +462,47 @@ def monthly_update(cfg, datas, T_k, seed, ens, anchor):
     walk.monthly_update 훅. 매달 처음부터 다시 맞추고(결정론적, seed 무시) 항상 채택합니다.
     kind는 다른 기법과 일정 표기를 맞추려고 1월·첫 달은 'cold', 나머지는 'finetune'이라 적지만
     절차는 같습니다(refit='full'). anchor는 쓰지 않고 그대로 돌려줍니다.
-    시작 포지션은 지난달 모델의 마지막 포지션(ens.last_pos)을 이어받습니다.
+    시작 포지션은 지난달 모델의 마지막 포지션(ens.last_pos)을 이어받습니다 (부호 규칙은 ens.last_sign_pos).
     """
     Tk = int(T_k.timestamp())
     pos0 = float(getattr(ens, "last_pos", 0.0)) if ens is not None else 0.0
-    model, info = fit_month(cfg, datas[:cfg.get("phases", len(datas))], Tk, pos0)
+    spos0 = float(getattr(ens, "last_sign_pos", 0.0)) if ens is not None else 0.0
+    model, info = fit_month(cfg, datas[:cfg.get("phases", len(datas))], Tk, pos0, spos0)
     entry = dict(month=str(T_k.date()), kind="cold" if (T_k.month == 1 or ens is None) else "finetune",
-                 refit="full", accepted=True, pos0=pos0, prev_oos=_prev_oos(ens), **info)
+                 refit="full", accepted=True, pos0=pos0, sign_pos0=spos0, prev_oos=_prev_oos(ens), **info)
     return model, anchor, entry
+
+
+# ══════════ 저장된 기록에서 경로 복원 (부호 규칙 비교용) ══════════
+def paths_from_log(log, d0, stride=6, end=None):
+    """
+    walk.run_replication의 월별 기록(log)과 phase 0 데이터만으로, 각 달 판단봉의
+    p, DP 포지션, 부호 규칙 포지션을 다시 만듭니다 (run_replication과 같은 월 구간·같은 판단봉).
+    반환 dict(p, dp, sign) — 길이 d0.T, 판단봉 밖은 NaN. dp는 저장된 U[0.0][:,0]과 같아야 합니다.
+    end: 마지막 달의 끝 (run_replication의 end, 기본 OOS_END).
+    """
+    import pandas as pd
+    end = pd.Timestamp(end) if end is not None else OOS_END
+    mask = decision_mask(d0, stride)
+    out = {k: np.full(d0.T, np.nan) for k in ("p", "dp", "sign")}
+    spos = 0.0
+    for i, e in enumerate(log):
+        Tk = int(pd.Timestamp(e["month"], tz="UTC").timestamp())
+        nxt = int(pd.Timestamp(log[i + 1]["month"], tz="UTC").timestamp()) if i + 1 < len(log) else int(end.timestamp())
+        a, b = decision_range(d0, Tk, nxt)
+        sel = np.arange(a, b)[mask[a:b]]
+        if len(sel) == 0:
+            continue
+        Z = (np.asarray(d0.X[sel], np.float64)[:, np.asarray(e["fi"])] - np.asarray(e["feat_mu"])) / np.asarray(e["feat_sd"])
+        p = float(e["c0"]) + Z @ np.asarray(e["ridge_beta"])
+        q_in, q_out = parse_q(e["q_in"]), parse_q(e["q_out"])
+        if e.get("policy_monotone", True):
+            w = band_path(p, q_in, q_out, e["pos0"])
+        else:
+            g = np.linspace(e["grid_lo"], e["grid_hi"], e["grid_n"])
+            pi = np.array([[int(ch) for ch in col] for col in e["pi_str"]], np.int8).T
+            w = band_path(p, q_in, q_out, e["pos0"], g, pi)
+        s = sign_path(p, spos)
+        spos = float(s[-1])
+        out["p"][sel], out["dp"][sel], out["sign"][sel] = p, w, s
+    return out
