@@ -319,15 +319,21 @@ def main():
     ap.add_argument("names", nargs="*")
     ap.add_argument("--reps", type=int, default=5)
     ap.add_argument("--out", default=OUT)
+    ap.add_argument("--print-only", action="store_true", help="저장된 결과만 다시 출력")
     a = ap.parse_args()
     from ..evaluate import _clean
     comp = {"L1_daily_trend8_ls3": "R2_daily_trend8", "L2_daily_trend8_ls5": "R3_daily_trend8_log5",
             "L3_daily_trend8_ls3_drift0": "R7_daily_trend8_drift0"}
-    out = _clean(evaluate(a.names, a.reps, compare={k: v for k, v in comp.items() if k in a.names}))
-    with open(a.out, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False, indent=1)
+    if a.print_only:
+        with open(a.out, encoding="utf-8") as f:
+            out = json.load(f)
+    else:
+        out = _clean(evaluate(a.names, a.reps, compare={k: v for k, v in comp.items() if k in a.names}))
+        with open(a.out, "w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False, indent=1)
 
     def line(n, s):
+        s = {k: (float("nan") if v is None else v) for k, v in s.items()}       # 청산(−∞) 등은 NaN으로 표시
         return (f"{n:28s} 샤프 {s['sharpe']:5.2f} CAGR {s['cagr']*100:6.1f}% MDD {s['max_dd']*100:6.1f}% "
                 f"순노출 {s['net_exposure']*100:4.0f}% 숏시간 {s['time_short']*100:3.0f}% "
                 f"롱손익 {s['long_logr']:+.2f} 숏손익 {s['short_logr']:+.2f} 수수료 {s['fees']:.2f} 유지비 {s['carried']:+.2f} "
@@ -348,7 +354,8 @@ def main():
     keys = ["base", "base_hold", "fund", "fund_hold", "fund_bitmex_hold", "perp_both_hold", "korea_lend_hold"]
     print(f"{'':28s} " + " ".join(f"{k:>16s}" for k in keys))
     for k in allk:
-        print(f"{k:28s} " + " ".join(f"{src(k)[x]['sharpe']:16.2f}" for x in keys))
+        print(f"{k:28s} " + " ".join(f"{src(k)[x]['sharpe']:16.2f}" if src(k)[x]['sharpe'] is not None else f"{'청산':>16s}"
+                                       for x in keys))
     print("— 검정 (정상 부트스트랩, ΔSharpe) —")
     for t in out["tests"]:
         print(f"[{t['conv']:8s}] {t['a']:28s} vs {t['b']:24s} {t['d_sharpe']:+.2f} p={t['p']:.2f}")
