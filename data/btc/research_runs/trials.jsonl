@@ -23,3 +23,4 @@
 {"name": "R11_direct_loggrowth", "cfg_hash": "76a367330547", "note": "", "time": "2026-09-25T09:35:53Z"}
 {"name": "R12_daily_trend8_uniform_log5", "cfg_hash": "894bb7a94af0", "note": "", "time": "2026-09-25T10:00:05Z"}
 {"name": "W2_dp_band", "cfg_hash": "8783efdf5151", "note": "", "time": "2026-09-25T10:49:43Z"}
+{"name": "W1_softmin_direct", "cfg_hash": "3be589398bc5", "note": "", "time": "2026-09-25T11:05:55Z"}
