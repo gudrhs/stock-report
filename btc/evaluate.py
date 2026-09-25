@@ -28,7 +28,18 @@ from .agent import policy_from_delta
 from .data import DATA_DIR
 from .env import simulate, simulate_weights, daily_marks, BAR_SEC
 from .features import NAMES
-from .walkforward import load_phases, load_run, decision_range, RUNS_DIR, n_trials
+from .walkforward import load_phases, load_run as _load_run, decision_range, RUNS_DIR, n_trials, code_hash
+
+_SEEN_CODE = set()
+
+
+def load_run(name, r):
+    """저장된 실행 결과 — 지금 코드와 다른 코드로 만든 결과면 거부 (고친 버그가 조용히 섞이지 않게)"""
+    run = _load_run(name, r)
+    if run.get("code_hash") != code_hash() and os.environ.get("BTC_ALLOW_STALE") != "1":
+        raise RuntimeError(f"{name} rep{r}: 코드 해시 불일치 ({run.get('code_hash')} ≠ {code_hash()}) — 다시 실행하세요")
+    _SEEN_CODE.add(run.get("code_hash"))
+    return run
 
 LOCK_TS = int(pd.Timestamp("2025-01-01", tz="UTC").timestamp())
 AUDIT = os.path.join(DATA_DIR, "lockbox_audit.log")
@@ -64,7 +75,14 @@ class Window:
     def __init__(self, datas, lo, hi, what):
         guard(_ts(hi), what)
         self.datas, self.lo, self.hi = datas, _ts(lo), _ts(hi)
-        self.rng = {k: decision_range(d, self.lo, self.hi) for k, d in enumerate(datas)}
+        self.rng = {}
+        for k, d in enumerate(datas):
+            a, b = decision_range(d, self.lo, self.hi)
+            # simulate()는 체결 봉 b의 종가와 b+1 시가까지 읽습니다 → 둘 다 hi 이전이어야 함
+            # (15분 밀린 phase는 마지막 한 봉을 줄여 잠금 구간 가격을 한 틱도 읽지 않게)
+            while b > a and (d.ts[b] + BAR_SEC > self.hi or (b + 1 < d.T and d.ts[b + 1] > self.hi)):
+                b -= 1
+            self.rng[k] = (a, b)
 
     def run(self, targets, cost, phase=0, weights=False):
         d = self.datas[phase]
@@ -73,10 +91,11 @@ class Window:
             sim = simulate_weights(targets, d.o, d.c, cost, a, b)
         else:
             sim = simulate(targets, d.o, d.c, cost, a, b, forced_hold=d.forced_hold)
-        days, eq = daily_marks(d.ts, sim["mark"], a, b)
+        days, eq = daily_marks(d.ts, sim["mark"], a, b, lo=self.lo, hi=self.hi)
         r = eq[1:] / eq[:-1] - 1.0
         return dict(days=days[1:], r=r, eq=eq, pos=sim["pos"][a:b], logr=sim["logr"][a:b],
-                    trades=sim["trades"], a=a, b=b)
+                    trades=sim["trades"], a=a, b=b,
+                    rebal=sim["rebal"][a:b] if "rebal" in sim else None)
 
     def agent_targets(self, delta, c_dec, phase=0):
         d = self.datas[phase]
@@ -131,6 +150,13 @@ BASE_LABEL = {
 
 def perf(res, cost=None):
     s = S.summary(res["r"])
+    if res.get("rebal") is not None:
+        # 비율 보유 전략(B7·B8): 가격 변동에 따른 비중 흔들림은 전환이 아니므로 '재조정 횟수'로 셈
+        years = len(res["pos"]) / (6 * 365.0)
+        n_rb = int(res["rebal"].sum())
+        s.update(exposure=float(res["pos"].mean()), switches_per_year=n_rb / years, avg_hold_days=None,
+                 hit_rate=None, profit_factor=None, n_trades=n_rb)
+        return s
     t = S.trade_stats(res["pos"], res["logr"])
     s.update({k: t[k] for k in ("exposure", "switches_per_year", "avg_hold_days", "hit_rate",
                                 "profit_factor", "n_trades")})
@@ -305,9 +331,7 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
         out["N1"] = dict(percentile=S.null_percentile(S.sharpe(head["r"]), n1), median=float(np.median(n1)),
                          p95=float(np.percentile(n1, 95)))
     pos_d = daily_position(head, day_id, len(days))
-    r_bh_asset = bh["r"]
-    n3 = S.null_circular_shift(pos_d, r_bh_asset, n=2000, min_shift=30, seed=4)
-    out["N3"] = dict(p=S.null_pvalue(S.sharpe(pos_d * r_bh_asset), n3), median=float(np.median(n3)))
+    out["N3"] = null_shift_bar(head["pos"], m, cost, day_id, len(days), n=2000, min_days=30, seed=4)
     n2 = []
     for r in range(n_null2):
         try:
@@ -353,6 +377,7 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     out["subperiods"] = subperiods(days, {"agent": head["r"], "B0": bh["r"], "B2": base["B2"]["r"],
                                           "S": sel["r"] if sel else None})
     out["n_trials"] = n_trials()
+    out["code_hash"] = sorted(x for x in _SEEN_CODE if x)
     return out
 
 
@@ -364,14 +389,39 @@ def train_name(g):
 
 
 def daily_position(res, day_id, n_days):
-    """4시간봉 보유 → 일별 평균 보유 (일별 수익과 같은 길이)"""
+    """
+    4시간봉 보유 → 일별 평균 보유 (일별 수익과 같은 길이).
+    결정봉 t의 보유는 t+1봉(종가 시각부터 4시간) 동안 수익을 내므로, 종가가 i번째 날
+    [D_i, D_i+1) 안에 있는 결정들이 일별 수익 r[i] (D_i → D_i+1)을 만듭니다.
+    """
     pos = np.zeros(n_days + 1)
     cnt = np.zeros(n_days + 1)
     dd = np.clip(day_id, 0, n_days)
     np.add.at(pos, dd, res["pos"])
     np.add.at(cnt, dd, 1)
     p = np.where(cnt > 0, pos / np.maximum(cnt, 1), 0)
-    return p[1:n_days + 1] if len(p) > n_days else p[:n_days]
+    return p[:n_days]
+
+
+def null_shift_bar(pos, m, cost, day_id, n_days, n=2000, min_days=30, seed=4):
+    """
+    N3 귀무: 4시간봉 보유 계열을 하루 단위(≥30일)로 원형 이동해 수익과 어긋나게 한 뒤,
+    관측값과 똑같은 회계(a·m + |Δa|·ln(1−c), 일별 합산)로 샤프를 비교합니다.
+    """
+    lnc = math.log(1.0 - cost)
+    dd = np.clip(day_id, 0, n_days - 1)
+
+    def sh(p):
+        g = p * m + np.abs(np.diff(np.concatenate([[0.0], p]))) * lnc
+        r = np.expm1(np.bincount(dd, weights=g, minlength=n_days)[:n_days])
+        return S.sharpe(r)
+
+    obs = sh(pos)
+    rng = np.random.default_rng(seed)
+    ks = rng.integers(min_days, max(min_days + 1, n_days - min_days), size=n)
+    null = np.array([sh(np.roll(pos, 6 * int(k))) for k in ks])
+    return dict(obs=obs, p=S.null_pvalue(obs, null), median=float(np.median(null)),
+                p95=float(np.percentile(null, 95)))
 
 
 def selector(W, grid_r, datas, cost, days):

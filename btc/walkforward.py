@@ -81,7 +81,9 @@ def load_phases(n=N_PHASES):
         for c in ("ts", "open", "high", "low", "close", "volume", "gap_before", "forced_hold"):
             save[f"{k}_{c}"] = b[c].to_numpy()
         save[f"{k}_X"], save[f"{k}_sig"] = X, sig
-    np.savez(path, **save)
+    tmp = f"{path}.{os.getpid()}.tmp.npz"            # 여러 프로세스가 동시에 만들어도 깨지지 않게
+    np.savez(tmp, **save)
+    os.replace(tmp, path)
     return load_phases(n)
 
 
@@ -101,7 +103,10 @@ def decision_range(d, lo_ts, hi_ts):
 def sanity_ok(ens, d0, T_k, cost=0.003):
     """1월 재학습 점검 — 최근 2년 phase 0에서 탐욕 정책을 돌려 봄 (손익은 안 봄)"""
     a, b = decision_range(d0, T_k - 2 * 365 * 86400, T_k)
-    delta, umax = ens.delta(d0.X[a:b], cost)
+    if b - a < 2 * 365 * 6 * 0.9:                  # 최근 2년 데이터가 없으면 점검 불가 — 조용히 넘기지 않음
+        return False, dict(reason="short_window", bars=int(b - a), umax=float("nan"))
+    delta, um = ens.delta(d0.X[a:b], cost)
+    umax = float(um.max())
     if not np.all(np.isfinite(delta)) or umax >= 200:
         return False, dict(reason="nonfinite_or_big", umax=umax)
     pos = policy_from_delta(delta, cost, d0.forced_hold[a:b])
@@ -116,7 +121,10 @@ def finetune_ok(new, old, d0, T_k, cost=0.003):
     """월간 이어학습 거부 — 최근 180봉에서 판단이 40% 넘게 다르면 거부"""
     a, b = decision_range(d0, T_k - 180 * BAR_SEC - 1, T_k)
     a = max(a, b - 180)
+    if b - a < 180:                                  # 최근 180봉이 없으면(데이터가 끊김) 명시적으로 거부
+        return False, dict(reason="short_window", bars=int(b - a), umax=float("nan"))
     dn, un = new.delta(d0.X[a:b], cost)
+    un = float(un.max())
     do, _ = old.delta(d0.X[a:b], cost)
     if not np.all(np.isfinite(dn)) or un >= 200:
         return False, dict(reason="nonfinite_or_big", umax=un)
@@ -144,11 +152,13 @@ def monthly_update(cfg, datas, T_k, seed, ens, anchor):
         new = tr.ensemble()
         ok, info = sanity_ok(new, datas[0], Tk)
         entry.update(kind="cold", pool=n_pool, td=float(np.mean(losses[-200:])), accepted=ok, **info)
-        if ok or ens is None:
-            if not ok:
-                entry["note"] = "no_previous_model"
+        if ok:
             ens = new
             anchor = new.net.copy_params()
+        elif ens is None:
+            # 사전 등록 규칙: 점검을 통과한 모델이 아직 하나도 없으면 매매하지 않고(현금 유지)
+            # 다음 달에 다시 처음부터 학습합니다. 점검에 떨어진 모델로는 절대 매매하지 않습니다.
+            entry["note"] = "gate_failed_no_model_hold_cash"
     elif cfg["fine_tune"]:
         tr = Trainer(cfg, seed)
         n_pool = tr.make_pool(datas, Tk, FIRST_TRAIN, WARMUP)
@@ -187,6 +197,9 @@ def run_replication(cfg, r, eval_phases=None, c_dec_list=None, end=OOS_END, data
         t0 = time.time()
         ens, anchor, entry = monthly_update(cfg, datas, T_k, seed, ens, anchor)
         entry["secs"] = round(time.time() - t0, 2)
+        if ens is None:                              # 아직 채택된 모델 없음 → 이달 Δ는 NaN (판단 보류 = 현금)
+            log.append(entry)
+            continue
         # 이 모델이 담당하는 결정봉: 종가 ∈ [T_k, 다음 재학습)
         for k in eval_phases:
             d = datas[k]
@@ -200,13 +213,13 @@ def run_replication(cfg, r, eval_phases=None, c_dec_list=None, end=OOS_END, data
             for cd in delta[k]:
                 dl, um = ens.delta(d.X[a:b], cd)
                 delta[k][cd][a:b] = dl
-            umax[k][a:b] = um
+                umax[k][a:b] = np.fmax(umax[k][a:b], um)
         log.append(entry)
         if verbose:
             print(f"  r{r} {entry['month']} {entry.get('kind')} acc={entry.get('accepted')} "
                   f"td={entry.get('td', 0):.3f} {entry['secs']}s", flush=True)
-    last_state = ens.state()
-    for i, a in enumerate(anchor):
+    last_state = ens.state() if ens is not None else {}
+    for i, a in enumerate(anchor or []):
         last_state[f"anchor{i}"] = a
     return dict(delta=delta, umax=umax, log=log, last_state=last_state)
 
@@ -282,8 +295,32 @@ def online_month(cfg, month_ens, datas, Tk, a, b, delta0, seed):
 
 
 # ══════════ 실행·저장 ══════════
+TRAIN_CODE = ("agent.py", "nn.py", "env.py", "data.py", "features.py", "config.py", "walkforward.py")
+
+
+def code_hash():
+    """학습 결과에 영향을 주는 코드의 해시 — 코드가 바뀌면 저장된 실행 결과를 재사용하지 않습니다"""
+    import hashlib
+    h = hashlib.sha1()
+    here = os.path.dirname(os.path.abspath(__file__))
+    for f in TRAIN_CODE:
+        with open(os.path.join(here, f), "rb") as fp:
+            h.update(fp.read())
+    return h.hexdigest()[:12]
+
+
 def run_path(cfg, r):
     return os.path.join(RUNS_DIR, cfg["name"], f"rep{r:02d}.npz")
+
+
+def run_is_current(cfg, r):
+    path = run_path(cfg, r)
+    if not os.path.exists(path):
+        return False
+    z = np.load(path)
+    if "cfg_hash" not in z.files or "code_hash" not in z.files:
+        return False
+    return bytes(z["cfg_hash"]).decode() == C.train_hash(cfg) and bytes(z["code_hash"]).decode() == code_hash()
 
 
 def save_run(cfg, r, res):
@@ -298,6 +335,8 @@ def save_run(cfg, r, res):
     for key, arr in res["last_state"].items():
         flat[f"s_{key}"] = arr
     flat["log"] = np.frombuffer(json.dumps(res["log"]).encode(), dtype=np.uint8)
+    flat["cfg_hash"] = np.frombuffer(C.train_hash(cfg).encode(), dtype=np.uint8)
+    flat["code_hash"] = np.frombuffer(code_hash().encode(), dtype=np.uint8)
     tmp = path + ".tmp.npz"
     np.savez_compressed(tmp, **flat)
     os.replace(tmp, path)
@@ -310,11 +349,16 @@ def load_run(cfg_name, r):
         if key.startswith("d_"):
             _, k, cd = key.split("_")
             delta.setdefault(int(k), {})[float(cd)] = z[key]
+        elif key in ("cfg_hash", "code_hash", "log"):
+            continue
         elif key.startswith("u_"):
             umax[int(key[2:])] = z[key]
         elif key.startswith("s_"):
             st[key[2:]] = z[key]
-    return dict(delta=delta, umax=umax, last_state=st, log=json.loads(bytes(z["log"]).decode()))
+    out = dict(delta=delta, umax=umax, last_state=st, log=json.loads(bytes(z["log"]).decode()))
+    out["code_hash"] = bytes(z["code_hash"]).decode() if "code_hash" in z.files else None
+    out["cfg_hash"] = bytes(z["cfg_hash"]).decode() if "cfg_hash" in z.files else None
+    return out
 
 
 def log_trial(cfg, kind, extra=None):
@@ -340,7 +384,7 @@ def n_trials():
 
 def _job(args):
     cfg, r, eval_phases, end_s = args
-    if os.path.exists(run_path(cfg, r)):
+    if run_is_current(cfg, r):
         return cfg["name"], r, "cached"
     t = time.time()
     try:

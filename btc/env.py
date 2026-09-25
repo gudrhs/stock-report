@@ -67,8 +67,8 @@ def simulate(targets, o, c, cost, start, end, forced_hold=None, exit_cost=True):
             trades.append(cash / entry_eq - 1.0)
             entry_eq = None
         pos[t] = a
-        if j + 1 < T:
-            logr[t] = a * math.log(o[j + 1] / o[j]) + abs(a - prev) * lnc
+        # 비용 항은 마지막 봉에서도 반드시 넣습니다 (가격 항만 다음 시가가 있을 때)
+        logr[t] = (a * math.log(o[j + 1] / o[j]) if j + 1 < T else 0.0) + abs(a - prev) * lnc
         mark[j] = cash + units * c[j]
         prev = a
     if exit_cost and prev == 1.0:
@@ -77,19 +77,24 @@ def simulate(targets, o, c, cost, start, end, forced_hold=None, exit_cost=True):
     return dict(pos=pos, logr=logr, mark=mark, trades=np.array(trades), start=start, end=end)
 
 
-def daily_marks(ts, mark, start, end, bar_sec=BAR_SEC):
+def daily_marks(ts, mark, start, end, bar_sec=BAR_SEC, lo=None, hi=None):
     """
     00:00 UTC 마다 자산을 찍어 일별 수익률을 만듭니다.
     그 시각 이전에 마감한 마지막 봉의 종가 기준 자산을 씁니다.
+    lo·hi(자정)를 주면 기간 시작 lo의 자산을 1(첫 체결 전)로, 끝 hi의 자산을 mark[end]
+    (청산 비용 포함)로 둡니다 — 15분 밀린 phase도 진입·청산 비용과 첫날·마지막 날이 빠지지 않게.
     반환 (날짜 배열 [UTC 초], 자산 배열)
     """
     close_t = ts[start:end + 1] + bar_sec
     m = mark[start:end + 1]
-    d0 = int(math.ceil(close_t[0] / 86400.0)) * 86400
-    d1 = int(close_t[-1] // 86400) * 86400
+    d0 = int(math.ceil(close_t[0] / 86400.0)) * 86400 if lo is None else int(lo)
+    d1 = int(close_t[-1] // 86400) * 86400 if hi is None else int(hi)
     days = np.arange(d0, d1 + 1, 86400, dtype=np.int64)
     k = np.searchsorted(close_t, days, side="right") - 1
-    return days, m[k]
+    eq = np.where(k >= 0, m[np.maximum(k, 0)], 1.0)
+    if hi is not None:
+        eq[-1] = m[-1]
+    return days, eq
 
 
 def daily_returns(ts, mark, start, end):
@@ -123,14 +128,17 @@ class PhaseData:
             self.z[hh] = np.clip(z, -4, 4)
         # t, t+1, t+2 사이에 빠진 봉이 없어야 학습 표본으로 씀
         g = self.gap
+        ts = self.ts
         self.contig = np.zeros(T, bool)
-        self.contig[:-2] = (g[1:-1] == 0) & (g[2:] == 0)
-        # 보조 목표 구간(t..t+43)에 빠진 봉이 있으면 보조 손실 제외
+        if T > 2:
+            self.contig[:-2] = (g[1:-1] == 0) & (g[2:] == 0) & (ts[2:] - ts[:-2] == 2 * BAR_SEC)
+        # 보조 목표 구간(t+1..t+43)에 빠진 봉이 있으면 보조 손실 제외 (빠진 봉 수와 시각 둘 다 확인)
         cg = np.concatenate([[0], np.cumsum(g > 0)])
         self.aux_ok = np.zeros(T, bool)
         n = T - 44
         if n > 0:
-            self.aux_ok[:n] = (cg[np.arange(n) + 44] - cg[np.arange(n) + 1]) == 0
+            i = np.arange(n)
+            self.aux_ok[:n] = ((cg[i + 44] - cg[i + 1]) == 0) & (ts[i + 43] - ts[i + 1] == 42 * BAR_SEC)
 
     def eligible(self, T_k, first_ts, warmup):
         """T_k 시점에 학습에 쓸 수 있는 봉 번호 — t+43봉 종가가 T_k 이전이어야 함 (정보 차단)"""
@@ -153,9 +161,10 @@ def simulate_weights(weights, o, c, cost, start, end, band=0.02, exit_cost=True)
     pos = np.zeros(T)
     logr = np.zeros(T)
     mark = np.full(T, np.nan)
+    rebal = np.zeros(T, bool)
     cash, units = 1.0, 0.0
     mark[start] = 1.0
-    eq_open_prev = None
+    E_prev = 1.0
     for t in range(start, end):
         j = t + 1
         E = cash + units * o[j]
@@ -169,12 +178,14 @@ def simulate_weights(weights, o, c, cost, start, end, band=0.02, exit_cost=True)
             else:
                 units += V / o[j]
                 cash += -V * (1.0 - cost)
+            rebal[t] = True
         E_after = cash + units * o[j]
         pos[t] = units * o[j] / E_after if E_after > 0 else 0.0
-        if eq_open_prev is not None:
-            logr[t - 1] = math.log(E_after / eq_open_prev)
-        eq_open_prev = E_after
+        # logr[t]: t봉 결정의 비용 + (j→j+1 시가) 가격 변동 — simulate()와 같은 색인
+        E_next = cash + units * o[j + 1] if j + 1 < T else E_after
+        logr[t] = math.log(E_next / E_prev) if E_prev > 0 else 0.0
+        E_prev = E_next
         mark[j] = cash + units * c[j]
     if exit_cost and units > 0:
         mark[end] = cash + units * c[end] * (1.0 - cost)
-    return dict(pos=pos, logr=logr, mark=mark, trades=np.array([]), start=start, end=end)
+    return dict(pos=pos, logr=logr, mark=mark, trades=np.array([]), rebal=rebal, start=start, end=end)

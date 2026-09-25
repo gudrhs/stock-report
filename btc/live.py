@@ -293,13 +293,14 @@ class PaperTrader:
         if now is not None and now - (ts + BAR) > 2 * BAR:
             hold_reason = hold_reason or "stale_data"
         delta, umax = self.ens.delta(x[None, :], self.c_dec)
-        d = float(delta[0])
-        if (not math.isfinite(d) or umax >= 200) and self.fallback is not None:
-            self.alarms.append(dict(ts=ts, alarm="model_fallback", umax=umax))
-            self.ens, self.fallback = self.fallback, None
-            delta, umax = self.ens.delta(x[None, :], self.c_dec)
-            d = float(delta[0])
-            hold_reason = hold_reason or "model_fallback"
+        d, umax = float(delta[0]), float(umax[0])
+        if not math.isfinite(d) or umax >= 200:
+            # 모델 이상: 경고 + 이번 봉은 관망. 직전 모델이 있으면 그걸로 되돌림
+            self.alarms.append(dict(ts=ts, alarm="model_bad", umax=umax, delta=d))
+            hold_reason = hold_reason or "model_bad"
+            if self.fallback is not None:
+                self.ens, self.fallback = self.fallback, None
+                self.model_tag += "→fallback"
         th = threshold(self.c_dec)
         p = self.acct.pos
         a = p
@@ -346,7 +347,32 @@ def latest_model():
     return Ensemble.from_state(z), tag
 
 
-def process(trader, venue, now=None, backfill_hours=12000, retries=18, wait=10.0, sleep=time.sleep):
+def model_month(tag):
+    """'p0_r0_2026-10-01' → 2026-10-01 00:00 UTC (초). 알 수 없으면 None"""
+    try:
+        return int(pd.Timestamp(tag.split("_")[-1].split("→")[0], tz="UTC").timestamp())
+    except Exception:
+        return None
+
+
+def maybe_swap_model(trader, model_dir=None):
+    """p0_latest.npz가 바뀌었으면 새 모델로 교체 (이전 모델은 비상용으로 보관)"""
+    path = os.path.join(model_dir or MODEL_DIR, "p0_latest.npz")
+    if not os.path.exists(path):
+        return False
+    z = dict(np.load(path))
+    tag = bytes(z.pop("tag")).decode() if "tag" in z else None
+    if not tag or tag == trader.model_tag.split("→")[0]:
+        return False
+    trader.fallback, trader.ens = trader.ens, Ensemble.from_state({k: v for k, v in z.items()
+                                                                     if not k.startswith("anchor")})
+    trader.alarms.append(dict(ts=trader.last_ts, alarm="model_update", old=trader.model_tag, new=tag))
+    trader.model_tag = tag
+    return True
+
+
+def process(trader, venue, now=None, backfill_hours=12000, retries=18, wait=10.0, sleep=time.sleep,
+            retrain_fn=None, model_dir=None):
     """
     새로 마감된 봉을 처리합니다. 처음이면 과거 봉으로 지표를 채웁니다(매매 없음).
     방금 끝난 4시간봉의 마지막 시간봉이 아직 안 왔으면 10초 간격으로 최대 3분 다시 받습니다.
@@ -370,6 +396,14 @@ def process(trader, venue, now=None, backfill_hours=12000, retries=18, wait=10.0
     bars = bars[bars["ts"] + BAR <= now]
     if trader.last_ts is not None:
         bars = bars[bars["ts"] > trader.last_ts]
+    # 월초: 백테스트처럼 그달 1일 00:00에 마감하는 봉부터 새 모델로 판단 — 필요하면 먼저 재학습
+    if len(bars):
+        last_close = int(bars["ts"].iloc[-1]) + BAR
+        month0 = int(pd.Timestamp(time.strftime("%Y-%m-01", time.gmtime(last_close)), tz="UTC").timestamp())
+        mm = model_month(trader.model_tag)
+        if retrain_fn is not None and mm is not None and mm < month0:
+            retrain_fn(pd.Timestamp(month0, unit="s", tz="UTC"))
+        maybe_swap_model(trader, model_dir)
     out = []
     if trader.last_ts is None:
         # 첫 실행: 마지막 봉만 판단, 나머지는 지표 워밍업
@@ -403,26 +437,57 @@ def retrain(src=None, when=None):
     매월 1일 모델 갱신 — 백테스트의 monthly_update()를 그대로 호출합니다.
     학습 데이터는 백테스트와 같은 비트스탬프 달러 1분봉 (src = ff137 저장소 클론, 먼저 git pull).
     """
-    from .data import build_cache, CACHE_15M
+    from .data import build_cache, CACHE_15M, load_15m
     from .walkforward import load_phases, monthly_update
     T_k = pd.Timestamp(when or pd.Timestamp.now(tz="UTC").strftime("%Y-%m-01"))
     T_k = T_k.tz_localize("UTC") if T_k.tzinfo is None else T_k
-    if src:
-        build_cache(src, CACHE_15M, cutoff=T_k)          # 그 달 1일까지의 새 데이터 포함
-    datas = load_phases()
+    tag = f"p0_r0_{T_k.date()}"
     z = dict(np.load(os.path.join(MODEL_DIR, "p0_latest.npz")))
+    if "tag" in z and bytes(z["tag"]).decode() == tag:
+        return dict(month=str(T_k.date()), note="already_retrained")      # 두 번 돌려도 한 번만
     z.pop("tag", None)
+    if src:
+        last = _last_minute(src)
+        extra = fetch_bitstamp_minutes(last + 60, int(T_k.timestamp())) if last + 60 < T_k.timestamp() else None
+        build_cache(src, CACHE_15M, cutoff=T_k, extra_minutes=extra)       # 그 달 1일 00:00까지
+    q = load_15m()
+    if int(q["ts"].iloc[-1]) + 900 < int(T_k.timestamp()) - 86400:
+        raise SystemExit(f"학습 데이터가 오래됐습니다 (마지막 {q.index[-1]}). 1분봉 저장소를 git pull 하세요.")
+    datas = load_phases()
     anchor = [z[k] for k in sorted((k for k in z if k.startswith("anchor")), key=lambda s: int(s[6:]))]
     ens = Ensemble.from_state({k: v for k, v in z.items() if not k.startswith("anchor")})
     ens2, anchor2, entry = monthly_update(C.P0, datas, T_k, (0, T_k.year, T_k.month, 0), ens, anchor)
     st = ens2.state()
     for i, a in enumerate(anchor2):
         st[f"anchor{i}"] = a
-    tag = f"p0_r0_{T_k.date()}"
     np.savez_compressed(os.path.join(MODEL_DIR, f"{tag}.npz"), **st)
     np.savez_compressed(os.path.join(MODEL_DIR, "p0_latest.npz"), **st,
                         tag=np.frombuffer(tag.encode(), dtype=np.uint8))
     return entry
+
+
+def _last_minute(src):
+    upd = os.path.join(src, "data", "updates", "btcusd_bitstamp_1min_latest.csv")
+    f = upd if os.path.exists(upd) else os.path.join(src, "data", "historical", "btcusd_bitstamp_1min_2012-2025.csv.gz")
+    return int(pd.read_csv(f, usecols=["timestamp"])["timestamp"].max())
+
+
+def fetch_bitstamp_minutes(start, end):
+    """비트스탬프 1분봉 [start, end) — 저장소(하루 1회 갱신)에 아직 없는 최근 분만 직접 받습니다"""
+    rows, t = [], int(start)
+    while t < end:
+        js = _get_json(f"https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=60&limit=1000&start={t}")
+        got = js["data"]["ohlc"]
+        if not got:
+            break
+        rows += got
+        t = int(got[-1]["timestamp"]) + 60
+        time.sleep(0.2)
+    if not rows:
+        return None
+    df = pd.DataFrame(rows).astype(float)
+    df["timestamp"] = df["timestamp"].astype("int64")
+    return df[(df["timestamp"] >= start) & (df["timestamp"] < end)]
 
 
 def main():
@@ -433,6 +498,8 @@ def main():
         p.add_argument("--venue", default="upbit", choices=list(VENUES))
         p.add_argument("--cost", type=float, default=None, help="편도 비용 (기본: 업비트 0.10%%)")
         p.add_argument("--state", default=os.path.join(LIVE_DIR, "state.pkl"))
+        p.add_argument("--retrain-src", default=None,
+                       help="1분봉 저장소 경로 — 주면 매월 1일 첫 판단 전에 자동으로 재학습 (백테스트와 같은 시점)")
     sub.add_parser("status").add_argument("--state", default=os.path.join(LIVE_DIR, "state.pkl"))
     e = sub.add_parser("export")
     e.add_argument("--rep", type=int, default=0)
@@ -460,8 +527,14 @@ def main():
     else:
         ens, tag = latest_model()
         trader = PaperTrader(ens, cost=cost, model_tag=tag)
+        os.makedirs(LIVE_DIR, exist_ok=True)
+    def _retrain(T_k):
+        import subprocess
+        subprocess.run(["git", "-C", a.retrain_src, "pull", "--ff-only"], check=False)
+        print("월간 재학습:", json.dumps(retrain(a.retrain_src, str(T_k.date())), ensure_ascii=False, default=str))
+    retrain_fn = _retrain if a.retrain_src else None
     while True:
-        for rec in process(trader, venue):
+        for rec in process(trader, venue, retrain_fn=retrain_fn):
             if rec.get("delta") is not None:
                 print(f"{rec['time']} 종가 {rec['close']:,.0f}  Δ={rec['delta']:+.3f} (문턱 ±{rec['threshold']:.2f})  "
                       f"보유 {rec['pos']}→{rec['decision']}  자산 {rec['equity']:.4f}  "

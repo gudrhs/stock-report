@@ -53,10 +53,10 @@ class Ensemble:
         return out[..., :2]
 
     def delta(self, X, cost):
-        """평균 U1 − 평균 U0 (B,) 와 |U| 최댓값"""
+        """평균 U1 − 평균 U0 (B,) 와 봉별 |U| 최댓값 (B,) — 봉마다 따로 (다른 봉 값이 섞이지 않게)"""
         U = self.U(X, cost).astype(np.float64)
         mu = U.mean(axis=0)
-        return mu[:, 1] - mu[:, 0], float(np.abs(U).max()) if U.size else 0.0
+        return mu[:, 1] - mu[:, 0], np.abs(U).max(axis=(0, 2)) if U.size else np.zeros(len(X))
 
     def state(self):
         st = self.net.state("p")
@@ -92,23 +92,27 @@ def policy_from_delta(delta, cost, forced_hold=None, p0=0):
     return out
 
 
-_FLAT = {}
+_FLAT = {"datas": None, "flat": None}
 
 
 def _flatten(datas):
-    """여러 phase 배열을 하나로 이어 붙여 한 번의 인덱싱으로 표본을 꺼냅니다 (phase 사이 경계는 표본 조건이 막음)"""
-    key = tuple(id(d) for d in datas)
-    if key not in _FLAT:
+    """
+    여러 phase 배열을 하나로 이어 붙여 한 번의 인덱싱으로 표본을 꺼냅니다 (phase 사이 경계는 표본 조건이 막음).
+    같은 객체 목록일 때만 재사용합니다 — id()만 비교하면 해제된 객체의 번호를 새 객체가 물려받아
+    엉뚱한 데이터로 학습할 수 있습니다. 객체 자체를 잡아 두고 'is'로 비교합니다.
+    """
+    prev = _FLAT["datas"]
+    if prev is None or len(prev) != len(datas) or any(a is not b for a, b in zip(prev, datas)):
         off = np.cumsum([0] + [d.T for d in datas[:-1]])
-        _FLAT.clear()
-        _FLAT[key] = dict(
+        _FLAT["datas"] = list(datas)
+        _FLAT["flat"] = dict(
             off=off,
             X=np.concatenate([d.X for d in datas]).astype(np.float32),
             m=np.concatenate([d.m for d in datas]).astype(np.float32),
             z6=np.nan_to_num(np.concatenate([d.z[6] for d in datas])).astype(np.float32),
             z42=np.nan_to_num(np.concatenate([d.z[42] for d in datas])).astype(np.float32),
             ok=np.concatenate([d.aux_ok & ~np.isnan(d.z[42]) for d in datas]).astype(np.float32))
-    return _FLAT[key]
+    return _FLAT["flat"]
 
 
 class Trainer:

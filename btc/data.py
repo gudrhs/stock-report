@@ -76,16 +76,19 @@ def minutes_to_15m(m, cutoff=CUTOFF):
     return out
 
 
-def build_cache(src_repo, out=CACHE_15M, cutoff=CUTOFF):
+def build_cache(src_repo, out=CACHE_15M, cutoff=CUTOFF, extra_minutes=None):
     """
     cutoff: 이 시각 이후 1분봉은 버림. 연구용 캐시는 2026-09-25로 고정(재현성),
     실운용 월간 재학습은 그 달 1일 00:00 UTC를 넘겨 새 데이터까지 씁니다.
+    extra_minutes: 저장소에 아직 안 올라온 최근 1분봉 (비트스탬프 API에서 직접 받은 것)
     """
     d = os.path.join(src_repo, "data")
     parts = [pd.read_csv(os.path.join(d, "historical", "btcusd_bitstamp_1min_2012-2025.csv.gz"))]
     upd = os.path.join(d, "updates", "btcusd_bitstamp_1min_latest.csv")
     if os.path.exists(upd):
         parts.append(pd.read_csv(upd))
+    if extra_minutes is not None and len(extra_minutes):
+        parts.append(extra_minutes[["timestamp", "open", "high", "low", "close", "volume"]])
     m = pd.concat(parts, ignore_index=True)
     q = minutes_to_15m(m, cutoff=cutoff)
     q = q.copy()
@@ -117,8 +120,16 @@ def bars_4h(df15, phase=0, stale_min=STALE_MIN):
     b = pd.DataFrame({"open": g["open"].first(), "high": g["high"].max(), "low": g["low"].min(),
                       "close": g["close"].last(), "volume": g["volume"].sum(),
                       "active_min": g["active_min"].sum(), "n15": g["ts"].count()})
-    b = b[b["n15"] == 16].drop(columns="n15")    # 15분봉 16개가 다 있는 봉만 (맨 앞·끝 미완성 봉 제외)
-    alive = (b["active_min"] >= stale_min).to_numpy() & b["close"].notna().to_numpy()
+    full = (b["n15"] == 16).to_numpy()
+    if not full.any():
+        return pd.DataFrame(columns=["ts"] + list(b.columns.drop("n15")) + ["gap_before", "forced_hold"])
+    i0, i1 = int(np.argmax(full)), len(full) - int(np.argmax(full[::-1]))
+    b = b.iloc[i0:i1]                            # 맨 앞·끝의 미완성 봉만 잘라냄
+    # 가운데에서 15분봉이 빠진 봉(원본 1분봉 누락)도 '죽은 봉'으로 셉니다 — 조용히 사라지면
+    # 그 앞뒤 봉이 붙어 있는 것처럼 보여 수익·연속성 계산이 틀어집니다.
+    alive = ((b["n15"] == 16).to_numpy() & (b["active_min"] >= stale_min).to_numpy()
+             & b["close"].notna().to_numpy())
+    b = b.drop(columns="n15")
     # 살아 있는 봉마다 바로 앞에 연속으로 빠진 봉 수
     dead_run = np.zeros(len(b), dtype=np.int64)
     run = 0

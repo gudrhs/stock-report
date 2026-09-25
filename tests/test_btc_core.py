@@ -89,7 +89,7 @@ class DataTests(unittest.TestCase):
         self.assertTrue(np.all(act["low"] <= np.minimum(act["open"], act["close"]) + 1e-9))
         self.assertLess(ts[-1], int(D.CUTOFF.timestamp()))
         b = D.bars_4h(q, 0)
-        self.assertEqual(int((b.index >= "2014-01-01").sum() and b[b.index >= "2014-01-01"]["gap_before"].sum()), 27)
+        self.assertEqual(int(b[b.index >= "2014-01-01"]["gap_before"].sum()), 27)   # 2015-01 해킹 26봉 + 2020-04 1봉
 
     @unittest.skipUnless(os.path.exists(CACHE), "15분봉 캐시 없음")
     def test_metric_consistency_buy_hold(self):
@@ -417,3 +417,116 @@ class LiveReplayTests(unittest.TestCase):
                          forced_hold=bars["forced_hold"].to_numpy(), exit_cost=False)
         eq_live = np.array([r["equity"] for r in logs])
         np.testing.assert_allclose(eq_live[1:], sim["mark"][a + 1:b], rtol=1e-12)
+
+
+class ReviewRegressionTests(unittest.TestCase):
+    """코드 리뷰에서 나온 문제들이 다시 생기지 않게"""
+
+    def test_missing_minute_rows_count_as_dead_bars(self):
+        m = minutes_frame("2020-01-01 00:00", 60 * 4 * 10)
+        m = m.drop(index=range(240 * 3, 240 * 3 + 30)).reset_index(drop=True)   # 네 번째 4h봉 30분 행 누락
+        q = D.minutes_to_15m(m, cutoff=pd.Timestamp("2030-01-01", tz="UTC"))
+        b = D.bars_4h(q, 0)
+        self.assertNotIn(pd.Timestamp("2020-01-01 12:00", tz="UTC"), b.index)
+        self.assertEqual(int(b.loc[pd.Timestamp("2020-01-01 16:00", tz="UTC"), "gap_before"]), 1)
+        X, sig = Fe.compute(b)
+        d = E.PhaseData(b, X, sig)
+        i = int(np.searchsorted(d.ts, int(pd.Timestamp("2020-01-01 08:00", tz="UTC").timestamp())))
+        self.assertFalse(d.contig[i - 1])            # t..t+2가 구멍을 건너면 학습 표본에서 제외
+
+    def test_flatten_cache_never_serves_other_objects(self):
+        from btc import agent as A
+        mk = lambda seed: E.PhaseData(synth_bars(300, seed), *Fe.compute(synth_bars(300, seed)))
+        d1 = mk(1)
+        f1 = A._flatten([d1])["X"].copy()
+        d2 = mk(2)
+        f2 = A._flatten([d2])["X"]
+        self.assertFalse(np.array_equal(f1, f2))
+        np.testing.assert_array_equal(f2, d2.X)
+
+    def test_last_decision_cost_in_logr(self):
+        o = np.array([100., 101, 102, 103])
+        s = E.simulate(np.array([0, 0, 1, np.nan]), o, o, 0.001, 0, 3, exit_cost=False)
+        self.assertAlmostEqual(s["logr"][2], math.log(1 - 0.001), places=12)
+        self.assertAlmostEqual(s["logr"][:3].sum(), math.log(s["mark"][3]), places=12)
+
+    def test_offset_phase_daily_marks_include_entry_and_exit_cost(self):
+        cost = 0.0015
+        lo = int(pd.Timestamp("2020-01-01", tz="UTC").timestamp())
+        hi = lo + 5 * 86400
+        for k in (0, 1, 8, 15):
+            ts = lo - 4 * 3600 + 900 * k + E.BAR_SEC * np.arange(40)
+            px = np.full(40, 100.0)
+            a = int(np.searchsorted(ts + E.BAR_SEC, lo))
+            b = int(np.searchsorted(ts + E.BAR_SEC, hi))
+            while ts[b] + E.BAR_SEC > hi:
+                b -= 1
+            s = E.simulate(np.ones(40), px, px, cost, a, b)
+            days, eq = E.daily_marks(ts, s["mark"], a, b, lo=lo, hi=hi)
+            self.assertEqual(days[0], lo)
+            self.assertEqual(days[-1], hi)
+            self.assertAlmostEqual(eq[-1] / eq[0], (1 - cost) ** 2, places=12, msg=f"phase {k}")
+
+    def test_weights_simulator_counts_rebalances_not_drift(self):
+        rng = np.random.default_rng(0)
+        o = 100 * np.exp(np.cumsum(rng.normal(0, 0.01, 600)))
+        s = E.simulate_weights(np.full(600, 0.5), o, o, 0.001, 0, 598)
+        self.assertLess(int(s["rebal"].sum()), 60)
+        self.assertGreater(len(np.unique(np.round(s["pos"][:598], 6))), 100)   # 비중은 흔들리지만 거래는 드묾
+
+    def test_n3_null_does_not_flag_reactive_rule_without_edge(self):
+        from btc import evaluate as Ev
+        rng = np.random.default_rng(3)
+        n_days = 1500
+        m = rng.normal(0, 0.012, n_days * 6)
+        mom = np.convolve(m, np.ones(6), "full")[:len(m)]           # 직전 1일 수익 (t봉까지)
+        pos = (np.concatenate([[0], mom[:-1]]) > 0).astype(float)   # 인과적 1일 모멘텀
+        day_id = np.arange(len(m)) // 6
+        res = Ev.null_shift_bar(pos, m, 0.0015, day_id, n_days, n=400)
+        self.assertGreater(res["p"], 0.02)
+
+    def test_failed_first_gate_never_trades(self):
+        from btc import walkforward as W
+        df = synth_bars(21000, seed=9, start="2012-06-01")
+        X, sig = Fe.compute(df)
+        d = E.PhaseData(df, X, sig)
+        cfg = C.make("t", phases=1, cold_steps=20, cold_split=10, ft_steps=5)
+        calls = []
+
+        def fake_gate(ens, d0, T_k, cost=0.003):
+            calls.append(T_k)
+            return (len(calls) >= 3), dict(exposure=0.99)
+        with patch.object(W, "sanity_ok", fake_gate):
+            res = W.run_replication(cfg, 0, eval_phases=[0], datas=[d], c_dec_list=[0.003],
+                                    end=pd.Timestamp("2017-05-01", tz="UTC"))
+        kinds = [(e["month"], e.get("kind"), e.get("accepted")) for e in res["log"]]
+        self.assertEqual([k[1] for k in kinds[:3]], ["cold", "cold", "cold"])  # 채택 전까지 매달 다시 처음부터
+        a, b = W.decision_range(d, int(pd.Timestamp("2017-01-01", tz="UTC").timestamp()),
+                                int(pd.Timestamp("2017-03-01", tz="UTC").timestamp()))
+        self.assertTrue(np.isnan(res["delta"][0][0.003][a:b]).all())         # 점검 탈락 모델은 매매 안 함
+        a2, b2 = W.decision_range(d, int(pd.Timestamp("2017-03-01", tz="UTC").timestamp()),
+                                  int(pd.Timestamp("2017-04-01", tz="UTC").timestamp()))
+        self.assertFalse(np.isnan(res["delta"][0][0.003][a2:b2]).any())
+
+    def test_live_model_hot_swap_and_kill_switch_without_fallback(self):
+        from btc import live as L
+        rng = np.random.default_rng(1)
+        ens_a = Ensemble(StackedMLP(2, [23, 8, 8, 4], rng, last_scale=0.1), "full22")
+        ens_b = Ensemble(StackedMLP(2, [23, 8, 8, 4], rng, last_scale=0.1), "full22")
+        tr = L.PaperTrader(ens_a, model_tag="p0_r0_2026-09-01")
+        with tempfile.TemporaryDirectory() as tmp:
+            st = ens_b.state()
+            np.savez(os.path.join(tmp, "p0_latest.npz"), **st,
+                     tag=np.frombuffer(b"p0_r0_2026-10-01", dtype=np.uint8))
+            self.assertTrue(L.maybe_swap_model(tr, tmp))
+            self.assertIs(tr.fallback, ens_a)
+            self.assertEqual(tr.model_tag, "p0_r0_2026-10-01")
+            self.assertFalse(L.maybe_swap_model(tr, tmp))              # 같은 모델이면 교체 안 함
+        # |U| ≥ 200 이면 대체 모델이 없어도 관망
+        big = Ensemble(StackedMLP(2, [23, 8, 8, 4], rng, last_scale=1e4), "full22")
+        tr2 = L.PaperTrader(big, model_tag="x")
+        df = synth_bars(2500, seed=3)
+        for i in range(2500):
+            rec = tr2.on_bar(df.iloc[i], trade=True)
+        self.assertEqual(rec["hold"], "model_bad")
+        self.assertEqual(rec["decision"], rec["pos"])
