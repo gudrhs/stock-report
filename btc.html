@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang=ko><head><meta charset=utf-8>
+<meta name="robots" content="noindex, nofollow">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>비트코인 강화학습 백테스트</title>
+<meta name=description content="차트 지표를 보고 4시간마다 현금/비트코인을 고르는 강화학습 에이전트의 워크포워드 백테스트">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#0f1115;--panel:#161a21;--panel2:#13171e;--line:#262a33;--grid:#20252e;
+--t1:#e6e8ec;--t2:#98a2b2;--t3:#6b7686;--accent:#4a8fe7;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--good:#3fae6a;--bad:#e66767}
+body{margin:0;background:var(--bg);color:var(--t1);line-height:1.6;
+font-family:'Malgun Gothic','맑은 고딕',-apple-system,'Segoe UI',sans-serif}
+.w{max-width:1180px;margin:0 auto;padding:0 16px 80px}
+.nav{position:sticky;top:0;z-index:99;background:#12161d;border-bottom:1px solid var(--line);
+padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.nav a{color:#9aa3b2;text-decoration:none;font-size:13px;padding:5px 12px;border-radius:7px;border:1px solid transparent}
+.nav a:hover{background:#1e2531;color:var(--t1);border-color:#2f3745}
+.nav a.on{background:#1d3a55;color:#7cc0f5;border-color:#2a5580}
+.nav .sp{flex:1}
+h1{font-size:28px;margin:30px 0 6px;letter-spacing:-.5px}
+.sub{color:#8b93a3;font-size:13.5px;margin-bottom:18px}
+h2{font-size:17px;margin:40px 0 10px;padding-left:11px;border-left:3px solid var(--accent)}
+h2 small{font-weight:400;font-size:12.5px;color:#8b93a3;margin-left:8px}
+h3{font-size:14px;margin:22px 0 8px;color:#c9d1dc}
+.verdict{border-radius:12px;padding:18px 20px;margin:18px 0;font-size:14.5px;line-height:1.75;border:1px solid}
+.verdict.fail{background:#1d1a14;border-color:#4d3f22;color:#e9dcc0}
+.verdict.pass{background:#142018;border-color:#28553a;color:#cdebd8}
+.verdict b{color:#fff}
+.verdict .rec{margin-top:8px;font-size:13.5px;color:#c9c0a8}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card .lb{font-size:11.5px;color:#8b93a3}
+.card .n{font-size:25px;font-weight:600;margin:3px 0 0;font-variant-numeric:tabular-nums}
+.card .s{font-size:11.5px;color:var(--t3);margin-top:2px;font-variant-numeric:tabular-nums}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#1a1f28;color:#9aa3b2;padding:8px 10px;text-align:left;font-size:11px;
+border-bottom:1px solid #2c313b;font-weight:600;white-space:nowrap}
+th.r,td.r{text-align:right}
+td{padding:8px 10px;border-bottom:1px solid #1e222a;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.nm{font-weight:600;white-space:normal;min-width:150px}
+tr.hl td{background:#1a2230}
+tr.bh td{background:#15191f}
+tr:hover td{background:#171c24}
+.pos{color:#6fcf97}.neg{color:#ff8a8a}.mut{color:var(--t3)}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+font-size:12.8px;color:var(--t2);margin:14px 0;line-height:1.8}
+.note b{color:#c9d1dc}
+.note ul{margin:6px 0 0 0;padding-left:18px}
+.chart{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 12px 6px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--t2);margin:2px 4px 8px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.tip{position:absolute;pointer-events:none;background:#0b0d11ee;border:1px solid #2f3745;border-radius:8px;
+padding:8px 10px;font-size:12px;color:var(--t1);display:none;white-space:nowrap;z-index:5;font-variant-numeric:tabular-nums}
+.tip .d{color:var(--t2);margin-bottom:3px}
+.tip i{display:inline-block;width:10px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}h1{font-size:23px}}
+details{margin:8px 0}
+summary{cursor:pointer;color:#7cc0f5;font-size:12.5px}
+code{background:#1a1f28;padding:1px 6px;border-radius:4px;font-size:11.5px;color:#a8b3c2}
+pre{background:#11151b;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:12px;color:#c9d1dc;overflow-x:auto;line-height:1.6}
+.foot{margin-top:52px;padding-top:20px;border-top:1px solid #1e222a;color:#5d6675;font-size:11.5px;line-height:1.8}
+.tag{display:inline-block;font-size:10.5px;padding:1px 8px;border-radius:20px;border:1px solid #2f3745;color:var(--t2);margin-left:6px}
+.empty{padding:40px;text-align:center;color:#4a5261;font-size:13px}
+</style></head><body>
+
+<div class=nav>
+  <a href="index.html">실거래 기록</a>
+  <a href="hub.html">지난 리포트</a>
+  <a href="btc.html" class=on>BTC 강화학습</a>
+  <span class=sp></span>
+  <span style="font-size:12px;color:#5d6675" id=upd></span>
+</div>
+
+<div class=w>
+<h1>비트코인 강화학습 매매 — 백테스트</h1>
+<div class=sub id=sub>불러오는 중…</div>
+
+<div id=verdict></div>
+<div class=cards id=cards></div>
+
+<h2>자산 곡선 <small id=eq-sub></small></h2>
+<div class=chart id=eqchart></div>
+<details><summary>표로 보기 (월말 자산)</summary><div class=wrap id=eqtable></div></details>
+
+<h2>에이전트는 언제 코인을 들고 있었나 <small>일별 평균 보유 비중</small></h2>
+<div class=chart id=expchart></div>
+
+<h2>기간별 성과 <small>같은 비용(편도 0.15%)·같은 체결 규칙</small></h2>
+<div class=wrap id=perftable></div>
+<div class=note id=perfnote></div>
+
+<h2>구간별 <small>표본외 A(2017–22) · B(2023–24) · 잠금 구간(2025–26.09)</small></h2>
+<div class=wrap id=subtable></div>
+
+<h2>연도별</h2>
+<div class=wrap id=yeartable></div>
+
+<h2>10번 반복의 결과 <small>시드만 다른 10번의 워크포워드 — 보고는 5번째(작은 쪽 중앙값)</small></h2>
+<div class=chart id=repchart></div>
+<div class=note id=repnote></div>
+
+<h2>거래비용이 달라지면 <small>편도 비용 vs 샤프</small></h2>
+<div class=chart id=bechart></div>
+<div class=wrap id=costtable style="margin-top:12px"></div>
+
+<h2>통계 검정 <small>사전 등록한 판정 규칙</small></h2>
+<div class=wrap id=testtable></div>
+<div class=note id=testnote></div>
+
+<h2>"가장 좋은 방법 찾기" — 변형 12개와 선택기 <small>과거 성적만 보고 매년 고르는 절차의 성과</small></h2>
+<div class=wrap id=gridtable></div>
+<div class=note id=gridnote></div>
+<h3>절제 실험</h3>
+<div class=wrap id=abltable></div>
+
+<h2>대조 실험·귀무모형 <small>이 검증 절차가 진짜 신호는 잡고 가짜 신호는 거르는지</small></h2>
+<div class=wrap id=nulltable></div>
+
+<h2>에이전트가 본 것 <small>지표 10분위별 보유 비율 · 예측 Δ 보정</small></h2>
+<div class=grid2>
+  <div class=chart id=intchart></div>
+  <div class=chart id=calchart></div>
+</div>
+
+<h2>방법</h2>
+<div class=note>
+<b>입력</b> — 4시간봉(UTC 00·04·08·12·16·20시)마다 22개 지표: 1봉·1일·1주·1달 수익률, 20·50·200·1200봉(≈200일) 이동평균 대비 위치와
+50/200·300/1200 교차, RSI14·RSI84(≈일봉 RSI14), MACD(12,26,9)와 일봉 환산 MACD, 거래량(직전 평균 대비·추세·상승/하락 흐름),
+변동성 국면, 봉 길이·종가 위치, 1달 고점 대비 낙폭. 모두 가격 수준과 무관한 값으로 바꾸고, 학습 데이터로 맞춘 정규화 상수는 없습니다.<br><br>
+<b>학습</b> — Double DQN. 작은 계좌는 가격을 못 움직이므로 가치가 정확히
+<code>Q(s,p,a) = κ·|a−p|·ln(1−c) + U(s,c,a)</code> 로 나뉩니다(갈아타는 비용 + 들고 갈 때의 가치). 두 행동의 목표를 표본마다 정확히 계산해 탐험이 필요 없고,
+판단 규칙에는 비용만큼의 문턱이 저절로 생깁니다. 신경망 23→32→32→4, 5개 앙상블, numpy 직접 구현.<br><br>
+<b>검증</b> — 2017년 1월부터 매월 1일, 그때까지의 데이터만으로 재학습(1월은 처음부터, 나머지는 이어서)하고 그 달은 그 모델로만 판단.
+체결은 다음 봉 시가. 모든 설정은 결과를 보기 전에 고정했고(학습 스텝 수만 2014–16 검증 손실로 결정), 시험한 변형은 전부 세서 DSR·PBO에 반영합니다.
+2025-01-01 이후는 코드가 잠가 두었다가 모든 설정을 확정한 뒤 한 번만 열었습니다.
+자세한 내용: <a href="https://github.com/gudrhs/stock-report/blob/main/btc/README.md" style="color:#7cc0f5">btc/README.md</a>
+</div>
+
+<h2>알아둘 한계</h2>
+<div class=note id=limits>
+<ul>
+<li><b>잠금 구간이 완전히 깨끗하지 않습니다.</b> 설계 단계에서 그 기간의 시장 통계(매수·보유 CAGR −6%, 최대낙폭 −53%)를 봤습니다. 또 하락장에서는 보유 비중이 100% 미만인 전략이 구조적으로 매수·보유를 이기므로, 잠금 구간은 200일선 필터·모멘텀·무작위 정책과 비교해야 합니다.</li>
+<li><b>진짜로 깨끗한 검증은 2026-09-25부터의 모의매매뿐</b>입니다. 사전 등록한 점검일은 2027-03-25, 2027-09-25.</li>
+<li>백테스트는 비트스탬프 달러 가격입니다. 업비트(원화)로 운용하면 환율·김치프리미엄이 더해집니다.</li>
+<li>소액 계좌 가정(시장 충격 없음, 전량 체결). 슬리피지는 편도 0.05%로 가정했습니다.</li>
+<li>검정력: 9.7년 동안 샤프 차이 약 0.6 이상이어야 유의하게 잡힙니다. "유의하지 않음"은 "우위 없음"이 아니라 "증거 없음"입니다.</li>
+</ul>
+</div>
+
+<h2>실시간 모의매매</h2>
+<pre>python -m btc.live run --venue upbit     # 4시간마다 판단 (업비트 KRW-BTC, 실주문 없음)
+python -m btc.live once --venue upbit    # 한 번만 (cron·작업 스케줄러용)
+python -m btc.live retrain --src &lt;비트스탬프 1분봉 저장소&gt;   # 매월 1일</pre>
+
+<div class=foot>
+데이터: 비트스탬프 BTC/USD 1분봉 (공개 저장소 ff137/bitstamp-btcusd-minute-data). 기술적 지표만 보고 기계적으로 판단한 결과이며 투자 권유가 아닙니다.
+과거 성과는 미래를 보장하지 않습니다. 판단과 결과는 투자자 본인에게 있습니다.
+<div id=gen></div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const C={bh:'#3987e5',ag:'#d95926',b2:'#199e70',s:'#c98500',grid:'#20252e',axis:'#6b7686',t2:'#98a2b2'};
+const pct=(x,d=1)=>x==null?'–':(x*100).toFixed(d)+'%';
+const sp=(x,d=1)=>x==null?'–':(x>0?'+':'')+(x*100).toFixed(d)+'%';
+const f2=(x,d=2)=>x==null?'–':Number(x).toFixed(d);
+const sg=(x,d=2)=>x==null?'–':(x>0?'+':'')+Number(x).toFixed(d);
+const cls=x=>x==null?'':(x>0?'pos':(x<0?'neg':''));
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const day=t=>new Date(t*1000).toISOString().slice(0,10);
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function table(id,head,rows,opts={}){
+  const h='<table><thead><tr>'+head.map((x,i)=>`<th class="${i&&!(opts.left||[]).includes(i)?'r':''}">${x}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(r=>`<tr class="${r._cls||''}">`+r.cells.map((c,i)=>`<td class="${i===0?'nm':((opts.left||[]).includes(i)?'':'r')} ${c&&c.c||''}">${c&&c.v!==undefined?c.v:c}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
+  $(id).innerHTML=h;
+}
+function legend(box,items){const d=document.createElement('div');d.className='legend';
+  d.innerHTML=items.map(([c,n,dash])=>`<span><i style="background:${c};${dash?'opacity:.5':''}"></i>${esc(n)}</span>`).join('');box.appendChild(d)}
+
+/* ── 선 그래프 (로그축 선택, 십자선 툴팁) ── */
+function lineChart(box,{x,series,log=false,yfmt,xfmt,h=320,ylabel,band}){
+  box.innerHTML='';
+  legend(box,series.filter(s=>!s.faint).map(s=>[s.color,s.name]));
+  const W=1100,H=h,m={l:58,r:112,t:10,b:28};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'},box);
+  const tip=document.createElement('div');tip.className='tip';box.appendChild(tip);
+  const tf=v=>log?Math.log10(v):v;
+  let lo=Infinity,hi=-Infinity;
+  series.forEach(s=>s.y.forEach(v=>{if(v!=null&&isFinite(v)&&(!log||v>0)){lo=Math.min(lo,tf(v));hi=Math.max(hi,tf(v))}}));
+  if(band){lo=Math.min(lo,band[0]);hi=Math.max(hi,band[1])}
+  const pad=(hi-lo)*0.04||1;lo-=pad;hi+=pad;
+  const X=i=>m.l+(W-m.l-m.r)*i/(x.length-1), Y=v=>m.t+(H-m.t-m.b)*(1-(tf(v)-lo)/(hi-lo));
+  // 격자·축
+  let ticks=[];
+  if(log){for(let e=Math.floor(lo);e<=Math.ceil(hi);e++)for(const k of [1,2,5]){const v=k*10**e;if(Math.log10(v)>=lo&&Math.log10(v)<=hi)ticks.push(v)}}
+  else{const st=niceStep((hi-lo)/5);for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)ticks.push(v)}
+  ticks.forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:C.grid,'stroke-width':1},svg);
+    const t=el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:C.axis},svg);t.textContent=yfmt(v)});
+  const yrs=[];x.forEach((t,i)=>{const d=new Date(t*1000);if(d.getUTCMonth()===0&&d.getUTCDate()===1)yrs.push(i)});
+  yrs.forEach(i=>{el('line',{x1:X(i),x2:X(i),y1:m.t,y2:H-m.b,stroke:C.grid,'stroke-width':1},svg);
+    const t=el('text',{x:X(i)+3,y:H-10,'font-size':11,fill:C.axis},svg);t.textContent=new Date(x[i]*1000).getUTCFullYear()});
+  // 선
+  series.forEach(s=>{let d='';s.y.forEach((v,i)=>{if(v==null||(log&&v<=0))return;d+=(d?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1)});
+    el('path',{d,fill:'none',stroke:s.color,'stroke-width':s.faint?1:2,'stroke-opacity':s.faint?0.28:1,'stroke-linejoin':'round'},svg)});
+  // 오른쪽 끝 직접 라벨 (겹치면 아래로 밀기)
+  const labs=series.filter(s=>!s.faint).map(s=>{const i=s.y.length-1;return {s,y:Y(s.y[i]),v:s.y[i]}}).sort((a,b)=>a.y-b.y);
+  for(let k=1;k<labs.length;k++)if(labs[k].y-labs[k-1].y<14)labs[k].y=labs[k-1].y+14;
+  labs.forEach(o=>{const t=el('text',{x:W-m.r+8,y:o.y+4,'font-size':11.5,fill:'#c9d1dc'},svg);t.textContent=o.s.short+' '+yfmt(o.v)});
+  // 십자선
+  const vl=el('line',{y1:m.t,y2:H-m.b,stroke:'#8b93a3','stroke-width':1,'stroke-dasharray':'3,3',visibility:'hidden'},svg);
+  const hit=el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'},svg);
+  const move=ev=>{const r=svg.getBoundingClientRect();const px=(ev.clientX-r.left)*W/r.width;
+    let i=Math.round((px-m.l)/(W-m.l-m.r)*(x.length-1));i=Math.max(0,Math.min(x.length-1,i));
+    vl.setAttribute('x1',X(i));vl.setAttribute('x2',X(i));vl.setAttribute('visibility','visible');
+    tip.innerHTML=`<div class=d>${xfmt(x[i])}</div>`+series.filter(s=>!s.faint).map(s=>`<div><i style="background:${s.color}"></i>${esc(s.name)} <b>${yfmt(s.y[i])}</b></div>`).join('');
+    tip.style.display='block';const bx=box.getBoundingClientRect();let lx=ev.clientX-bx.left+14;
+    if(lx+tip.offsetWidth>bx.width-6)lx=ev.clientX-bx.left-tip.offsetWidth-14;tip.style.left=lx+'px';tip.style.top=(ev.clientY-bx.top-10)+'px'};
+  hit.addEventListener('mousemove',move);hit.addEventListener('touchmove',e=>{move(e.touches[0])},{passive:true});
+  hit.addEventListener('mouseleave',()=>{vl.setAttribute('visibility','hidden');tip.style.display='none'});
+}
+function niceStep(r){const e=10**Math.floor(Math.log10(r));const f=r/e;return (f<1.5?1:f<3?2:f<7?5:10)*e}
+
+/* ── 막대 (0 기준, 양/음) ── */
+function barChart(box,{labels,values,color,fmt,h=220,mark,title}){
+  box.innerHTML='';if(title){const d=document.createElement('div');d.className='legend';d.textContent=title;box.appendChild(d)}
+  const W=1100,H=h,m={l:58,r:16,t:12,b:30};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`},box);const tip=document.createElement('div');tip.className='tip';box.appendChild(tip);
+  let lo=Math.min(0,...values),hi=Math.max(0,...values);const pad=(hi-lo)*0.08||0.1;lo-=pad;hi+=pad;
+  const Y=v=>m.t+(H-m.t-m.b)*(1-(v-lo)/(hi-lo));const n=values.length,bw=(W-m.l-m.r)/n;
+  const st=niceStep((hi-lo)/4);for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st){el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:C.grid},svg);
+    const t=el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:C.axis},svg);t.textContent=fmt(v)}
+  el('line',{x1:m.l,x2:W-m.r,y1:Y(0),y2:Y(0),stroke:'#4a5261','stroke-width':1.5},svg);
+  values.forEach((v,i)=>{const x0=m.l+i*bw+2,w=Math.max(2,bw-4),y0=Y(Math.max(v,0)),y1=Y(Math.min(v,0));
+    const c=typeof color==='function'?color(i,v):color;
+    const r=el('rect',{x:x0,y:y0,width:w,height:Math.max(1,y1-y0),rx:Math.min(4,w/2),fill:c},svg);
+    const t=el('text',{x:x0+w/2,y:H-10,'text-anchor':'middle','font-size':11,fill:C.axis},svg);t.textContent=labels[i];
+    const hr=el('rect',{x:m.l+i*bw,y:m.t,width:bw,height:H-m.t-m.b,fill:'transparent'},svg);
+    hr.addEventListener('mousemove',ev=>{tip.innerHTML=`<div class=d>${esc(labels[i])}${mark&&mark(i)?' · '+mark(i):''}</div><b>${fmt(v)}</b>`;tip.style.display='block';
+      const bx=box.getBoundingClientRect();tip.style.left=Math.min(ev.clientX-bx.left+12,bx.width-tip.offsetWidth-6)+'px';tip.style.top=(ev.clientY-bx.top-10)+'px'});
+    hr.addEventListener('mouseleave',()=>tip.style.display='none')});
+}
+
+async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok)return null;return await r.json()}catch(e){return null}}
+
+(async()=>{
+  let R=await getJSON('data/btc/report_full.json');let full=!!R;
+  if(!R)R=await getJSON('data/btc/report_dev.json');
+  if(!R){$('sub').textContent='아직 결과 파일이 없습니다 (python -m btc.evaluate).';return}
+  const CTL=await getJSON('data/btc/controls.json');
+  const span=full?'2017-01 ~ 2026-09':'2017-01 ~ 2024-12';
+  const A=R.agent,B=R.baselines,H1=R.H1||{},boot=H1.bootstrap||{};
+  $('sub').innerHTML=`비트스탬프 BTC/USD 4시간봉 · 표본외 ${span} · 편도 거래비용 ${pct(R.cost,2)} (수수료 0.10% + 슬리피지 0.05%) · 판단용 비용 ${pct(R.c_dec,2)}`;
+  $('upd').textContent='생성 '+(R.generated||'').slice(0,10);
+  $('gen').textContent=`결과 생성 ${R.generated} · 시험 횟수 N=${R.n_trials} · 헤드라인 반복 r${R.headline_rep}`;
+
+  // 판정
+  const cl=R.claim||{};const dsr=R.dsr||{};
+  const dS=boot.obs,ci=boot.ci90||[null,null];
+  let v;
+  if(cl.passed){v=`<div class="verdict pass"><b>사전 등록한 판정 규칙을 모두 통과했습니다.</b> 강화학습 에이전트는 ${span} 표본외 구간에서 비용 차감 후 매수·보유 대비
+    샤프 차이 ${sg(dS)} (90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], Holm 보정 p = ${f2(cl.holm_p,3)}, DSR = ${f2(dsr.p0,3)}).
+    반복 ${cl.reps_positive}/${cl.reps}, 격자 ${cl.phases_positive}/${cl.phases}에서 양(+)이었습니다. 그래도 '최적'이라는 뜻은 아닙니다.</div>`}
+  else{v=`<div class="verdict fail"><b>강화학습 에이전트는 ${span} 표본외 구간에서 비용(편도 ${pct(R.cost,2)}) 차감 후 매수·보유 대비 통계적으로 유의한 초과성과를 보이지 못했습니다</b>
+    (ΔSharpe = ${sg(dS)}, 90% 구간 [${sg(ci[0])}, ${sg(ci[1])}], p = ${f2(boot.p,3)}, DSR = ${f2(dsr.p0,3)}).`+
+    (R.b2_ge_agent?`<div class=rec>더 단순한 200일선 필터(B2)가 같거나 더 나았으므로 단순 규칙을 권합니다.</div>`:'')+
+    `<div class=rec>판정 조건: Holm p ${f2(cl.holm_p,3)} (&lt;0.05) · DSR ${f2(cl.dsr,3)} (≥0.95) · 반복 ${cl.reps_positive}/${cl.reps} (≥8) · 격자 ${cl.phases_positive}/${cl.phases} (≥12) · 무작위정책 백분위 ${cl.n1_percentile==null?'–':(cl.n1_percentile*100).toFixed(0)} (≥95) · 특징섞기 대조 전부 상회 ${cl.n2_beats_all?'예':'아니오'}</div></div>`}
+  $('verdict').innerHTML=v;
+
+  const card=(lb,n,s)=>`<div class=card><div class=lb>${lb}</div><div class=n>${n}</div><div class=s>${s}</div></div>`;
+  $('cards').innerHTML=
+    card('연 수익률 CAGR',pct(A.cagr),'매수·보유 '+pct(B.B0.cagr))+
+    card('샤프 비율',f2(A.sharpe),'매수·보유 '+f2(B.B0.sharpe))+
+    card('최대 낙폭',pct(A.max_dd),'매수·보유 '+pct(B.B0.max_dd))+
+    card('평균 보유 비중',pct(A.exposure,0),'연 '+f2(A.switches_per_year,1)+'회 전환')+
+    card('비용 전 CAGR',pct(A.gross_cagr),'비용 부담 '+pct(A.cost_drag))+
+    card('베타 / 알파',f2(A.beta),'알파 '+sp(A.alpha)+' /년 (t '+f2(A.t_alpha,1)+')');
+
+  // 자산 곡선
+  const S=R.series;const x=S.days;
+  const reps=(S.reps||[]).map((r,k)=>({name:'반복 '+k,y:x.map((_,i)=>r[Math.floor(i/7)]??null),color:C.ag,faint:true}));
+  // 반복 곡선은 7일 간격 → 같은 길이로 늘림
+  const ser=[...reps,
+    {name:'매수·보유 (B0)',short:'매수보유',y:S.B0,color:C.bh},
+    {name:'강화학습 P0 (중앙 반복)',short:'RL',y:S.agent,color:C.ag},
+    {name:'200일선 필터 (B2)',short:'200일선',y:S.B2,color:C.b2}];
+  if(S.selector)ser.push({name:'선택기 S',short:'선택기',y:S.selector,color:C.s});
+  $('eq-sub').textContent='로그 축 · 시작 = 1 · 옅은 선 = 나머지 반복 9개';
+  lineChart($('eqchart'),{x,series:ser,log:true,yfmt:v=>v==null?'–':(v>=10?v.toFixed(0):v>=1?v.toFixed(1):v.toFixed(2))+'배',xfmt:day,h:360});
+  const mi=[];x.forEach((t,i)=>{const d=new Date(t*1000);if(i===x.length-1||new Date(x[i+1]*1000).getUTCMonth()!==d.getUTCMonth())mi.push(i)});
+  table('eqtable',['월말','매수·보유','강화학습 P0','200일선'],mi.map(i=>({cells:[day(x[i]),f2(S.B0[i]),f2(S.agent[i]),f2(S.B2[i])]})));
+  lineChart($('expchart'),{x,series:[{name:'보유 비중 (일평균)',short:'',y:S.exposure,color:C.ag}],yfmt:v=>(v*100).toFixed(0)+'%',xfmt:day,h:170,band:[0,1]});
+
+  // 성과표
+  const rowOf=(nm,m,cls,tag)=>({_cls:cls,cells:[esc(nm)+(tag?`<span class=tag>${tag}</span>`:''),pct(m.cagr),f2(m.sharpe),f2(m.sortino),pct(m.max_dd),f2(m.calmar),pct(m.exposure,0),f2(m.switches_per_year,1),m.n_trades??'–',m.tuw_days??'–']});
+  const rows=[rowOf('매수·보유 (B0)',B.B0,'bh'),rowOf('강화학습 P0 — 중앙 반복',A,'hl')];
+  ['B1','B2','B3','B4','B5','B6','B7','B8'].forEach(k=>B[k]&&rows.push(rowOf(k+' '+B[k].label,B[k],'',k==='B8'?'사후정보':'')));
+  table('perftable',['전략','CAGR','샤프','소르티노','최대낙폭','칼마','보유비중','연 전환','거래 수','최장 수중(일)'],rows);
+  $('perfnote').innerHTML=`<b>읽는 법</b> — 강화학습이 낙폭을 줄였다면 그게 '실력'인지 '덜 들고 있어서'인지 가려야 합니다. B7(변동성 목표)과 B8(에이전트와 같은 평균 비중을 늘 들고 있기)이 그 비교 대상입니다.
+    B8은 에이전트의 사후 평균 비중을 쓰므로 실제로는 불가능한 기준입니다.`;
+
+  // 구간별
+  const sub=R.subperiods||[];
+  const subRows=[];sub.forEach(p=>{[['매수·보유','B0'],['강화학습 P0','agent'],['200일선','B2'],['선택기 S','S']].forEach(([n,k])=>{if(p[k])subRows.push({_cls:k==='agent'?'hl':'',cells:[p.name+' · '+n,pct(p[k].cagr),f2(p[k].sharpe),pct(p[k].max_dd)]})})});
+  table('subtable',['구간 · 전략','CAGR','샤프','최대낙폭'],subRows);
+
+  // 연도별
+  table('yeartable',['연도','매수·보유','강화학습 P0','차이','200일선','평균 보유비중'],(R.years||[]).map(y=>({cells:[y.year,{v:sp(y.B0),c:cls(y.B0)},{v:sp(y.agent),c:cls(y.agent)},{v:sp(y.agent-y.B0),c:cls(y.agent-y.B0)},{v:sp(y.B2),c:cls(y.B2)},pct(y.exposure,0)]})));
+
+  // 반복
+  const rp=R.reps||[];
+  barChart($('repchart'),{labels:rp.map(r=>'r'+r.rep),values:rp.map(r=>r.d_sharpe),color:(i,v)=>i===R.headline_rep?C.ag:(v>0?'#8a5a44':'#4a5261'),fmt:v=>sg(v),mark:i=>i===R.headline_rep?'헤드라인(작은 쪽 중앙값)':'',title:'반복별 샤프 − 매수·보유 샤프'});
+  const pos=rp.filter(r=>r.d_sharpe>0).length;
+  const ph=R.phases||[];const php=ph.filter(p=>p.d_sharpe>0).length;
+  $('repnote').innerHTML=`10번 중 <b>${pos}번</b>이 매수·보유보다 샤프가 높았습니다(판정 기준 ≥8). 4시간봉 경계를 15분씩 밀어 만든 16개 격자에서는 <b>${php}/${ph.length}</b>개가 양(+)이었습니다(기준 ≥12).
+    같은 방법이라도 시드에 따라 결과가 이만큼 흔들립니다 — 가장 좋은 반복이 아니라 중앙값을 보는 이유입니다.`;
+
+  // 비용
+  const be=R.breakeven||[];
+  lineChart($('bechart'),{x:be.map(b=>b.cost),series:[{name:'강화학습 P0',short:'RL',y:be.map(b=>b.sharpe),color:C.ag},{name:'매수·보유',short:'매수보유',y:be.map(b=>b.bh_sharpe),color:C.bh}],
+    yfmt:v=>f2(v),xfmt:c=>'편도 비용 '+(c*100).toFixed(2)+'%',h:230});
+  table('costtable',['시나리오','편도 비용','판단 배수','P0 샤프','매수·보유 샤프','P0 CAGR','매수·보유 CAGR','반복 10개 중 샤프 우위'],(R.costs||[]).map(c=>({cells:[c.scenario,pct(c.cost,2),'×'+c.mult,f2(c.sharpe),f2(c.bh_sharpe),pct(c.cagr),pct(c.bh_cagr),c.d_sharpe_all_reps?c.d_sharpe_all_reps.filter(d=>d>0).length+'/10':'–']})));
+
+  // 검정
+  const h2=R.H2||[];
+  table('testtable',['비교 (P0 − 기준)','ΔSharpe','90% 구간','단측 p','Holm 보정 p'],h2.map(t=>({cells:[t.base+' '+(B[t.base]?B[t.base].label:''),{v:sg(t.d_sharpe),c:cls(t.d_sharpe)},'['+sg(t.ci90[0])+', '+sg(t.ci90[1])+']',f2(t.p,3),f2(t.p_holm,3)]})));
+  const lw=H1.lw||{};
+  $('testnote').innerHTML=`<b>H1</b> (사전 등록, 단측): P0 샤프 &gt; 매수·보유 샤프. 짝지은 정상 부트스트랩(평균 블록 20일, 10,000회) p = ${f2(boot.p,3)} ·
+    Ledoit-Wolf HAC 교차확인 p = ${f2(lw.p_one_sided,3)} · PSR(0) = ${f2((R.psr||{}).sr0,3)} · 초과수익 PSR = ${f2((R.psr||{}).excess,3)} ·
+    DSR = ${f2(dsr.p0,3)} (시험 N = ${dsr.N??'–'})`;
+
+  // 격자
+  const g=R.grid||[];
+  table('gridtable',['변형 (γ · 지표 · 판단비용 배수)','반복','샤프 평균','CAGR 평균','최대낙폭 평균','보유비중'],g.map(r=>({_cls:r.name==='g0.97_full22_m2'?'hl':'',cells:[r.name.replace('g0_','γ=0 (다음 봉만) · ').replace('g0.9_','γ=0.9 · ').replace('g0.97_','γ=0.97 · ').replace('full22','지표 22').replace('min8','지표 8').replace('_m1',' · ×1').replace('_m2',' · ×2')+(r.name==='g0.97_full22_m2'?' = P0':''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.maxdd_mean),pct(r.exposure_mean,0)]})));
+  const sel=R.selector||{};const pbo=R.pbo||{};
+  $('gridnote').innerHTML=`<b>선택기 S</b> — 매년 1월 1일, 그때까지 직전 24개월 성적만 보고 12개 중 하나를 골라 그해를 운용합니다(과거 정보만 사용).
+    2019년 이후 샤프 ${f2(sel.sharpe)} (같은 기간 P0 ${f2(sel.p0_sharpe_same_window)}), CAGR ${pct(sel.cagr)}, 최대낙폭 ${pct(sel.max_dd)}.<br>
+    <b>PBO</b>(과최적화 확률, 2017–24, 16블록 12,870분할) = <b>${f2(pbo.pbo,2)}</b>${pbo.pbo>0.5?' — 0.5를 넘으므로 이 격자에서 고르는 것은 잡음에 가깝고, 선택기는 무작위로 고른 것과 비슷하다고 봐야 합니다.':'.'}
+    · 사후에 가장 좋았던 변형(${esc((dsr.best_in_hindsight||{}).name||'–')})의 DSR = ${f2((dsr.best_in_hindsight||{}).dsr,3)} · 선택기 DSR = ${f2(dsr.selector,3)}`;
+  const ab=R.ablations||[];const AB={X1:'매월 이어학습 없이 1월에만 학습',X2:'봉마다 온라인 학습 (실시간 적응)',X3:'15분 밀린 격자 없이 한 격자만'};
+  table('abltable',['절제 실험','반복','샤프 평균','CAGR 평균','보유비중'],ab.map(r=>({cells:[r.name+' '+(AB[r.name]||''),r.reps,f2(r.sharpe_mean),pct(r.cagr_mean),pct(r.exposure_mean,0)]})));
+
+  // 귀무·대조
+  const nr=[];
+  if(R.N1)nr.push({cells:['N1 무작위 정책 1,000개 (같은 보유비중·전환율)','P0 샤프의 백분위',(R.N1.percentile*100).toFixed(0)+' / 100','기준 ≥95']});
+  if(R.N2)nr.push({cells:['N2 특징을 시간상 섞어 학습한 워크포워드 '+R.N2.sharpes.length+'개 (2017–24)','P0 샤프 vs 최고값',f2(R.N2.p0_dev_sharpe)+' vs '+f2(Math.max(...R.N2.sharpes)),R.N2.beats_all?'전부 상회':'상회 못 함']});
+  if(R.N3)nr.push({cells:['N3 일별 보유를 30일 이상 원형 이동 2,000회','p',f2(R.N3.p,3),'']});
+  if(CTL){const pc=CTL.runs.find(r=>r.kind==='regime');const ng=CTL.runs.filter(r=>r.kind==='garch');
+    if(pc)nr.push({cells:['양성 대조: 추세 국면을 90% 맞히는 지표를 심은 합성 시장','ΔSharpe / p',sg(pc.d_sharpe)+' / '+f2(pc.p,3),pc.p<0.01?'통과 (잡아냄)':'실패']});
+    if(ng.length)nr.push({cells:['음성 대조: 예측력 없는 GARCH 시장 '+ng.length+'개','ΔSharpe 평균 / 최대 DSR',sg(ng.reduce((a,b)=>a+b.d_sharpe,0)/ng.length)+' / '+f2(Math.max(...CTL.neg_dsr),2),Math.max(...CTL.neg_dsr)<0.95?'통과 (속지 않음)':'실패']});}
+  table('nulltable',['검사','지표','값','판정'],nr,{left:[3]});
+
+  // 해석
+  const it=R.interpret||{};const nm={ma_1200:'200일선 대비',rsi_84:'일봉 RSI',macdh_1d:'일봉 MACD 히스토그램',vol_regime:'변동성 국면'};
+  const cols=[C.bh,C.ag,C.b2,C.s];const ks=Object.keys(nm).filter(k=>it[k]);
+  lineChart($('intchart'),{x:[1,2,3,4,5,6,7,8,9,10],series:ks.map((k,j)=>({name:nm[k],short:'',y:it[k],color:cols[j]})),yfmt:v=>(v*100).toFixed(0)+'%',xfmt:v=>v+'분위 (낮음→높음)',h:260,band:[0,1]});
+  const cal=it.calibration||[];
+  lineChart($('calchart'),{x:cal.map((_,i)=>i+1),series:[{name:'예측 Δ (U1−U0)',short:'예측',y:cal.map(c=>c.pred),color:C.ag},{name:'실현 다음 봉 수익 ×100',short:'실현',y:cal.map(c=>c.real),color:C.bh}],yfmt:v=>f2(v),xfmt:v=>'Δ '+v+'분위',h:260});
+})();
+</script>
+</body></html>

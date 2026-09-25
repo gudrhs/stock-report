@@ -1,0 +1,7 @@
+# BTC 강화학습 — 다시 만들 수 있는 중간 산출물·개인 모의매매 상태는 올리지 않습니다
+data/btc/cache/
+data/btc/runs/**/*.npz
+data/btc/runs/**/*.tmp.npz
+data/btc/live/
+__pycache__/
+*.pyc
