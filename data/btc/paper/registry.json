@@ -351,6 +351,119 @@
    "base_15m": "data/btc/btcusd_15m.csv.gz",
    "base_sha256": "a9000c010dcb936b773f3f6c8a2016f34cc1ab92c990628a5b059f3adf917475",
    "registered_at": "2026-09-25T12:41:48Z"
+  },
+  "C1_r6_committee10": {
+   "name": "C1_r6_committee10",
+   "cfg": {
+    "name": "C1_r6_committee10",
+    "gamma": 0.967,
+    "features": "full22",
+    "c_mult": 2.0,
+    "hidden": [
+     32,
+     32
+    ],
+    "members": 5,
+    "batch": 256,
+    "cold_steps": 2000,
+    "cold_lr1": 0.001,
+    "cold_lr2": 0.0003,
+    "cold_split": 1500,
+    "ft_steps": 300,
+    "ft_lr": 0.0003,
+    "lambda_sp": 0.01,
+    "wd": 0.0001,
+    "tau": 0.01,
+    "noise": 0.1,
+    "aux_w": 0.25,
+    "clip": 5.0,
+    "recency_frac": 0.0,
+    "half_life_years": 2.0,
+    "phases": 16,
+    "fine_tune": true,
+    "online": false,
+    "permute": false,
+    "acts": [
+     0.0,
+     1.0
+    ],
+    "reward": "lin",
+    "lam": 0.0,
+    "stride": 6,
+    "gate": "p0",
+    "feat": [
+     "ret_42",
+     "ret_180",
+     "ma_50",
+     "ma_200",
+     "rsi_84",
+     "macdh_1d",
+     "dd_180",
+     "vol_regime"
+    ],
+    "committee": 10
+   },
+   "cfg_hash": "88ba1266c060",
+   "code_hash": "711a992210ed",
+   "algo": "dqn",
+   "algo_hash": null,
+   "algo_files": [],
+   "frozen_hash": "4dacebf982b1",
+   "frozen_files": [
+    "btc/research/paper.py",
+    "btc/walkforward.py",
+    "btc/evaluate.py",
+    "btc/stats.py",
+    "btc/config.py",
+    "btc/live.py"
+   ],
+   "pins": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6"
+   },
+   "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "machine": "x86_64",
+    "openblas_coretype": null,
+    "blas": "scipy-openblas 0.3.31.188.0",
+    "simd_found": [
+     "X86_V3",
+     "X86_V4",
+     "AVX512_ICL",
+     "AVX512_SPR"
+    ]
+   },
+   "git": {
+    "commit": "a0ed7c8046970e46033a87904fdb83cab0cb27ed",
+    "dirty": []
+   },
+   "reps": 10,
+   "start": "2026-09-27",
+   "first_decision": "2026-09-27T00:00:00Z 이후 처음 마감하는 00:00 UTC phase 0 봉(살아 있는 봉)",
+   "chain_from": "2017-01-01",
+   "checkpoints": [
+    "2027-03-25",
+    "2027-09-25"
+   ],
+   "final_checkpoint": "2027-09-25",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md '새 강화학습 4가지 묶음' 결과 뒤 C1 보조 모의매매 조항): 반복 n개(C1은 R6 설정 10개)의 판단 목표(0/1, 모델이 없어 현금 처리한 봉은 0표)를 판단봉마다 다수결 — 보유 표 > n/2 이면 보유, < n/2 이면 현금, 정확히 n/2 이면 합의의 직전 포지션 유지(시작 현금), 강제 유지 봉에서는 바꾸지 않음. 이 합의 전략 하나를 주 트랙과 같은 구간·체결·비용(다음 4시간봉 시가, 편도 0.15%)으로 계산해, 합의 샤프 > 매수·보유 샤프 이고 합의 최대낙폭이 매수·보유보다 얕으면 'pass', 아니면 'fail'. 마지막 점검일 전에는 'pending'. 반복별 성과는 참고로만 적음. 보조 트랙이며 주 후보(R6) 판정과 무관. 1년치라 방향성 확인입니다.",
+   "policy": {
+    "cost": 0.0015,
+    "c_dec": 0.003,
+    "stride": 6,
+    "weights_round": 0.25,
+    "weights_band": 0.02,
+    "fill": "다음 4시간봉 시가",
+    "headline": "반복 10개 다수결 합의 (> n/2 보유, < n/2 현금, n/2 유지)",
+    "train_cut": "T + n일 (모든 phase에 T 뒤 살아 있는 봉이 생기는 첫 날, n ≥ 1)",
+    "stop_rule": "판단봉 종가 + 2일까지 모델이 없으면 현금(목표 0) + 이유 기록",
+    "no_model": "현금"
+   },
+   "base_15m": "data/btc/btcusd_15m.csv.gz",
+   "base_sha256": "a9000c010dcb936b773f3f6c8a2016f34cc1ab92c990628a5b059f3adf917475",
+   "registered_at": "2026-09-25T23:51:58Z"
   }
  }
 }
