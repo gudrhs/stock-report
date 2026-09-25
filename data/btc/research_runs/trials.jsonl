@@ -16,3 +16,8 @@
 {"name": "LSRULE_B5_LS", "cfg_hash": "181b377add4d", "note": "", "time": "2026-09-25T09:21:59Z"}
 {"name": "LSRULE_B6_LF", "cfg_hash": "5ebf16bc43f4", "note": "", "time": "2026-09-25T09:21:59Z"}
 {"name": "LSRULE_B6_LS", "cfg_hash": "106a8f4bf30d", "note": "", "time": "2026-09-25T09:21:59Z"}
+{"name": "R7_daily_trend8_drift0", "cfg_hash": "5cdb8a52c00b", "note": "", "time": "2026-09-25T09:35:53Z"}
+{"name": "R8_daily_trend8_drift05", "cfg_hash": "c58f1f889a6d", "note": "", "time": "2026-09-25T09:35:53Z"}
+{"name": "R9_daily_trend8_down2", "cfg_hash": "de2f389f6087", "note": "", "time": "2026-09-25T09:35:53Z"}
+{"name": "R10_daily_veto_b2", "cfg_hash": "e8d9d95bc5aa", "note": "", "time": "2026-09-25T09:35:53Z"}
+{"name": "R11_direct_loggrowth", "cfg_hash": "76a367330547", "note": "", "time": "2026-09-25T09:35:53Z"}
