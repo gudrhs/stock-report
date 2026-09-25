@@ -53,6 +53,7 @@ screen.targets + evaluate.Window.run)와 **같은 코드·같은 시드·같은 
   registry.json                 등록부 (설정 전체, 설정·코드 지문, 시작일, 점검일, 판정 규칙)
   btcusd_15m_ext.csv.gz         2026-09-25 이후 15분봉 (덧붙이기만)
   status.json · report.json     마지막 step 상태 · 보고서
+  alarms.jsonl                  경고 기록 (조회 실패, 오래된 데이터, 지문 불일치, 재확인 불일치, 시간 예산 등)
   <변형>/state/repNN.pkl        마지막으로 학습한 달의 모델 상태 (다음 실행이 이어 가는 데 필요 — 커밋 대상)
   <변형>/models/repNN/YYYY-MM.pkl  모의매매 기간의 달별 모델 보관본 (재현·감사용, 커밋하지 않아도 됨)
   <변형>/train_log_repNN.jsonl  월간 갱신 기록 (사슬 전체)
@@ -773,7 +774,7 @@ def step(now=None, offline=False, paper_dir=None, base_path=BASE_15M, df15=None,
     """
     모의매매 한 걸음. now(초 또는 ISO, 기본 지금) 시각에 있었을 데이터만으로 처리합니다.
     df15: 테스트용 — 15분봉 전체를 직접 넘김 (연구용 파일·덧붙인 파일·거래소 조회 대신)
-    반환 dict (status.json 과 같은 내용)
+    반환 dict (이번 실행 요약·경고. status.json 에는 이 가운데 저장된 상태로 정해지는 값만 씀)
     """
     paper_dir = paper_dir or PAPER_DIR
     now = int(time.time()) if now is None else (int(now) if isinstance(now, (int, float, np.integer)) else _ts(now))
@@ -915,7 +916,11 @@ def evaluate_variant(ent, d0, now, paper_dir=None):
             cps[c] = dict(status="final", verdict=verdict, **(b or {}))
         else:
             cps[c] = dict(status="interim", note="중간 점검 — 판정하지 않음", **(b or {}))
+    # 등록 시각보다 먼저 마감한 판단봉(등록 전에 이미 본 데이터로 한 판단)은 사후 계산이라 따로 셈
+    reg_ts = _ts(ent["registered_at"]) if ent.get("registered_at") else None
+    retro = sum(1 for x in decs[0] if reg_ts is not None and int(x["ts_close"]) < reg_ts) if decs else 0
     return dict(start=ent["start"], reps=ent["reps"], cfg_hash=ent["cfg_hash"], code_hash=ent["code_hash"],
+                registered_at=ent.get("registered_at"), retroactive_decisions=retro,
                 since_start=since, checkpoints=cps, final_checkpoint=final, verdict=verdict,
                 verdict_rule=ent["verdict_rule"])
 
@@ -956,6 +961,8 @@ def main(argv=None):
     try:
         if a.cmd == "register":
             ent = register(a.variant, reps=a.reps, start=a.start, paper_dir=a.dir)
+            if _ts(ent["start"]) + DAY <= _ts(ent["registered_at"]):
+                print("주의: 시작일이 등록일보다 앞섭니다 — 등록 전에 마감한 판단봉은 보고서에 retroactive_decisions로 따로 셉니다")
             print(json.dumps({k: ent[k] for k in ("name", "cfg_hash", "code_hash", "algo_hash", "reps", "start",
                                                   "checkpoints")}, ensure_ascii=False))
         elif a.cmd == "step":

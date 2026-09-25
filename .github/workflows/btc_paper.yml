@@ -1,0 +1,58 @@
+name: BTC 모의매매 (3단계)
+
+# btc/research/success_criteria.md 3단계 — 고정한 후보를 매일 00:00 UTC 마감 봉에서 판단합니다.
+# 00:20 UTC: 비트스탬프 1분봉이 00:00까지 다 들어온 뒤. GitHub이 늦게 시작해도 step이 빠진 날을 순서대로 따라잡습니다
+# (판단은 그 봉 종가까지의 데이터만 쓰므로 결과는 같음). 등록(register)은 사람이 따로 합니다.
+
+on:
+  schedule:
+    - cron: "20 0 * * *"
+  workflow_dispatch:          # 수동 실행 버튼
+
+permissions:
+  contents: write
+
+concurrency:
+  group: btc-paper
+  cancel-in-progress: false
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: 패키지 설치
+        run: pip install -r requirements.txt
+
+      - name: 모의매매 한 걸음 (데이터 덧붙이기 → 월간 재학습 → 판단 → 장부)
+        # 등록 직후 첫 실행은 2017-01부터 재학습 사슬을 다시 돌립니다. 35분이 지나면 새 달 학습을 멈추고
+        # 저장한 뒤 끝냅니다 — 다음 실행이 같은 결과로 이어 갑니다.
+        timeout-minutes: 40
+        run: python -u -m btc.research.paper step --max-minutes 35 --workers 2
+
+      - name: 보고서
+        if: always()
+        run: python -u -m btc.research.paper report
+
+      - name: 결과 커밋
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/btc/paper
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "BTC 모의매매 $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash
+            git push
+          fi
