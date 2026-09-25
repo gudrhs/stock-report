@@ -24,3 +24,6 @@
 {"name": "R12_daily_trend8_uniform_log5", "cfg_hash": "894bb7a94af0", "note": "", "time": "2026-09-25T10:00:05Z"}
 {"name": "W2_dp_band", "cfg_hash": "8783efdf5151", "note": "", "time": "2026-09-25T10:49:43Z"}
 {"name": "W1_softmin_direct", "cfg_hash": "3be589398bc5", "note": "", "time": "2026-09-25T11:05:55Z"}
+{"name": "Q1_qrdqn_cvar", "cfg_hash": "c70e69a5cc0c", "note": "", "time": "2026-09-25T22:59:33Z"}
+{"name": "A1_actor_critic", "cfg_hash": "b4d503d2a477", "note": "", "time": "2026-09-25T22:59:33Z"}
+{"name": "P1_pessimistic_dqn", "cfg_hash": "f998f2d76350", "note": "", "time": "2026-09-25T22:59:33Z"}
