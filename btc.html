@@ -334,7 +334,9 @@ async function getJSON(u){try{const r=await fetch(u,{cache:'no-cache'});if(!r.ok
   const be=R.breakeven||[];
   lineChart($('bechart'),{x:be.map(b=>b.cost),series:[{name:'강화학습 P0',short:'RL',y:be.map(b=>b.sharpe),color:C.ag},{name:'매수·보유',short:'매수보유',y:be.map(b=>b.bh_sharpe),color:C.bh}],
     yfmt:v=>f2(v),xfmt:(c,ax)=>(ax?'':'편도 비용 ')+(c*100).toFixed(2)+'%',h:230,time:false,numx:true});
-  $('bechart').insertAdjacentHTML('beforeend',`<div class=legend>손익분기 비용(샤프 기준, 매수·보유와 같아지는 편도 비용): <b>${R.breakeven_cost==null?'시험한 범위 안에서 늘 우위':(R.breakeven_cost===0?'비용 0에서도 매수·보유보다 낮음':pct(R.breakeven_cost,2))}</b></div>`);
+  const bn=R.breakeven_note||{};
+  $('bechart').insertAdjacentHTML('beforeend',`<div class=legend>${R.breakeven_cost!=null?'손익분기 비용(샤프가 매수·보유와 같아지는 편도 비용): <b>'+pct(R.breakeven_cost,2)+'</b>':
+    '매수·보유보다 샤프가 높았던 비용: <b>'+((bn.positive_at||[]).map(c=>(c*100).toFixed(2)+'%').join(', ')||'없음')+'</b>'+(bn.flips>1?' — 비용에 따라 앞섰다 뒤졌다 하므로 하나의 손익분기점이 없습니다 (일관된 우위 없음)':'')}. 1% 비용에서는 판단용 비용(2%)이 너무 커서 한 번도 사지 않습니다.</div>`);
   table('costtable',['시나리오','편도 비용','판단 배수','P0 샤프','매수·보유 샤프','P0 CAGR','매수·보유 CAGR','반복 10개 중 샤프 우위'],(R.costs||[]).map(c=>({cells:[c.scenario,pct(c.cost,2),'×'+c.mult,f2(c.sharpe),f2(c.bh_sharpe),pct(c.cagr),pct(c.bh_cagr),c.d_sharpe_all_reps?c.d_sharpe_all_reps.filter(d=>d>0).length+'/10':'–']})));
 
   // 검정

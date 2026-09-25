@@ -382,15 +382,17 @@ def evaluate(window="dev", reps_p0=10, reps_grid=5, reps_abl=3, n_null2=8, quick
     k = sum(1 for y in yrs if y["agent"] > y["B0"])
     n = len(yrs)
     out["year_sign_test"] = dict(wins=k, years=n, p=float(sum(math.comb(n, j) for j in range(k, n + 1)) / 2 ** n) if n else None)
-    # 손익분기 비용: 샤프 차이(에이전트 − 매수·보유)가 0을 지나는 편도 비용 (선형 보간)
+    # 손익분기 비용: 샤프 차이(에이전트 − 매수·보유)가 비용에 따라 한 번만 부호가 바뀔 때만 보간해 제시.
+    # 여러 번 오르내리면(잡음) 하나의 손익분기점이 없다고 적습니다.
     be_x = [(b["cost"], b["sharpe"] - b["bh_sharpe"]) for b in out["breakeven"]]
+    signs = [d >= 0 for _, d in be_x]
+    flips = sum(1 for a_, b_ in zip(signs, signs[1:]) if a_ != b_)
     out["breakeven_cost"] = None
-    for (c0, d0_), (c1, d1_) in zip(be_x, be_x[1:]):
-        if d0_ >= 0 > d1_:
-            out["breakeven_cost"] = c0 + (c1 - c0) * d0_ / (d0_ - d1_)
-            break
-    if be_x and be_x[0][1] < 0:
-        out["breakeven_cost"] = 0.0                  # 비용 0에서도 매수·보유보다 못함
+    out["breakeven_note"] = dict(flips=flips, positive_at=[c for c, d in be_x if d >= 0])
+    if flips == 1 and signs[0]:
+        for (c0, d0_), (c1, d1_) in zip(be_x, be_x[1:]):
+            if d0_ >= 0 > d1_:
+                out["breakeven_cost"] = c0 + (c1 - c0) * d0_ / (d0_ - d1_)
 
     # ── 차트용 계열 (일별 자산) ──
     out["series"] = dict(days=[int(x) for x in days],
