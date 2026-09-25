@@ -14,3 +14,4 @@ V0 r5 142s repro_exact=True maxabs=0
 V1 r5 147s
 V2 r5 148s
 V3 r5 145s
+V0 r4 149s repro_exact=True maxabs=0
