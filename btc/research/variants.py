@@ -49,4 +49,12 @@ VARIANTS = {c["name"]: c for c in [
     # 11. 비교용(강화학습 아님): 비용 차감 로그성장을 직접 최대화하는 정책
     v("R11_direct_loggrowth", algo="direct", stride=6, feat=TREND8, obj="log", cost_train=0.003,
       turnover_pen=0.0, seq_len=60, seq_batch=32),
+    # ── 롱숏 (사후 추가, 사용자 요청) — 숏은 로그성장 보상으로 정확히 회계(변동성 손실 포함) ──
+    # 행동 순서의 첫 번째(0.0)가 시작 포지션(현금)입니다. 노출도 상한 점검은 롱숏에 맞지 않아 'switch' 점검.
+    v("L1_daily_trend8_ls3", stride=6, gamma=0.967, feat=TREND8,
+      acts=(0.0, -1.0, 1.0), reward="log", gate="switch"),
+    v("L2_daily_trend8_ls5", stride=6, gamma=0.967, feat=TREND8,
+      acts=(0.0, -1.0, -0.5, 0.5, 1.0), reward="log", gate="switch"),
+    v("L3_daily_trend8_ls3_drift0", stride=6, gamma=0.967, feat=TREND8,
+      acts=(0.0, -1.0, 1.0), reward="log", gate="switch", drift_alpha=0.0),
 ]}
