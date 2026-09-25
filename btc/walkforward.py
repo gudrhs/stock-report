@@ -119,10 +119,12 @@ def sanity_ok(ens, d0, T_k, cost=0.003):
 
 def finetune_ok(new, old, d0, T_k, cost=0.003):
     """월간 이어학습 거부 — 최근 180봉에서 판단이 40% 넘게 다르면 거부"""
-    a, b = decision_range(d0, T_k - 180 * BAR_SEC - 1, T_k)
-    a = max(a, b - 180)
-    if b - a < 180:                                  # 최근 180봉이 없으면(데이터가 끊김) 명시적으로 거부
-        return False, dict(reason="short_window", bars=int(b - a), umax=float("nan"))
+    # 종가가 T_k 이전인 '살아 있는 봉' 중 마지막 180개 (죽은 봉이 끼어 있어도 180개를 채움)
+    b = int(np.searchsorted(d0.ts + BAR_SEC, T_k, side="left"))
+    a = b - 180
+    if a < 0 or T_k - (d0.ts[b - 1] + BAR_SEC) > 7 * 86400:
+        # 최근 데이터가 없으면(1주 넘게 끊김) 점검 불가 — 조용히 넘기지 않고 명시적으로 거부
+        return False, dict(reason="short_window", bars=int(max(b - max(a, 0), 0)), umax=float("nan"))
     dn, un = new.delta(d0.X[a:b], cost)
     un = float(un.max())
     do, _ = old.delta(d0.X[a:b], cost)

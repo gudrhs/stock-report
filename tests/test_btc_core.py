@@ -530,3 +530,22 @@ class ReviewRegressionTests(unittest.TestCase):
             rec = tr2.on_bar(df.iloc[i], trade=True)
         self.assertEqual(rec["hold"], "model_bad")
         self.assertEqual(rec["decision"], rec["pos"])
+
+
+class GateWindowTests(unittest.TestCase):
+    def test_finetune_gate_uses_last_180_valid_bars_across_a_stale_bar(self):
+        from btc import walkforward as W
+        df = synth_bars(3000, seed=11)
+        df = df.drop(index=2900).reset_index(drop=True)          # 죽은 봉 하나
+        df.loc[2900, "gap_before"] = 1
+        X, sig = Fe.compute(df)
+        d = E.PhaseData(df, X, sig)
+        rng = np.random.default_rng(0)
+        ens = Ensemble(StackedMLP(2, [23, 8, 8, 4], rng, last_scale=0.1), "full22")
+        Tk = int(df["ts"].iloc[-1]) + E.BAR_SEC
+        ok, info = W.finetune_ok(ens, ens, d, Tk)
+        self.assertTrue(ok, info)
+        self.assertEqual(info["disagree"], 0.0)
+        ok2, info2 = W.finetune_ok(ens, ens, d, Tk + 30 * 86400)     # 한 달 데이터가 끊김
+        self.assertFalse(ok2)
+        self.assertEqual(info2["reason"], "short_window")
