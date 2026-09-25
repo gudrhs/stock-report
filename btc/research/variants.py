@@ -57,4 +57,8 @@ VARIANTS = {c["name"]: c for c in [
       acts=(0.0, -1.0, -0.5, 0.5, 1.0), reward="log", gate="switch"),
     v("L3_daily_trend8_ls3_drift0", stride=6, gamma=0.967, feat=TREND8,
       acts=(0.0, -1.0, 1.0), reward="log", gate="switch", drift_alpha=0.0),
+    # ── 1단계 선별 통과 요소 결합 (사후, 사용자 요청 "매수·보유를 이길 때까지") ──
+    # 12. R6(균등 추출) + R3(비율 보유 0~100%·로그성장 보상)
+    v("R12_daily_trend8_uniform_log5", stride=6, gamma=0.967, feat=TREND8, recency_frac=0.0,
+      acts=(0.0, 0.25, 0.5, 0.75, 1.0), reward="log"),
 ]}
