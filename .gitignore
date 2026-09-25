@@ -8,3 +8,4 @@ __pycache__/
 data/btc/research_runs/**/*.npz
 data/btc/research_runs/**/*.tmp.npz
 btc/research/out/**/*.npz
+btc/research/out/**/*.txt
