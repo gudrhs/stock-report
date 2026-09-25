@@ -67,6 +67,45 @@ def targets(W, cfg, run, mask):
     return tg, frac, float(nan.mean())
 
 
+def dp_clock_targets(W, log, hour):
+    """
+    상태가 있는 동적계획 띠 모델(W2)은 '모든 봉' 출력이 4시간마다 판단하는 다른 전략이 되므로,
+    월별 기록(예측 계수·띠 경계)으로 hour시 판단봉의 p를 다시 계산하고 그 시각만의 이전 포지션을 이어 갑니다.
+    hour=0이면 기본 실행과 같아야 합니다 (robust()에서 확인).
+    """
+    import pandas as pd
+    from ..walkforward import decision_range, OOS_END
+    from .algos.dp_band import band_path, parse_q
+    d = W.datas[0]
+    a0, b0 = W.rng[0]
+    mask = clock_mask(d, hour)
+    tg = np.full(d.T, np.nan)
+    pos = 0.0
+    for i, e in enumerate(log):
+        if "ridge_beta" not in e:
+            continue
+        Tk = int(pd.Timestamp(e["month"], tz="UTC").timestamp())
+        nxt = int(pd.Timestamp(log[i + 1]["month"], tz="UTC").timestamp()) if i + 1 < len(log) else int(OOS_END.timestamp())
+        a, b = decision_range(d, Tk, nxt)
+        sel = np.arange(a, b)[mask[a:b]]
+        if len(sel) == 0:
+            continue
+        Z = (np.asarray(d.X[sel], np.float64)[:, np.asarray(e["fi"])] - np.asarray(e["feat_mu"])) / np.asarray(e["feat_sd"])
+        pv = float(e["c0"]) + Z @ np.asarray(e["ridge_beta"])
+        q_in, q_out = parse_q(e["q_in"]), parse_q(e["q_out"])
+        if e.get("policy_monotone", True):
+            w = band_path(pv, q_in, q_out, pos)
+        else:
+            g = np.linspace(e["grid_lo"], e["grid_hi"], e["grid_n"])
+            pi = np.array([[int(ch) for ch in col] for col in e["pi_str"]], np.int8).T
+            w = band_path(pv, q_in, q_out, pos, g, pi)
+        pos = float(w[-1])
+        tg[sel] = w
+    out = np.full(d.T, np.nan)
+    out[a0:b0] = tg[a0:b0]
+    return out
+
+
 def run_tg(W, tg, frac):
     return W.run(tg, COST, weights=True) if frac else W.run(tg, COST)
 
@@ -126,15 +165,32 @@ def robust(names):
         # ── B2: 판단 시각 6가지 ──
         allname = name + "__allbars"
         have_all = all(os.path.exists(run_path(allname, r)) for r in range(5))
-        if have_all:
+        stateful = cfg.get("algo") == "dp_band"
+        if have_all or stateful:
             per_hour = {}
+            sel0 = np.arange(a, b)[m0[a:b]]
             for r in range(5):
+                if stateful:
+                    # 00시 재구성이 저장된 기본 실행과 같아야 함
+                    t0 = dp_clock_targets(W, runs10[r]["log"], 0)
+                    base = runs10[r]["U"][0.0][:, 0]
+                    if not np.allclose(t0[sel0], base[sel0], equal_nan=True, atol=0):
+                        raise SystemExit(f"{name} rep{r}: 00시 재구성이 기본 실행과 다릅니다 — 구현 오류")
+                    for h in HOURS:
+                        tg = dp_clock_targets(W, runs10[r]["log"], h)
+                        per_hour.setdefault(h, []).append((S.sharpe(run_tg(W, tg, True)["r"]),
+                                                           float(np.isnan(tg[a:b][clock_mask(d, h)[a:b]]).mean())))
+                    continue
                 ra = load_run(allname, r)
-                # 00시 판단값은 기존 실행과 비트 단위로 같아야 함
+                # 00시 판단: 포지션이 기존 실행과 같아야 하고 값 차이 < 1e-5 (행 묶음 크기에 따른 부동소수 차이만 허용)
                 key = 0.0 if (cfg.get("algo") == "direct" or cfg.get("output") == "weights") else C_DEC
-                sel0 = np.arange(a, b)[m0[a:b]]
-                if not np.array_equal(ra["U"][key][sel0], runs10[r]["U"][key][sel0], equal_nan=True):
+                ua, ub = ra["U"][key][sel0], runs10[r]["U"][key][sel0]
+                if not np.array_equal(np.isnan(ua), np.isnan(ub)) or np.nanmax(np.abs(ua - ub)) >= 1e-5:
                     raise SystemExit(f"{name} rep{r}: 00시 판단값이 기존 실행과 다릅니다 — 구현 오류")
+                ta, _, _ = targets(W, cfg, ra, m0)
+                tb, _, _ = targets(W, cfg, runs10[r], m0)
+                if not np.array_equal(ta, tb, equal_nan=True):
+                    raise SystemExit(f"{name} rep{r}: 00시 포지션이 기존 실행과 다릅니다 — 구현 오류")
                 for h in HOURS:
                     tg, frac, nan_share = targets(W, cfg, ra, clock_mask(d, h))
                     per_hour.setdefault(h, []).append((S.sharpe(run_tg(W, tg, frac)["r"]), nan_share))

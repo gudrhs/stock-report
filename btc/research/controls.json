@@ -1,0 +1,234 @@
+{
+ "R6_daily_trend8_uniform": {
+  "positive": [
+   {
+    "seed": 1,
+    "d_sharpe": 6.219727943990302,
+    "p": 0.0,
+    "exposure": 0.47707049965776865
+   }
+  ],
+  "positive_pass": true,
+  "neg_mean_d": -0.30363634883162377,
+  "neg_se": 0.1523049188517568,
+  "neg_dsr": [
+   4.92193828304885e-07,
+   0.16668505708105685,
+   0.43161773135715686,
+   0.08570954306304969,
+   0.08649086383308162,
+   0.004802560582237174
+  ],
+  "neg_exposure": [
+   0.1543463381245722,
+   0.8275154004106776,
+   0.9277891854893908,
+   0.6279945242984257,
+   0.8627652292950034,
+   0.662217659137577
+  ],
+  "negative_pass": true,
+  "runs": [
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "regime",
+    "seed": 1,
+    "planted": "ret_42",
+    "d_sharpe": 6.219727943990302,
+    "p": 0.0,
+    "sharpe": 5.709895881795357,
+    "bh_sharpe": -0.5098320621949449,
+    "exposure": 0.47707049965776865,
+    "rejected_gates": 0
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 1,
+    "planted": null,
+    "d_sharpe": -0.9623281299367631,
+    "p": 0.9955,
+    "sharpe": -0.939368917489387,
+    "bh_sharpe": 0.022959212447376073,
+    "exposure": 0.1543463381245722,
+    "rejected_gates": 6
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 0,
+    "planted": null,
+    "d_sharpe": -0.13306275540580803,
+    "p": 0.82675,
+    "sharpe": 0.40316694076294146,
+    "bh_sharpe": 0.5362296961687495,
+    "exposure": 0.8275154004106776,
+    "rejected_gates": 2
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 2,
+    "planted": null,
+    "d_sharpe": 0.045971210286119946,
+    "p": 0.33,
+    "sharpe": 0.6829496735872647,
+    "bh_sharpe": 0.6369784633011447,
+    "exposure": 0.9277891854893908,
+    "rejected_gates": 5
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 3,
+    "planted": null,
+    "d_sharpe": -0.48502179224203995,
+    "p": 0.9745,
+    "sharpe": 0.2612496436317218,
+    "bh_sharpe": 0.7462714358737618,
+    "exposure": 0.6279945242984257,
+    "rejected_gates": 4
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 4,
+    "planted": null,
+    "d_sharpe": -0.02827478890121532,
+    "p": 0.597,
+    "sharpe": 0.26250271316592005,
+    "bh_sharpe": 0.2907775020671354,
+    "exposure": 0.8627652292950034,
+    "rejected_gates": 1
+   },
+   {
+    "name": "R6_daily_trend8_uniform",
+    "kind": "garch",
+    "seed": 5,
+    "planted": null,
+    "d_sharpe": -0.2591018367900364,
+    "p": 0.8445,
+    "sharpe": -0.1709592472587917,
+    "bh_sharpe": 0.08814258953124474,
+    "exposure": 0.662217659137577,
+    "rejected_gates": 2
+   }
+  ]
+ },
+ "R3_daily_trend8_log5": {
+  "positive": [
+   {
+    "seed": 1,
+    "d_sharpe": 6.180514491697887,
+    "p": 0.0,
+    "exposure": 0.47991766782607326
+   }
+  ],
+  "positive_pass": true,
+  "neg_mean_d": -0.23297817320369818,
+  "neg_se": 0.08942443855008829,
+  "neg_dsr": [
+   0.21336187310018445,
+   0.0010513791592317466,
+   0.6785113381235328,
+   0.29526124031072787,
+   0.15767953024653214,
+   0.012293521635820493
+  ],
+  "neg_exposure": [
+   0.7178985895885479,
+   0.10784160624222722,
+   0.9047873600620235,
+   0.7039653869381244,
+   0.7537189951614466,
+   0.6496159525917858
+  ],
+  "negative_pass": true,
+  "runs": [
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "regime",
+    "seed": 1,
+    "planted": "ret_42",
+    "d_sharpe": 6.180514491697887,
+    "p": 0.0,
+    "sharpe": 5.670682429502943,
+    "bh_sharpe": -0.5098320621949449,
+    "exposure": 0.47991766782607326,
+    "rejected_gates": 0
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 0,
+    "planted": null,
+    "d_sharpe": -0.24284079950659931,
+    "p": 0.91175,
+    "sharpe": 0.2933888966621502,
+    "bh_sharpe": 0.5362296961687495,
+    "exposure": 0.7178985895885479,
+    "rejected_gates": 8
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 1,
+    "planted": null,
+    "d_sharpe": -0.5157624232723814,
+    "p": 0.9055,
+    "sharpe": -0.4928032108250054,
+    "bh_sharpe": 0.022959212447376073,
+    "exposure": 0.10784160624222722,
+    "rejected_gates": 8
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 2,
+    "planted": null,
+    "d_sharpe": 0.10091923950667059,
+    "p": 0.12825,
+    "sharpe": 0.7378977028078153,
+    "bh_sharpe": 0.6369784633011447,
+    "exposure": 0.9047873600620235,
+    "rejected_gates": 8
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 3,
+    "planted": null,
+    "d_sharpe": -0.3616122375864401,
+    "p": 0.95125,
+    "sharpe": 0.38465919828732165,
+    "bh_sharpe": 0.7462714358737618,
+    "exposure": 0.7039653869381244,
+    "rejected_gates": 8
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 4,
+    "planted": null,
+    "d_sharpe": -0.07099533260691829,
+    "p": 0.6855,
+    "sharpe": 0.21978216946021709,
+    "bh_sharpe": 0.2907775020671354,
+    "exposure": 0.7537189951614466,
+    "rejected_gates": 5
+   },
+   {
+    "name": "R3_daily_trend8_log5",
+    "kind": "garch",
+    "seed": 5,
+    "planted": null,
+    "d_sharpe": -0.3075774857565205,
+    "p": 0.8975,
+    "sharpe": -0.21943489622527576,
+    "bh_sharpe": 0.08814258953124474,
+    "exposure": 0.6496159525917858,
+    "rejected_gates": 7
+   }
+  ]
+ }
+}
