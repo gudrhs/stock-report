@@ -453,9 +453,9 @@
    },
    "controls": {
     "source": "Q1_qrdqn_cvar",
-    "positive": null,
-    "negative": null,
-    "passed": null
+    "positive": true,
+    "negative": true,
+    "passed": true
    },
    "criteria": {
     "beats_r6": {
@@ -467,7 +467,7 @@
      "early": false
     },
     "performance_ok": false,
-    "controls_passed": null,
+    "controls_passed": true,
     "candidate": null,
     "verdict": "판정 불가 (모델 없음 비율 100.0% > 5%)",
     "p_vs_r6_below_005_both": false,
@@ -646,9 +646,9 @@
    },
    "controls": {
     "source": "A1_actor_critic",
-    "positive": null,
-    "negative": null,
-    "passed": null
+    "positive": true,
+    "negative": true,
+    "passed": true
    },
    "criteria": {
     "beats_r6": {
@@ -660,7 +660,7 @@
      "early": true
     },
     "performance_ok": false,
-    "controls_passed": null,
+    "controls_passed": true,
     "candidate": false,
     "verdict": "개선 후보 아님",
     "p_vs_r6_below_005_both": false,
