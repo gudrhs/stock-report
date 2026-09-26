@@ -230,5 +230,121 @@
     "rejected_gates": 7
    }
   ]
+ },
+ "Q1_qrdqn_cvar": {
+  "positive": [
+   {
+    "seed": 1,
+    "d_sharpe": 6.262800468372009,
+    "p": 0.0,
+    "exposure": 0.4072553045859001
+   }
+  ],
+  "positive_pass": true,
+  "neg_mean_d": -0.3868931498982353,
+  "neg_se": 0.12178325642558765,
+  "neg_dsr": [
+   0.5,
+   0.5,
+   0.5,
+   0.5,
+   0.5,
+   0.5
+  ],
+  "neg_exposure": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "negative_pass": true,
+  "runs": [
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "regime",
+    "seed": 1,
+    "planted": "ret_42",
+    "d_sharpe": 6.262800468372009,
+    "p": 0.0,
+    "sharpe": 5.7529684061770645,
+    "bh_sharpe": -0.5098320621949449,
+    "exposure": 0.4072553045859001,
+    "rejected_gates": 0
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 3,
+    "planted": null,
+    "d_sharpe": -0.7462714358737618,
+    "p": 0.98125,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.7462714358737618,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 1,
+    "planted": null,
+    "d_sharpe": -0.022959212447376073,
+    "p": 0.53175,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.022959212447376073,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 2,
+    "planted": null,
+    "d_sharpe": -0.6369784633011447,
+    "p": 0.97225,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.6369784633011447,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 0,
+    "planted": null,
+    "d_sharpe": -0.5362296961687495,
+    "p": 0.93675,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.5362296961687495,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 4,
+    "planted": null,
+    "d_sharpe": -0.2907775020671354,
+    "p": 0.818,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.2907775020671354,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   },
+   {
+    "name": "Q1_qrdqn_cvar",
+    "kind": "garch",
+    "seed": 5,
+    "planted": null,
+    "d_sharpe": -0.08814258953124474,
+    "p": 0.6075,
+    "sharpe": 0.0,
+    "bh_sharpe": 0.08814258953124474,
+    "exposure": 0.0,
+    "rejected_gates": 96
+   }
+  ]
  }
 }
