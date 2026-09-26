@@ -1,6 +1,6 @@
 {
- "now": "2026-09-25T00:20:00Z",
- "now_ts": 1790295600,
+ "now": "2026-09-25T23:52:08Z",
+ "now_ts": 1790380328,
  "data_end": "2026-09-25T00:00:00Z",
  "ext_until": null,
  "env": {
@@ -178,6 +178,114 @@
      "ledger_through": null,
      "equity": null
     }
+   }
+  },
+  "C1_r6_committee10": {
+   "reps": {
+    "0": {
+     "variant": "C1_r6_committee10",
+     "rep": 0,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "1": {
+     "variant": "C1_r6_committee10",
+     "rep": 1,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "2": {
+     "variant": "C1_r6_committee10",
+     "rep": 2,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "3": {
+     "variant": "C1_r6_committee10",
+     "rep": 3,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "4": {
+     "variant": "C1_r6_committee10",
+     "rep": 4,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "5": {
+     "variant": "C1_r6_committee10",
+     "rep": 5,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "6": {
+     "variant": "C1_r6_committee10",
+     "rep": 6,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "7": {
+     "variant": "C1_r6_committee10",
+     "rep": 7,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "8": {
+     "variant": "C1_r6_committee10",
+     "rep": 8,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    },
+    "9": {
+     "variant": "C1_r6_committee10",
+     "rep": 9,
+     "trained_through": "2026-09-01",
+     "n_decisions": 0,
+     "n_cash": 0,
+     "undecided": 0,
+     "ledger_through": null,
+     "equity": null
+    }
+   },
+   "committee": {
+    "ledger_through": null,
+    "equity": null
    }
   }
  }
