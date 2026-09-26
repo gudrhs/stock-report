@@ -1,0 +1,39 @@
+2026-09-25T08:03:13Z	opened	evaluate:full
+2026-09-25T09:09:11Z	opened	research:R1_daily
+2026-09-25T09:14:17Z	opened	research:R1_daily,R2_daily_trend8
+2026-09-25T09:21:59Z	opened	research-ls:rules
+2026-09-25T09:22:33Z	opened	research-ls:rules
+2026-09-25T09:27:35Z	opened	replication-check:longshort daily-return diff
+2026-09-25T09:28:33Z	opened	research-ls:L1_daily_trend8_ls3
+2026-09-25T09:29:03Z	opened	research-ls:L1 short-episodes
+2026-09-25T09:34:07Z	opened	research-ls:funding-carry-audit
+2026-09-25T09:35:08Z	opened	research-ls-decomp(diagnostic)
+2026-09-25T09:35:22Z	opened	research-ls-decomp(diagnostic)
+2026-09-25T09:36:59Z	opened	research-ls:funding-carry-audit
+2026-09-25T09:37:41Z	opened	research-ls-decomp(diagnostic)
+2026-09-25T09:45:14Z	opened	judge_1_0
+2026-09-25T09:45:53Z	opened	research:R1_daily,R2_daily_trend8,R3_daily_trend8_log5,R4_daily_trend8_mv2,R5_daily_trend8_gateSw,R6_daily_trend8_uniform,R7_daily_trend8_drift0
+2026-09-25T09:45:53Z	opened	research-ls:L1_daily_trend8_ls3,L2_daily_trend8_ls5,L3_daily_trend8_ls3_drift0
+2026-09-25T09:58:46Z	opened	research-screen:R1_daily,R2_daily_trend8,R3_daily_trend8_log5,R4_daily_trend8_mv2,R6_daily_trend8_uniform,R7_daily_trend8_drift0
+2026-09-25T10:12:00Z	opened	research-screen:R8_daily_trend8_drift05,R9_daily_trend8_down2,R10_daily_veto_b2,R12_daily_trend8_uniform_log5
+2026-09-25T10:15:07Z	opened	research-ls:L1_daily_trend8_ls3,L2_daily_trend8_ls5,L3_daily_trend8_ls3_drift0
+2026-09-25T10:48:48Z	opened	research-screen:R11_direct_loggrowth
+2026-09-25T11:07:54Z	opened	research-screen:W2_dp_band
+2026-09-25T11:07:55Z	opened	dp_band sign-rule report W2_dp_band
+2026-09-25T11:27:57Z	opened	research-screen:W1_softmin_direct
+2026-09-25T11:50:16Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
+2026-09-25T11:51:24Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
+2026-09-25T11:53:28Z	opened	verify-b123-independent
+2026-09-25T11:53:51Z	opened	verify-b3check
+2026-09-25T11:53:51Z	opened	verify-placebo-probe
+2026-09-25T11:54:14Z	opened	verify-w2b2
+2026-09-25T11:54:53Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:55:42Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:55:51Z	opened	verify-placebo (scratch, read-only)
+2026-09-25T11:59:17Z	opened	verify-audit:dsr-grid (scratch, read-only)
+2026-09-25T11:59:58Z	opened	verify-audit:dsr-delta (scratch, read-only)
+2026-09-25T12:04:24Z	opened	research-robust:R6_daily_trend8_uniform,R3_daily_trend8_log5,W2_dp_band
+2026-09-25T23:43:41Z	opened	research-morerl:main 2017-01-01..2026-09-25
+2026-09-25T23:44:45Z	opened	research-morerl:c1check 2017-01-01
+2026-09-25T23:44:51Z	opened	research-morerl:c1check 2017-01-01
+2026-09-26T00:49:39Z	opened	research-morerl:main 2017-01-01..2026-09-25
