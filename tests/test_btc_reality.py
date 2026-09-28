@@ -101,7 +101,7 @@ class Rules(unittest.TestCase):
             self.assertGreater(len(np.unique(res["pos"].round(6))), 1, k)
 
     def test_exec_prices_are_0030_opens(self):
-        o_ex, info = R.exec_open(self.d, df15())
+        o_ex, at = R.exec_open(self.d, df15())
         f = df15()
         op = pd.Series(f["open"].to_numpy(), index=f["ts"].to_numpy())
         j = np.nonzero((self.d.ts % DAY == 0) & (self.d.ts >= self.W.lo) & (self.d.ts < self.W.hi))[0]
@@ -188,26 +188,59 @@ class Timing(unittest.TestCase):
         op = np.arange(20, dtype=float) + 100.0
         op[2] = np.nan                                                      # 00:30 봉이 빔 → 00:45 봉
         f = pd.DataFrame({"ts": tt, "open": op})
-        px, n_sub = R.open_at(f, [t0])
+        px, src = R.open_at(f, [t0])
         self.assertEqual(px[0], 103.0)
-        self.assertEqual(n_sub, 1)
+        self.assertEqual(int(src[0]), t0 + 2700)                          # 실제로 쓴 봉 = 00:45
         op2 = op.copy()
         op2[2:] = np.nan
-        px2, _ = R.open_at(pd.DataFrame({"ts": tt, "open": op2}), [t0])
+        px2, src2 = R.open_at(pd.DataFrame({"ts": tt, "open": op2}), [t0])
         self.assertTrue(np.isnan(px2[0]))
+        self.assertEqual(int(src2[0]), -1)
 
 
 class Krw(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d = datas()[0]
+        cls.krw = R.load_krw()
+        cls.fac = R.krw_factor(cls.d, df15(), cls.krw)
+
     def test_booked_fill_equals_krw_open(self):
-        d = datas()[0]
-        fac, info = R.krw_factor(d, df15(), R.load_krw())
-        krw = R.load_krw()
+        d, fac = self.d, self.fac["open"]
         j = np.nonzero((d.ts % DAY == 0) & (d.ts >= ts("2018-01-01")) & (d.ts < ts("2026-09-01")))[0]
         days = pd.to_datetime(d.ts[j], unit="s", utc=True)
-        ref = krw["krw_open"].reindex(days).to_numpy()
+        ref = self.krw["krw_open"].reindex(days).to_numpy()
         np.testing.assert_allclose(d.o[j] * fac[j], ref, rtol=1e-12)
         self.assertTrue(np.all(np.isnan(fac[d.ts < ts("2014-01-01")])))
         self.assertTrue(np.all(np.isfinite(fac[(d.ts >= ts("2015-01-01")) & (d.ts < ts("2026-09-25"))])))
+
+    def test_midnight_mark_is_krw_price(self):
+        """00:00 에 마감하는 봉의 원화 종가 = 그 시각 원화 시가 (등록 정의: 00:00 D 는 D 의 k) — 전날 k 가 아님"""
+        d, fc = self.d, self.fac["close"]
+        close = d.ts + BAR_SEC
+        j = np.nonzero((close % DAY == 0) & (close >= ts("2018-01-01")) & (close < ts("2026-09-01")))[0]
+        days = pd.to_datetime(close[j], unit="s", utc=True)
+        ref = self.krw["krw_open"].reindex(days).to_numpy()
+        err = np.abs(d.c[j] * fc[j] / ref - 1.0)
+        self.assertLess(float(np.mean(err)), 5e-4)                          # 비트스탬프 종가 ≈ 다음 봉 시가
+        self.assertLess(float(np.max(err)), 1e-2)
+        # 봉 안(04:00~20:00 마감)은 시작한 날 k 와 같음
+        inner = np.nonzero((close % DAY != 0) & (d.ts >= ts("2018-01-01")))[0]
+        self.assertTrue(np.array_equal(fc[inner], self.fac["open"][inner]))
+
+    def test_fractional_trade_count_is_exact(self):
+        """비율 회계(B80)의 거래 수 = simulate_weights 의 재조정 수 (원화·00:30 체결가에서도)"""
+        W = Window(datas(), "2019-01-01", "2021-01-01", "test_btc_reality")
+        d = W.datas[0]
+        a, b = W.rng[0]
+        tg, frac = R.rule_targets(d, a, b, decision_mask(d, 6))["B80"]
+        o_ex, _ = R.exec_open(d, df15())
+        o, c = o_ex * self.fac["open"], d.c * self.fac["close"]
+        res = R.run_one(d, a, b, W.lo, W.hi, tg, frac, 0.0015, o, c)
+        from btc.env import simulate_weights
+        sim = simulate_weights(tg, o, c, 0.0015, a, b)
+        self.assertEqual(R.metrics(res)["n_trades"], int(sim["rebal"][a:b].sum()))
+        self.assertGreater(int(sim["rebal"][a:b].sum()), 5)
 
 
 @unittest.skipUnless(all(os.path.exists(run_path(n + "__early", r)) for n, _, k in R.MODELS.values() for r in range(k)),
@@ -414,6 +447,21 @@ class Bench(unittest.TestCase):
                 self.assertNotEqual(ok[self.HI], got[self.HI], rel)
         finally:
             shutil.rmtree(tmp2, ignore_errors=True)
+
+    def test_code_fingerprint_and_exec_info(self):
+        rep = json.loads(self.bench1[os.path.join(PB.SUB, "report.json")].decode())
+        self.assertIn("paper_bench.py", " ".join(rep["code"]["files"]))
+        ex = rep["exec_price"]
+        self.assertGreater(ex["n_bars"], 90)
+        self.assertEqual(ex["n_missing"], 0)
+
+    def test_failure_leaves_previous_output(self):
+        """계산 중 실패하면 benchmarks/ 는 이전 결과 그대로 (파일이 섞이지 않음)"""
+        from unittest import mock
+        with mock.patch.object(P, "committee_targets", side_effect=RuntimeError("boom")):
+            with self.assertRaises(RuntimeError):
+                PB.build(self.tmp, now=P._ts("2024-04-12T00:20Z"), df15=load_15m())
+        self.assertEqual(self.snap(only_bench=True), self.bench1)
 
     def test_no_registry_no_output(self):
         tmp2 = tempfile.mkdtemp(prefix="paper_bench_empty_")

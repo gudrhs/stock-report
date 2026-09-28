@@ -87,7 +87,7 @@ jobs:
       - name: "보조 기록 (기준 규칙·실행 가능 장부, 판정에 안 씀)"
         if: always() && steps.reg.outputs.commits != ''
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 3           # 실제로는 몇 초 (고정 step 40분 + 이것 + 준비가 작업 한도 45분 안에)
         run: |
           pins=$(python3 -c 'import json, os
           v = json.load(open(os.environ["PAPER_DIR"] + "/registry.json", encoding="utf-8"))["variants"]

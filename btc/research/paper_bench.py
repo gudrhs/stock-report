@@ -3,30 +3,36 @@
 모의매매 보조 기록 — btc/research/success_criteria.md '모의매매 보조 기록 보완 (2026-09-28 02:10 UTC 등록)'.
 
 등록 커밋의 고정 코드(paper.py step·report)와 따로, HEAD 코드로 같은 데이터(기본 15분봉 + 덧붙인 봉)를 읽어 씁니다.
-  · 기준 규칙 장부 — B0 매수·보유, B2 200일선, B5 일봉 MACD, B6 1개월 모멘텀, B80 늘 80%, SMA120(사후 선택)
-      booked: 등록 계산과 같은 체결(판단봉 다음 봉 시가 = 00:00). B0 booked 는 변형 폴더의 bh_ledger.csv 와 같은 값
-      exec  : 실행 가능 시각(00:30 15분봉 시가) 체결
-  · 등록 변형의 실행 가능 장부 — 판단 기록(decisions_repNN.csv)을 읽기만 하고, 판단을 00:20 실행 + 00:30 체결로 옮김.
+  · 기준 규칙 장부 (rules/) — B0 매수·보유, B2 200일선, B5 일봉 MACD, B6 1개월 모멘텀, B80 늘 80%, SMA120(사후 선택)
+      booked: 등록 계산과 같은 체결(판단봉 다음 봉 시가 = 00:00) · exec: 실행 가능 시각(00:30 15분봉 시가) 체결
+      구간은 [가장 이른 변형 시작, now 의 자정]. 변형 폴더의 bh_ledger.csv 는 [그 변형 시작, 반복 공통 끝] 이라,
+      B0 booked 는 시작이 같고 모든 반복이 판단을 마친 변형에서만 바이트 단위로 같습니다.
+      변형과 같은 구간의 비교는 report.json 의 variants[이름].rules_same_window 와 checkpoints 를 보세요.
+  · 등록 변형의 실행 가능 장부 (exec/<변형>/) — 판단 기록(decisions_repNN.csv)을 읽기만 하고, 판단을 00:20 실행 + 00:30 체결로 옮김.
       매달 첫 판단봉은 그 달 학습 자르기 c(T)(train_log 의 data_cut, 없으면 T + 1일) + 20분 뒤 첫 00:30 에 체결
-      (c(T) = T + 1일이면 2일 판단과 같은 시각 → 2일 판단이 이김)
+      (c(T) = T + 1일이면 2일 판단과 같은 시각 → 2일 판단이 이김). CI가 늦게 돈 시각(decided_at)은 쓰지 않습니다 —
+      판단값은 실행 시각과 무관하므로(paper.py 따라잡기 규칙) '제때 실행했다면'의 장부입니다.
 판정에 쓰지 않습니다 (등록 문구: 보조 기록). 판정은 고정 코드의 report.json 그대로입니다.
 
 안전 규칙: 쓰는 곳은 <모의매매 폴더>/benchmarks/ 뿐입니다. 등록부·status.json·report.json·alarms.jsonl·
 변형 폴더·ext/(덧붙인 봉)는 읽기만 하고, 데이터를 새로 받지도 않습니다 (고정 step 이 받은 봉까지만 씀).
 기준 시각 now = status.json 의 now_ts (마지막 고정 step 과 같은 데이터 범위).
+모두 계산한 뒤에 한꺼번에 씁니다 (중간에 실패하면 이전 결과가 그대로 남음). report.json 에 계산한 코드의 지문을 적습니다.
 
   python -m btc.research.paper_bench [--dir data/btc/paper] [--base data/btc/btcusd_15m.csv.gz] [--now ISO]
 """
 import argparse
+import hashlib
 import json
 import os
+import subprocess
 
 import numpy as np
 import pandas as pd
 
 from ..env import BAR_SEC
 from . import paper as P
-from .recost import rule_signals, exec_open, exec_targets, run_one, RULES, RULE_KO, FRAC_RULES
+from .recost import rule_signals, exec_open, exec_info, exec_targets, run_one, RULES, RULE_KO, FRAC_RULES
 from .evaluate import daily_hold
 from .walk import decision_mask
 
@@ -35,10 +41,28 @@ SUB = "benchmarks"
 STRIDE = 6
 NOTE = ("보조 기록 — 판정에 쓰지 않음 (success_criteria.md '모의매매 보조 기록 보완'). booked = 등록 계산과 같은 00:00 체결, "
         "exec = 00:20 판단 뒤 00:30 체결 (학습 모델의 월초 판단은 c(T) + 20분 뒤)")
+FILL_HEADER = ["close_utc", "fill_utc", "fill_open", "w_before", "w_after"]
+CODE_FILES = ("research/paper_bench.py", "research/recost.py", "research/paper.py", "research/evaluate.py",
+              "research/walk.py", "env.py", "features.py", "data.py", "evaluate.py")
 
 
 def bench_dir(paper_dir):
     return os.path.join(paper_dir or P.PAPER_DIR, SUB)
+
+
+def code_fingerprint():
+    """이 기록을 만든 코드: 커밋(있으면)과 파일별 sha1 앞 12자리"""
+    core = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    files = {}
+    for f in CODE_FILES:
+        with open(os.path.join(core, f), "rb") as fh:
+            files[f] = hashlib.sha1(fh.read()).hexdigest()[:12]
+    try:
+        commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10,
+                                cwd=os.path.dirname(core)).stdout.strip() or None
+    except Exception:
+        commit = None
+    return dict(commit=commit, files=files)
 
 
 def _hi(d0, now):
@@ -46,43 +70,38 @@ def _hi(d0, now):
     return (min(int(now), int(close[-1])) // DAY) * DAY
 
 
-def _ledger_rows(res):
-    return [dict(date=P._date(t), equity=P._num(e)) for t, e in zip(res["days"], res["eq"])] if res is not None else []
-
-
-def _fill_rows(d0, res, fill_px, fill_at):
-    if res is None:
-        return []
-    out = []
-    a = res["a"]
-    for j in np.nonzero(res["traded"] > 1e-12)[0]:
-        t = a + j
-        out.append(dict(close_utc=P._iso(d0.ts[t] + BAR_SEC), fill_utc=P._iso(d0.ts[t + 1] + fill_at),
-                        fill_open=P._num(fill_px[t + 1]), w_before=P._num(res["w_pre"][j]),
-                        w_after=P._num(res["pos"][j])))
-    return out
-
-
 def run(d0, lo, hi, tg, frac, o, c):
-    """(lo, hi) 구간 장부 — paper.window_range 와 같은 (a, b). 반환 None(구간 없음) 또는 dict"""
+    """(lo, hi) 구간 장부 — paper.window_range 와 같은 (a, b). 반환 None(구간 없음) 또는 run_one 결과"""
     a, b = P.window_range(d0, lo, hi)
     if b <= a:
         return None
-    res = run_one(d0, a, b, lo, hi, tg, frac, P.COST, o, c)
-    pos = res["pos"]
-    prev = np.concatenate([[0.0], pos[:-1]])
-    g = o[a + 1:b + 1] / o[a:b]                         # paper.window_run 과 같은 체결 전 비중
-    den = prev * g + (1.0 - prev)
-    res["w_pre"] = np.where(den > 0, prev * g / np.where(den > 0, den, 1.0), 0.0)
-    res["traded"] = np.abs(pos - res["w_pre"])
-    res["a"], res["b"] = a, b
-    return res
+    return run_one(d0, a, b, lo, hi, tg, frac, P.COST, o, c)
 
 
-def _write_pair(folder, tag, d0, res, fill_px, fill_at):
-    P._write_csv(os.path.join(folder, f"ledger_{tag}.csv"), ["date", "equity"], _ledger_rows(res))
-    P._write_csv(os.path.join(folder, f"fills_{tag}.csv"), ["close_utc", "fill_utc", "fill_open", "w_before", "w_after"],
-                 _fill_rows(d0, res, fill_px, fill_at))
+class Writer:
+    """쓸 파일을 모아 두었다가 계산이 다 끝난 뒤 한꺼번에 씀"""
+
+    def __init__(self, root):
+        self.root = root
+        self.files = []
+
+    def pair(self, folder, tag, d0, res, fill_px, fill_at):
+        rows = [dict(date=P._date(t), equity=P._num(e)) for t, e in zip(res["days"], res["eq"])] if res is not None else []
+        fills = []
+        if res is not None:
+            for j in np.nonzero(res["traded"] > 1e-12)[0]:
+                t = res["a"] + j
+                fills.append(dict(close_utc=P._iso(d0.ts[t] + BAR_SEC), fill_utc=P._iso(fill_at[t + 1]),
+                                  fill_open=P._num(fill_px[t + 1]), w_before=P._num(res["w_pre"][j]),
+                                  w_after=P._num(res["pos"][j])))
+        base = os.path.join(self.root, folder)
+        self.files.append((os.path.join(base, f"ledger_{tag}.csv"), ["date", "equity"], rows))
+        self.files.append((os.path.join(base, f"fills_{tag}.csv"), FILL_HEADER, fills))
+
+    def commit(self, report):
+        for path, header, rows in self.files:
+            P._write_csv(path, header, rows)
+        P._write_json(os.path.join(self.root, "report.json"), report)
 
 
 def month_cuts_from_logs(vdir, reps, lo, hi):
@@ -133,16 +152,17 @@ def build(paper_dir=None, base_path=None, now=None, df15=None):
     df = P.truncate(P.load_15m_all(paper_dir, base_path) if df15 is None else df15, now)
     d0 = P.phases_for(df, 1)[0]
     mask = decision_mask(d0, STRIDE)
-    o_ex, ex_info = exec_open(d0, df)
+    o_ex, at_ex = exec_open(d0, df)
     hi = _hi(d0, now)
     lo = min(P._ts(e["start"]) for e in reg.values())
-    out_dir = bench_dir(paper_dir)
+    W = Writer(bench_dir(paper_dir))
+    a, b = P.window_range(d0, lo, hi)
     report = dict(now=P._iso(now), data_end=P._iso(int(df["ts"].iloc[-1]) + 900), start=P._date(lo),
-                  ledger_through=P._date(hi), note=NOTE, exec_price=ex_info, rules={}, variants={})
+                  ledger_through=P._date(hi), note=NOTE, code=code_fingerprint(),
+                  exec_price=exec_info(d0, at_ex, a, b, lo, hi) if b > a else None, rules={}, variants={})
 
     # ── 기준 규칙 ──
     sig = rule_signals(d0)
-    a, b = P.window_range(d0, lo, hi)
     rule_tg = {}
     for k in RULES:
         tg = daily_hold(sig[k], mask, a, b) if b > a else np.full(d0.T, np.nan)
@@ -150,9 +170,8 @@ def build(paper_dir=None, base_path=None, now=None, df15=None):
         rule_tg[k] = (tg, frac)
         booked = run(d0, lo, hi, tg, frac, d0.o, d0.c)
         ex = run(d0, lo, hi, exec_targets(d0, tg, None), frac, o_ex, d0.c)
-        folder = os.path.join(out_dir, "rules")
-        _write_pair(folder, f"{k}_booked", d0, booked, d0.o, 0)
-        _write_pair(folder, f"{k}_exec", d0, ex, o_ex, 1800)
+        W.pair("rules", f"{k}_booked", d0, booked, d0.o, d0.ts)
+        W.pair("rules", f"{k}_exec", d0, ex, o_ex, at_ex)
         report["rules"][k] = dict(label=RULE_KO[k], booked=_block(booked), exec=_block(ex))
 
     # ── 등록 변형의 실행 가능 장부 ──
@@ -167,21 +186,19 @@ def build(paper_dir=None, base_path=None, now=None, df15=None):
         his = [P.rep_hi(d0, x, vlo, now, vmask) for x in decs]
         vhi = min(his) if his else vlo
         cuts = month_cuts_from_logs(vdir, ent["reps"], vlo, int(d0.ts[-1]) + 2 * DAY)
-        folder = os.path.join(out_dir, "exec", name)
+        folder = os.path.join("exec", name)
         reps_out = []
-        ex_res = []
         for r in range(ent["reps"]):
             res = run(d0, vlo, his[r], exec_targets(d0, tgs[r], cuts), frac, o_ex, d0.c) if his[r] > vlo else None
-            _write_pair(folder, f"rep{r:02d}", d0, res, o_ex, 1800)
-            ex_res.append(res)
+            W.pair(folder, f"rep{r:02d}", d0, res, o_ex, at_ex)
             reps_out.append(dict(ledger_through=P._date(his[r]) if res is not None else None, exec=_block(res)))
         v = dict(start=ent["start"], reps=reps_out, ledger_through=P._date(vhi) if vhi > vlo else None)
         if cfg.get("committee"):
             ctg = P.committee_targets(d0, tgs)
             res = run(d0, vlo, vhi, exec_targets(d0, ctg, cuts), False, o_ex, d0.c) if vhi > vlo else None
-            _write_pair(folder, "committee", d0, res, o_ex, 1800)
+            W.pair(folder, "committee", d0, res, o_ex, at_ex)
             v["committee"] = dict(exec=_block(res))
-        # 같은 구간(변형 시작 ~ 반복 공통 끝)의 규칙 성과 — 나란히 보기용
+        # 같은 구간(변형 시작 ~ 반복 공통 끝)의 규칙 성과 — 나란히 보기용 (B0 booked = 그 변형의 bh_ledger.csv)
         v["rules_same_window"] = {}
         for k, (tg, fr) in rule_tg.items():
             bk = run(d0, vlo, vhi, tg, fr, d0.o, d0.c) if vhi > vlo else None
@@ -210,7 +227,7 @@ def build(paper_dir=None, base_path=None, now=None, df15=None):
             cps[cp] = blk
         v["checkpoints"] = cps
         report["variants"][name] = v
-    P._write_json(os.path.join(out_dir, "report.json"), report)
+    W.commit(report)
     return report
 
 
@@ -224,7 +241,7 @@ def main(argv=None):
     if rep is None:
         print("등록된 변형이나 status.json 이 없어 건너뜀")
         return 0
-    print(f"보조 기록: now {rep['now']}  장부 끝 {rep['ledger_through']}  시작 {rep['start']}")
+    print(f"보조 기록: now {rep['now']}  장부 끝 {rep['ledger_through']}  시작 {rep['start']}  코드 {rep['code']['commit']}")
     for k, v in rep["rules"].items():
         bk, ex = v["booked"], v["exec"]
         f = lambda m: "—" if not m.get("days") else f"샤프 {m['sharpe']:.2f} 배수 {m['twm']:.3f}"

@@ -13,7 +13,9 @@
 
 시나리오
   · 통화: USD(비트스탬프) / KRW — 봉 가격 × k(D), k(D) = 그날 00:00 UTC 원화 시가 ÷ 비트스탬프 00:00 시가
-    (그날 안에서는 일정. 원화 시가: 2017-10-23까지 코빗 00:00 직전 체결가, 2017-10-24부터 업비트 일봉 시가)
+    (그날 안에서는 일정: 봉 시가는 시작한 날, 종가는 마감 시각이 속한 날의 k → 매일 00:00 평가가 = 원화 시가.
+     원화 시가: 2017-10-23까지 코빗 00:00 직전 체결가, 2017-10-24부터 업비트 일봉 시가 — 이음 날 약 +0.7% 한 번 뜀)
+    처음 구현(커밋 64ddc4d)은 00:00 평가가에 전날 k 를 붙인 버그였고, 그 방식은 사후 점검 KRW_start_day_marks 로만 남김
   · 체결 시각: booked(등록대로 00:00 시가) · exec(00:30 15분봉 시가, 학습 모델의 월초 판단은 c(T) 뒤) ·
     lag1 · lag2 (판단을 판단봉 한 칸·두 칸 뒤로, 앞 칸은 현금)
   · 편도 비용: 0.15%(등록) · 0.05%(업비트 원화 수수료)
@@ -195,7 +197,8 @@ def month_cuts(ph, lo, hi):
 def open_at(df15, day_ts, offset=EXEC_OFFSET, max_wait=EXEC_MAX_WAIT):
     """
     각 날짜(00:00 UTC 초)에 대해 day + offset 에 시작하는 15분봉 시가.
-    그 봉이 비었으면 day + max_wait 전 첫 체결 가능한 15분봉 시가, 그래도 없으면 NaN. 반환 (가격, 대체 수)
+    그 봉이 비었으면 day + max_wait 전 첫 체결 가능한 15분봉 시가, 그래도 없으면 NaN.
+    반환 (가격, 실제로 쓴 15분봉 시작 시각 — 없으면 −1)
     """
     ts = df15["ts"].to_numpy(dtype=np.int64)
     op = df15["open"].to_numpy(dtype=float)
@@ -204,22 +207,42 @@ def open_at(df15, day_ts, offset=EXEC_OFFSET, max_wait=EXEC_MAX_WAIT):
     want = np.asarray(day_ts, dtype=np.int64) + offset
     i = np.searchsorted(ts_ok, want)
     px = np.full(len(want), np.nan)
-    n_sub = 0
+    src = np.full(len(want), -1, dtype=np.int64)
     for k, (w, j) in enumerate(zip(want, i)):
         if j < len(ts_ok) and ts_ok[j] < w - offset + max_wait:
             px[k] = op_ok[j]
-            n_sub += int(ts_ok[j] != w)
-    return px, n_sub
+            src[k] = ts_ok[j]
+    return px, src
 
 
 def exec_open(d, df15):
-    """00:00 에 시작하는 phase 0 봉의 시가를 00:30 15분봉 시가로 바꾼 배열 (다른 봉은 그대로). 반환 (배열, 대체 수)"""
+    """
+    00:00 에 시작하는 phase 0 봉의 시가를 00:30 15분봉 시가로 바꾼 배열 (다른 봉은 그대로).
+    반환 (배열, 체결 시각 배열 — 봉마다 실제로 쓴 가격의 시각. 바꾸지 않은 봉은 봉 시작 시각)
+    """
     o = d.o.copy()
+    at = d.ts.copy()
     j = np.nonzero(d.ts % DAY == 0)[0]
-    px, n_sub = open_at(df15, d.ts[j])
+    px, src = open_at(df15, d.ts[j])
     ok = np.isfinite(px)
     o[j[ok]] = px[ok]
-    return o, dict(n_bars=int(len(j)), n_substituted=int(n_sub), n_missing=int((~ok).sum()))
+    at[j[ok]] = src[ok]
+    return o, at
+
+
+def exec_info(d, at, a, b, lo, hi):
+    """구간이 실제로 쓰는 체결 봉(a+1..b) 가운데 00:00 시작 봉의 00:30 체결가 사정 + 00:00 봉이 죽은 날"""
+    j = np.arange(a + 1, b + 1)
+    j = j[d.ts[j] % DAY == 0]
+    sub = at[j] != d.ts[j] + EXEC_OFFSET
+    missing = at[j] == d.ts[j]
+    days = np.arange((lo // DAY) * DAY, hi, DAY)
+    starts = set(int(x) for x in d.ts[(d.ts >= lo) & (d.ts < hi) & (d.ts % DAY == 0)])
+    dead = [pd.Timestamp(int(x), unit="s", tz="UTC").strftime("%Y-%m-%d") for x in days if int(x) not in starts]
+    return dict(n_bars=int(len(j)), n_substituted=int(np.sum(sub & ~missing)), n_missing=int(missing.sum()),
+                substituted=[pd.Timestamp(int(t), unit="s", tz="UTC").strftime("%Y-%m-%d %H:%M")
+                             for t in at[j][sub & ~missing]],
+                dead_midnight_days=dead)
 
 
 def load_krw(path=KRW_FILE):
@@ -237,31 +260,43 @@ def daily_open(df15):
 
 def krw_factor(d, df15, krw):
     """
-    봉마다 원화 배수 k(그 봉이 시작한 날). k(D) = 원화 시가(D) ÷ 비트스탬프 시가(D). 없는 날은 직전 값.
-    반환 (배수 배열, 정보)
+    원화 배수 k(D) = 원화 시가(D) ÷ 비트스탬프 00:00 시가(D) — 00:00 UTC 의 비율, 그날(D) 안에서는 일정.
+    반환 dict:
+      open  — 봉 시가에 쓰는 k (봉이 시작한 날)
+      close — 봉 종가에 쓰는 k (종가 시각이 속한 날: 00:00 에 마감하는 봉은 다음 날 k → 매일 00:00 평가가 = 원화 시가)
+      filled_open / filled_close — 그 k 가 없어 직전 값을 쓴 봉 (원화 값이나 비트스탬프 00:00 시가가 없는 날)
+      start_day_close — 처음 구현의 종가 배수 (봉이 시작한 날의 k, 00:00 평가가에 전날 k) — 사후 점검용
     """
     bs = daily_open(df15)
-    k = (krw["krw_open"] / bs.reindex(krw.index)).rename("k")
-    n_ff = int(k.isna().sum())
-    k = k.ffill()                                   # 원화 자료 시작 전 날짜는 NaN 그대로 (구간 안에서만 쓰는지 확인)
-    days = pd.to_datetime((d.ts // DAY) * DAY, unit="s", utc=True)
-    fac = k.reindex(days).to_numpy(dtype=float)
-    return fac, dict(days_forward_filled=n_ff)
+    raw = (krw["krw_open"] / bs.reindex(krw.index)).rename("k")
+    k = raw.ffill()                                 # 원화 자료 시작 전 날짜는 NaN 그대로 (구간 안에서만 쓰는지 확인)
+
+    def by(t):
+        days = pd.to_datetime((t // DAY) * DAY, unit="s", utc=True)
+        return k.reindex(days).to_numpy(dtype=float), raw.reindex(days).isna().to_numpy()
+
+    fo, mo = by(d.ts)
+    fc, mc = by(d.ts + BAR_SEC)
+    return dict(open=fo, close=fc, filled_open=mo, filled_close=mc, start_day_close=fo)
 
 
-def krw_mark_check(d, fac, krw, lo, hi):
-    """근사 점검: 그날 마지막 봉 종가 × k(D) 와 업비트 일봉 종가의 차이 (업비트 구간만)"""
+def krw_info(d, fac, krw, a, b, lo, hi):
+    """구간이 쓰는 봉(a..b+1)에서 직전 k 로 채운 날 + 00:00 평가가(종가 × k)와 원화 시가의 차이 (근사 오차)"""
+    sl = np.arange(a, min(b + 2, d.T))
+    used = [(d.ts[sl], fac["filled_open"][sl]), (d.ts[sl] + BAR_SEC, fac["filled_close"][sl])]
+    filled = sorted({pd.Timestamp(int((t // DAY) * DAY), unit="s", tz="UTC").strftime("%Y-%m-%d")
+                     for ts_, m in used for t in ts_[m]})
     close = d.ts + BAR_SEC
-    m = (d.ts % DAY == 20 * 3600) & (close > lo) & (close <= hi)      # 20:00 시작 봉 = 그날 마지막 봉
-    j = np.nonzero(m)[0]
-    days = pd.to_datetime((d.ts[j] // DAY) * DAY, unit="s", utc=True)
-    up = krw["upbit_close"].reindex(days).to_numpy(dtype=float)
-    ok = np.isfinite(up)
-    if not ok.any():
-        return dict(n=0)
-    err = d.c[j[ok]] * fac[j[ok]] / up[ok] - 1.0
-    return dict(n=int(ok.sum()), mean_abs_pct=float(np.mean(np.abs(err)) * 100),
-                p99_abs_pct=float(np.percentile(np.abs(err), 99) * 100), max_abs_pct=float(np.max(np.abs(err)) * 100))
+    j = np.nonzero((close % DAY == 0) & (close > lo) & (close <= hi))[0]
+    days = pd.to_datetime(close[j], unit="s", utc=True)
+    ref = krw["krw_open"].reindex(days).to_numpy(dtype=float)
+    ok = np.isfinite(ref)
+    out = dict(days_forward_filled=len(filled), forward_filled=filled)
+    if ok.any():
+        err = d.c[j[ok]] * fac["close"][j[ok]] / ref[ok] - 1.0
+        out["mark_vs_krw_open"] = dict(n=int(ok.sum()), mean_abs_pct=float(np.mean(np.abs(err)) * 100),
+                                       max_abs_pct=float(np.max(np.abs(err)) * 100))
+    return out
 
 
 # ══════════ 한 칸 계산 ══════════
@@ -272,11 +307,11 @@ def run_one(d, a, b, lo, hi, tg, frac, cost, o, c):
     days, eq = daily_marks(d.ts, sim["mark"], a, b, lo=lo, hi=hi)
     pos = sim["pos"][a:b]
     prev = np.concatenate([[0.0], pos[:-1]])
-    g = c[a:b] / np.concatenate([[c[a]], c[a:b - 1]])     # 봉 사이 가격 변동으로 흘러간 비중 (회전율용 근사)
+    g = o[a + 1:b + 1] / o[a:b]                     # 직전 체결 뒤 체결가 변동으로 흘러간 비중 (paper.window_run 과 같음)
     den = prev * g + (1.0 - prev)
     w_pre = np.where(den > 0, prev * g / np.where(den > 0, den, 1.0), 0.0)
     traded = np.abs(pos - w_pre)
-    return dict(days=days, eq=eq, r=eq[1:] / eq[:-1] - 1.0, pos=pos, traded=traded)
+    return dict(days=days, eq=eq, r=eq[1:] / eq[:-1] - 1.0, pos=pos, w_pre=w_pre, traded=traded, a=a, b=b)
 
 
 def metrics(res):
@@ -316,13 +351,15 @@ def evaluate_window(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
     late = {pd.Timestamp(T, unit="s", tz="UTC").strftime("%Y-%m"): int((c - T) // DAY)
             for T, c in cuts.items() if c - T != DAY}
 
-    o_ex, ex_info = exec_open(d, df15)
-    fac, kinfo = krw_factor(d, df15, krw)
-    if not np.all(np.isfinite(fac[a:b + 2])):
+    o_ex, at_ex = exec_open(d, df15)
+    fac = krw_factor(d, df15, krw)
+    fo, fc = fac["open"], fac["close"]
+    if not (np.all(np.isfinite(fo[a:b + 2])) and np.all(np.isfinite(fc[a:b + 2]))):
         raise ValueError("구간 안에 원화 배수가 없는 봉이 있습니다")
-    kinfo["mark_check_vs_upbit_close"] = krw_mark_check(d, fac, krw, lo, hi)
+    ex_info = exec_info(d, at_ex, a, b, lo, hi)
+    kinfo = krw_info(d, fac, krw, a, b, lo, hi)
     px = {("USD", False): (d.o, d.c), ("USD", True): (o_ex, d.c),
-          ("KRW", False): (d.o * fac, d.c * fac), ("KRW", True): (o_ex * fac, d.c * fac)}
+          ("KRW", False): (d.o * fo, d.c * fc), ("KRW", True): (o_ex * fo, d.c * fc)}
 
     def timed(name, tg, timing):
         return apply_timing(d, name, tg, timing, cuts)
@@ -356,6 +393,8 @@ def evaluate_window(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
                     if do_boot and name != "B0":
                         bt = boot(rr[hi_rep]["r"], bh["r"])
                         m.update(p_vs_bh=bt["p"], ci90_vs_bh=list(bt["ci90"]), se_vs_bh=bt["se"])
+                    if frac_of(series, name):                # 비율 회계: 실제 재조정 수 (simulate_weights rebal 과 같음)
+                        m["fractional"] = True
                     cell[name] = m
                 cells[key] = cell
                 if timing == "exec":                 # 규칙에 월초 지연을 넣었다면 (등록 문구의 다른 읽기) — 참고
@@ -370,9 +409,15 @@ def evaluate_window(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
                 rules_exec_with_month_cut_d_sharpe=rules_exec_with_cut, cells=cells)
 
 
+def frac_of(series, name):
+    return bool(series[name][0][1])
+
+
 # ══════════ 사후 점검 (등록 밖 — 결과를 본 뒤 추가, 주 결과를 바꾸지 않음) ══════════
 POSTHOC_CELLS = (("booked", 0.0015), ("exec", 0.0005))
-SUBPERIODS = (("2017-01-01", "2019-01-01"), ("2019-01-01", "2026-09-25"))
+SUBPERIODS = (("2017-2018", "2017-01-01", "2019-01-01", False),
+              ("2019-2026.09", "2019-01-01", "2026-09-25", False),
+              ("excl 2017-12..2018-03", "2017-12-01", "2018-04-01", True))      # True = 그 구간을 뺀 나머지
 
 
 def day_factor(krw_col, d, when):
@@ -384,10 +429,11 @@ def day_factor(krw_col, d, when):
 
 def posthoc(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
     """
-    원화 결과가 근사 방식이나 한 시기에 기대는지 점검:
-      exact_marks — 평가가(종가)에 마감 시각의 날 k를 씀 → 매일 00:00 평가가 = 업비트 시가 (근사 오차 없음)
-      fx_only     — 김치프리미엄 없이 환율만 (k = 원/달러)
-      sub-period  — 2017~2018(프리미엄 거품 포함) / 2019~2026-09 로 나눈 매수·보유 대비 샤프 차이 (등록 원화·USD)
+    원화 결과가 계산 방식이나 한 시기에 기대는지 점검 (등록 밖):
+      KRW                 — 등록 계산 (00:00 평가가 = 그날 k)
+      KRW_start_day_marks — 처음 구현의 평가가 (00:00 평가가에 전날 k — 등록 정의와 다른 버그였던 방식)
+      KRW_fx_only         — 김치프리미엄 없이 환율만 (k = 원/달러)
+      기간 나눔           — 2017~2018 / 2019~2026-09 / 2017-12~2018-03 을 뺀 나머지 (USD·KRW)
     """
     d = W.datas[0]
     a, b = W.rng[0]
@@ -395,16 +441,14 @@ def posthoc(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
     series = build_series(d, a, b, tag, loader)
     cuts = month_cuts(ph, lo, hi)
     o_ex, _ = exec_open(d, df15)
-    bs = daily_open(df15)
-    k = (krw["krw_open"] / bs.reindex(krw.index)).ffill()
+    fac = krw_factor(d, df15, krw)
     fx = krw["usdkrw_0000"].ffill()
-    k_open, k_close = day_factor(k, d, "open"), day_factor(k, d, "close")
-    f_open = day_factor(fx, d, "open")
+    f_open, f_close = day_factor(fx, d, "open"), day_factor(fx, d, "close")
     pricing = {
         "USD": lambda ex: ((o_ex if ex else d.o), d.c),
-        "KRW": lambda ex: ((o_ex if ex else d.o) * k_open, d.c * k_open),
-        "KRW_exact_marks": lambda ex: ((o_ex if ex else d.o) * k_open, d.c * k_close),
-        "KRW_fx_only": lambda ex: ((o_ex if ex else d.o) * f_open, d.c * f_open),
+        "KRW": lambda ex: ((o_ex if ex else d.o) * fac["open"], d.c * fac["close"]),
+        "KRW_start_day_marks": lambda ex: ((o_ex if ex else d.o) * fac["open"], d.c * fac["start_day_close"]),
+        "KRW_fx_only": lambda ex: ((o_ex if ex else d.o) * f_open, d.c * f_close),
     }
     out = {}
     for pname, pf in pricing.items():
@@ -424,14 +468,18 @@ def posthoc(W, ph, df15, krw, tag, loader=load_run, do_boot=True):
                 x = rr[hr]
                 m = dict(sharpe=shs[hr], d_vs_bh=shs[hr] - sb, headline_rep=hr,
                          max_dd=S.max_drawdown(x["r"]), twm=float(np.prod(1.0 + x["r"])))
+                if len(shs) > 1:
+                    m["sharpe_reps"] = shs
                 if do_boot and n != "B0":
                     m["p_vs_bh"] = boot(x["r"], bh["r"])["p"]
                 if pname in ("USD", "KRW"):
                     subs = {}
-                    days = bh["days"][1:]
-                    for s0, s1 in SUBPERIODS:
+                    days = bh["days"][1:]                  # r[i] 는 days[i+1] 에 끝나는 하루
+                    for label, s0, s1, excl in SUBPERIODS:
                         sel = (days > _ts(s0)) & (days <= _ts(s1))
-                        subs[f"{s0[:4]}-{s1[:4]}"] = dict(
+                        if excl:
+                            sel = ~sel
+                        subs[label] = dict(
                             d_vs_bh=S.sharpe(x["r"][sel]) - S.sharpe(bh["r"][sel]),
                             sharpe=S.sharpe(x["r"][sel]), bh_sharpe=S.sharpe(bh["r"][sel]),
                             p_vs_bh=(boot(x["r"][sel], bh["r"][sel])["p"] if do_boot and n != "B0" else None))
@@ -472,7 +520,48 @@ def evaluate(loader=load_run, datas=None, df15=None, krw=None, do_boot=True):
         wins[key] = w
     return dict(registered="success_criteria.md '현실 점검 (2026-09-28 02:10 UTC 등록)'",
                 costs=list(COSTS), timings=list(TIMINGS), currencies=list(CURRENCIES), n_boot=N_BOOT,
-                boot_seed=BOOT_SEED, mean_block=MEAN_BLOCK, c_dec=0.003, windows=wins)
+                boot_seed=BOOT_SEED, mean_block=MEAN_BLOCK, c_dec=0.003,
+                multiplicity=multiplicity(wins) if do_boot else None, notes=NOTES, windows=wins)
+
+
+NOTES = {
+    "p_values": "칸마다 등록대로 보정 없이 적은 단측 p (매수·보유 대비). 같은 판단의 결정론적 변환이라 칸끼리 독립이 아님 — "
+                "multiplicity 의 BH·Holm 은 참고용",
+    "B80": "B80(늘 80%, 2%p 띠)은 매수·보유와 일별 상관이 약 0.9999라 부트스트랩 표준오차가 약 0.004 — "
+           "±0.01 차이도 p≈0/1 로 나오므로 p값을 근거로 읽지 않음",
+    "krw_marks": "원화 평가가는 매일 00:00 에 그날 k (= 원화 시가). 처음 구현(커밋 64ddc4d)은 00:00 평가가에 전날 k 를 붙인 "
+                 "버그였음 — 그 값은 posthoc 의 KRW_start_day_marks",
+    "rules_exec": "규칙은 학습이 없어 실행 가능 시각에 월초 c(T) 지연을 넣지 않음. 넣었을 때의 차이는 "
+                  "rules_exec_with_month_cut_d_sharpe",
+}
+
+
+def multiplicity(wins):
+    """등록 칸 p값 전체에 대한 참고용 BH q 최솟값·Holm 최솟값, 칸 안 Holm (보정은 등록 밖)"""
+    ps, where = [], []
+    for wk, w in wins.items():
+        for key, cell in w["cells"].items():
+            for n in ORDER:
+                p = cell[n].get("p_vs_bh")
+                if p is not None:
+                    ps.append(float(p))
+                    where.append((wk, key, n))
+    ps = np.array(ps)
+    m = len(ps)
+    order = np.argsort(ps)
+    bh = np.empty(m)
+    run = 1.0
+    for rank in range(m - 1, -1, -1):
+        i = order[rank]
+        run = min(run, ps[i] * m / (rank + 1))
+        bh[i] = run
+    holm = np.minimum(1.0, (m - np.arange(m)) * ps[order])
+    holm = np.maximum.accumulate(holm)
+    best = order[:5]
+    return dict(n=int(m), n_below_05=int((ps < 0.05).sum()), n_below_01=int((ps < 0.01).sum()),
+                min_bh_q=float(bh.min()), min_holm=float(holm[0]),
+                smallest=[dict(window=where[i][0], cell=where[i][1], name=where[i][2], p=float(ps[i]), bh_q=float(bh[i]))
+                          for i in best])
 
 
 # ══════════ 출력 ══════════
@@ -496,37 +585,56 @@ NAME_KO = dict(RULE_KO, R6="R6", R3="R3", W2="W2", C1="C1")
 
 def report(out):
     pct = lambda x: "—" if x is None else f"{x * 100:.1f}%"
+    short = lambda n: NAME_KO[n].split(" ")[0]
     lines = [f"현실 점검 (새 시험 아님) — 부트스트랩 {out['n_boot']}번·시드 {out['boot_seed']}·평균 블록 {out['mean_block']}"]
+    for k, v in out.get("notes", {}).items():
+        lines.append(f"  주의[{k}]: {v}")
+    mu = out.get("multiplicity")
+    if mu:
+        lines.append(f"  p값 {mu['n']}개 가운데 0.05 미만 {mu['n_below_05']}, 0.01 미만 {mu['n_below_01']} — "
+                     f"참고용 보정: BH q 최소 {mu['min_bh_q']:.3f}, Holm 최소 {mu['min_holm']:.3f}")
     for wk, w in out["windows"].items():
         rc = w["ref_check"]
         bad = [k for k, v in rc.items() if not v["matches"]]
         lines.append(f"\n[{WINDOW_KO[wk]}] 등록 계산 재현: " + ("모두 일치" if not bad else "다름! " + ", ".join(bad)))
-        lines.append(f"  원화: 앞 날짜로 채운 날 {w['krw']['days_forward_filled']}, "
-                     f"평가가 근사 오차(업비트 종가 대비) {w['krw']['mark_check_vs_upbit_close']}")
-        lines.append(f"  00:30 체결가: {w['exec_price']}; c(T)≠T+1일 달: {w['month_cut_not_T_plus_1'] or '없음'}")
+        kr, ex = w["krw"], w["exec_price"]
+        lines.append(f"  원화: 직전 k로 채운 날 {kr['days_forward_filled']} {kr['forward_filled']}, "
+                     f"00:00 평가가 대 원화 시가 {kr.get('mark_vs_krw_open')}")
+        lines.append(f"  00:30 체결가: 체결 봉 {ex['n_bars']}, 다른 15분봉으로 대체 {ex['n_substituted']} {ex['substituted']}, "
+                     f"없음 {ex['n_missing']}, 00:00 봉이 죽은 날 {ex['dead_midnight_days']}; "
+                     f"c(T)≠T+1일 달: {w['month_cut_not_T_plus_1'] or '없음'}")
+        alt = w.get("rules_exec_with_month_cut_d_sharpe") or {}
+        mx = max((abs(v) for c in alt.values() for v in c.values()), default=0.0)
+        lines.append(f"  규칙에 월초 c(T) 지연을 넣으면 샤프 변화 최대 {mx:.3f} (학습이 없어 넣지 않음)")
         for key, cell in w["cells"].items():
             cur, timing, cost = key.split("|")
             lines.append(f"\n  {cur} · {TIMING_KO[timing]} · 편도 {float(cost) * 100:.2f}%")
-            lines.append(f"    {'이름':<16}{'샤프':>6}{'보유 대비':>9}{'p':>6}{'MACD 대비':>10}{'CAGR':>8}{'최대낙폭':>9}"
-                         f"{'배수':>8}{'노출':>6}")
+            lines.append(f"    {'이름':<16}{'샤프':>6}{'보유 대비':>9}{'p':>7}{'MACD 대비':>10}{'CAGR':>8}{'최대낙폭':>9}"
+                         f"{'배수':>8}{'노출':>8}{'회전/년':>8}")
             for name in ORDER:
                 m = cell[name]
                 p = m.get("p_vs_bh")
                 lines.append(f"    {NAME_KO[name]:<16}{m['sharpe']:>6.2f}{m['d_vs_bh']:>+9.2f}"
-                             f"{'' if p is None else f'{p:.2f}':>6}{m['d_vs_b5']:>+10.2f}{pct(m['cagr']):>8}"
-                             f"{pct(m['max_dd']):>9}{m['twm']:>8.1f}{pct(m['exposure']):>6}")
+                             f"{'' if p is None else f'{p:.3f}':>7}{m['d_vs_b5']:>+10.2f}{pct(m['cagr']):>8}"
+                             f"{pct(m['max_dd']):>9}{m['twm']:>8.1f}{pct(m['exposure']):>8}{m['turnover']:>8.1f}")
+            r6 = cell["R6"]
+            sb = cell["B0"]["sharpe"]
+            if r6.get("sharpe_reps"):
+                rr = r6["sharpe_reps"]
+                lines.append(f"    R6 반복 0~{len(rr) - 1} 보유 대비 범위 {min(rr) - sb:+.2f} ~ {max(rr) - sb:+.2f} "
+                             f"(대표 반복 {r6['headline_rep']})")
         ph = w.get("posthoc")
         if ph:
-            lines.append("\n  [사후 점검 — 등록 밖, 결과를 본 뒤 추가] 원화 근사·시기 의존성")
+            lines.append("\n  [사후 점검 — 등록 밖, 결과를 본 뒤 추가] 원화 계산 방식·환율만·기간 의존성")
             for key, cell in ph.items():
                 lines.append(f"    {key}: " + ", ".join(
-                    f"{NAME_KO[n].split(' ')[0]} {cell[n]['d_vs_bh']:+.2f}"
-                    + (f"(p {cell[n]['p_vs_bh']:.2f})" if cell[n].get("p_vs_bh") is not None else "")
+                    f"{short(n)} {cell[n]['d_vs_bh']:+.2f}"
+                    + (f"(p {cell[n]['p_vs_bh']:.3f})" if cell[n].get("p_vs_bh") is not None else "")
                     for n in ORDER if n != "B0"))
                 if "subperiods" in cell["R6"]:
                     for sp in cell["R6"]["subperiods"]:
                         lines.append(f"      {sp}: " + ", ".join(
-                            f"{NAME_KO[n].split(' ')[0]} {cell[n]['subperiods'][sp]['d_vs_bh']:+.2f}" for n in ORDER
+                            f"{short(n)} {cell[n]['subperiods'][sp]['d_vs_bh']:+.2f}" for n in ORDER
                             if n != "B0") + f" (보유 샤프 {cell['R6']['subperiods'][sp]['bh_sharpe']:.2f})")
     return "\n".join(lines)
 
