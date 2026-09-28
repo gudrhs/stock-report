@@ -5,7 +5,7 @@
  "ledger_through": "2026-09-25",
  "note": "보조 기록 — 판정에 쓰지 않음 (success_criteria.md '모의매매 보조 기록 보완'). booked = 등록 계산과 같은 00:00 체결, exec = 00:20 판단 뒤 00:30 체결 (학습 모델의 월초 판단은 c(T) + 20분 뒤)",
  "code": {
-  "commit": "64ddc4d42835d585775a1f5aff08bc332c47a65c",
+  "commit": "b73f18fd2d5a95a93acedbfdcc95aeb0b5afd7df",
   "files": {
    "research/paper_bench.py": "397f97a1b613",
    "research/recost.py": "53454fd8aa3f",
