@@ -81,6 +81,21 @@ jobs:
           done
           exit $rc
 
+      # 보조 기록 (success_criteria.md '모의매매 보조 기록 보완'): 기준 규칙 장부·00:30 실행 가능 장부.
+      # 고정 코드가 아닌 이 체크아웃(HEAD) 코드로 돌고, data/btc/paper/benchmarks/ 에만 씁니다 (판정에 안 씀).
+      # 고정 step 이 받은 봉까지만 읽고(status.json 의 now) 새로 받지 않으며, 실패해도 모의매매 결과 커밋은 막지 않습니다.
+      - name: "보조 기록 (기준 규칙·실행 가능 장부, 판정에 안 씀)"
+        if: always() && steps.reg.outputs.commits != ''
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          pins=$(python3 -c 'import json, os
+          v = json.load(open(os.environ["PAPER_DIR"] + "/registry.json", encoding="utf-8"))["variants"]
+          e = max(v.values(), key=lambda e: e.get("registered_at") or "")
+          print(" ".join(sorted(k + "==" + x for k, x in (e.get("pins") or {}).items())))')
+          python -m pip install --quiet $pins
+          python -u -m btc.research.paper_bench --dir "$PAPER_DIR" --base "$BASE_15M"
+
       - name: 결과 커밋
         if: always() && steps.reg.outputs.commits != ''
         run: |

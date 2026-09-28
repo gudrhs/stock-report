@@ -1,0 +1,481 @@
+{
+ "now": "2026-09-25T23:52:08Z",
+ "data_end": "2026-09-25T00:00:00Z",
+ "start": "2026-09-25",
+ "ledger_through": "2026-09-25",
+ "note": "보조 기록 — 판정에 쓰지 않음 (success_criteria.md '모의매매 보조 기록 보완'). booked = 등록 계산과 같은 00:00 체결, exec = 00:20 판단 뒤 00:30 체결 (학습 모델의 월초 판단은 c(T) + 20분 뒤)",
+ "exec_price": {
+  "n_bars": 4992,
+  "n_substituted": 10,
+  "n_missing": 0
+ },
+ "rules": {
+  "B0": {
+   "label": "매수·보유",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  },
+  "B2": {
+   "label": "200일선",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  },
+  "B5": {
+   "label": "일봉 MACD",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  },
+  "B6": {
+   "label": "1개월 모멘텀",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  },
+  "B80": {
+   "label": "늘 80%",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  },
+  "SMA120": {
+   "label": "SMA120 (사후 선택)",
+   "booked": {
+    "days": 0
+   },
+   "exec": {
+    "days": 0
+   }
+  }
+ },
+ "variants": {
+  "C1_r6_committee10": {
+   "start": "2026-09-27",
+   "reps": [
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    }
+   ],
+   "ledger_through": null,
+   "committee": {
+    "exec": {
+     "days": 0
+    }
+   },
+   "rules_same_window": {
+    "B0": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B2": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B5": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B6": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B80": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "SMA120": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    }
+   },
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   }
+  },
+  "R3_daily_trend8_log5": {
+   "start": "2026-09-25",
+   "reps": [
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    }
+   ],
+   "ledger_through": null,
+   "rules_same_window": {
+    "B0": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B2": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B5": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B6": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B80": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "SMA120": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    }
+   },
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   }
+  },
+  "R6_daily_trend8_uniform": {
+   "start": "2026-09-25",
+   "reps": [
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    }
+   ],
+   "ledger_through": null,
+   "rules_same_window": {
+    "B0": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B2": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B5": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B6": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B80": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "SMA120": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    }
+   },
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   }
+  },
+  "W2_dp_band": {
+   "start": "2026-09-25",
+   "reps": [
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    },
+    {
+     "ledger_through": null,
+     "exec": {
+      "days": 0
+     }
+    }
+   ],
+   "ledger_through": null,
+   "rules_same_window": {
+    "B0": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B2": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B5": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B6": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "B80": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    },
+    "SMA120": {
+     "booked": {
+      "days": 0
+     },
+     "exec": {
+      "days": 0
+     }
+    }
+   },
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   }
+  }
+ }
+}
