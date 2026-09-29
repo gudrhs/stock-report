@@ -16,29 +16,18 @@
 "entry": 53600,
 "entry_date": "2026-09-10",
 "peak": 64800,
-"days": 10,
+"days": 11,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
-},
-"375500": {
-"name": "DL이앤씨",
-"market": "코스피200",
-"entry": 88100,
-"entry_date": "2026-09-16",
-"peak": 88100,
-"days": 6,
-"score": 45.9,
-"grade": "홈런",
-"signal_date": "2026-09-15"
 },
 "001820": {
 "name": "삼화콘덴서",
 "market": "코스피200",
 "entry": 145200,
 "entry_date": "2026-09-17",
-"peak": 147600,
-"days": 5,
+"peak": 149700,
+"days": 6,
 "score": 64.2,
 "grade": "홈런",
 "signal_date": "2026-09-16"
@@ -49,7 +38,7 @@
 "entry": 324000,
 "entry_date": "2026-09-21",
 "peak": 326000,
-"days": 3,
+"days": 4,
 "score": 78.3,
 "grade": "홈런",
 "signal_date": "2026-09-18"
@@ -60,19 +49,8 @@
 "entry": 9050,
 "entry_date": "2026-09-21",
 "peak": 10630,
-"days": 3,
+"days": 4,
 "score": 70.0,
-"grade": "홈런",
-"signal_date": "2026-09-18"
-},
-"327260": {
-"name": "RF머트리얼즈",
-"market": "코스닥150",
-"entry": 50500,
-"entry_date": "2026-09-21",
-"peak": 50500,
-"days": 3,
-"score": 55.2,
 "grade": "홈런",
 "signal_date": "2026-09-18"
 },
@@ -82,7 +60,7 @@
 "entry": 25200,
 "entry_date": "2026-09-22",
 "peak": 25250,
-"days": 2,
+"days": 3,
 "score": 56.5,
 "grade": "홈런",
 "signal_date": "2026-09-21"
@@ -93,9 +71,31 @@
 "entry": 71500,
 "entry_date": "2026-09-23",
 "peak": 73600,
-"days": 1,
+"days": 2,
 "score": 32.4,
 "grade": "홈런",
 "signal_date": "2026-09-22"
+},
+"030530": {
+"name": "원익홀딩스",
+"market": "코스닥150",
+"entry": 28000,
+"entry_date": "2026-09-29",
+"peak": 28000,
+"days": 1,
+"score": 61.1,
+"grade": "홈런",
+"signal_date": "2026-09-23"
+},
+"033640": {
+"name": "네패스",
+"market": "코스닥150",
+"entry": 26750,
+"entry_date": "2026-09-29",
+"peak": 27450,
+"days": 1,
+"score": 49.8,
+"grade": "홈런",
+"signal_date": "2026-09-23"
 }
 }
