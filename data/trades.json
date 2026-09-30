@@ -5230,5 +5230,37 @@
 "reason": "B 55.4 < 60 이탈",
 "severity": "이탈",
 "cum": 19.0
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "005930",
+"name": "삼성전자",
+"market": "코스피200",
+"entry_date": "2026-09-29",
+"exit_date": "2026-09-30",
+"entry": 266000,
+"exit": 274500,
+"pnl": 3.2,
+"days": 1,
+"reason": "청선 5.4 — 5선 이탈",
+"severity": "청산",
+"cum": 0.63
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "204270",
+"name": "제이앤티씨",
+"market": "코스닥150",
+"entry_date": "2026-09-22",
+"exit_date": "2026-09-30",
+"entry": 25200,
+"exit": 23200,
+"pnl": -7.94,
+"days": 3,
+"reason": "B 59.5 < 60 이탈",
+"severity": "이탈",
+"cum": 18.06
 }
 ]

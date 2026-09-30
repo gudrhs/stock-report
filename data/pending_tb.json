@@ -1,30 +1,4 @@
 {
-"buy": [
-{
-"code": "252990",
-"name": "샘씨엔에스",
-"market": "코스닥150",
-"score": 54.8,
-"rank": 3,
-"grade": "홈런",
-"signal_date": "2026-09-29"
-},
-{
-"code": "077360",
-"name": "덕산하이메탈",
-"market": "코스닥150",
-"score": 48.5,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-09-29"
-}
-],
-"sell": [
-{
-"code": "204270",
-"reason": "B 59.5 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-09-29"
-}
-]
+"buy": [],
+"sell": []
 }
