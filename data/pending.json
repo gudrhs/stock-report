@@ -1,39 +1,23 @@
 {
 "buy": [
 {
-"code": "119850",
-"name": "지엔씨에너지",
+"code": "183300",
+"name": "코미코",
 "market": "코스닥150",
-"score": 75.4,
+"score": 85.2,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-10-01"
+},
+{
+"code": "319660",
+"name": "피에스케이",
+"market": "코스닥150",
+"score": 75.8,
 "rank": 2,
 "grade": "",
-"signal_date": "2026-09-30"
-},
-{
-"code": "092870",
-"name": "엑시콘",
-"market": "코스닥150",
-"score": 74.6,
-"rank": 3,
-"grade": "",
-"signal_date": "2026-09-30"
-},
-{
-"code": "023160",
-"name": "태광",
-"market": "코스닥150",
-"score": 63.3,
-"rank": 4,
-"grade": "",
-"signal_date": "2026-09-30"
+"signal_date": "2026-10-01"
 }
 ],
-"sell": [
-{
-"code": "316140",
-"reason": "적선 5일 기울기 -3.8 — 상승탄력 꺾임",
-"severity": "청산",
-"signal_date": "2026-09-30"
-}
-]
+"sell": []
 }

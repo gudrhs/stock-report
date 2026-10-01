@@ -15,8 +15,8 @@
 "market": "코스닥150",
 "entry": 53600,
 "entry_date": "2026-09-10",
-"peak": 64800,
-"days": 12,
+"peak": 67600,
+"days": 13,
 "score": 75.0,
 "grade": "홈런",
 "signal_date": "2026-09-07"
@@ -27,7 +27,7 @@
 "entry": 145200,
 "entry_date": "2026-09-17",
 "peak": 155600,
-"days": 7,
+"days": 8,
 "score": 64.2,
 "grade": "홈런",
 "signal_date": "2026-09-16"
@@ -38,7 +38,7 @@
 "entry": 324000,
 "entry_date": "2026-09-21",
 "peak": 326000,
-"days": 5,
+"days": 6,
 "score": 78.3,
 "grade": "홈런",
 "signal_date": "2026-09-18"
@@ -48,8 +48,8 @@
 "market": "코스닥150",
 "entry": 9050,
 "entry_date": "2026-09-21",
-"peak": 10680,
-"days": 5,
+"peak": 10990,
+"days": 6,
 "score": 70.0,
 "grade": "홈런",
 "signal_date": "2026-09-18"
@@ -60,7 +60,7 @@
 "entry": 71500,
 "entry_date": "2026-09-23",
 "peak": 77700,
-"days": 3,
+"days": 4,
 "score": 32.4,
 "grade": "홈런",
 "signal_date": "2026-09-22"
@@ -71,7 +71,7 @@
 "entry": 28000,
 "entry_date": "2026-09-29",
 "peak": 28000,
-"days": 2,
+"days": 3,
 "score": 61.1,
 "grade": "홈런",
 "signal_date": "2026-09-23"
@@ -81,8 +81,8 @@
 "market": "코스닥150",
 "entry": 26750,
 "entry_date": "2026-09-29",
-"peak": 28700,
-"days": 2,
+"peak": 30150,
+"days": 3,
 "score": 49.8,
 "grade": "홈런",
 "signal_date": "2026-09-23"
@@ -92,8 +92,8 @@
 "market": "코스닥150",
 "entry": 20000,
 "entry_date": "2026-09-30",
-"peak": 20000,
-"days": 1,
+"peak": 20300,
+"days": 2,
 "score": 54.8,
 "grade": "홈런",
 "signal_date": "2026-09-29"
@@ -104,7 +104,7 @@
 "entry": 14240,
 "entry_date": "2026-09-30",
 "peak": 14240,
-"days": 1,
+"days": 2,
 "score": 48.5,
 "grade": "홈런",
 "signal_date": "2026-09-29"

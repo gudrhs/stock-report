@@ -1,22 +1,11 @@
 {
-"316140": {
-"name": "우리금융지주",
-"market": "코스피200",
-"entry": 35050,
-"entry_date": "2026-09-14",
-"peak": 36800,
-"days": 10,
-"score": 51.0,
-"grade": "",
-"signal_date": "2026-09-11"
-},
 "053800": {
 "name": "안랩",
 "market": "코스닥150",
 "entry": 71500,
 "entry_date": "2026-09-23",
 "peak": 77700,
-"days": 3,
+"days": 4,
 "score": 78.4,
 "grade": "",
 "signal_date": "2026-09-22"
@@ -26,8 +15,8 @@
 "market": "코스피200",
 "entry": 82600,
 "entry_date": "2026-09-23",
-"peak": 89500,
-"days": 3,
+"peak": 90200,
+"days": 4,
 "score": 73.9,
 "grade": "",
 "signal_date": "2026-09-22"
@@ -38,7 +27,7 @@
 "entry": 81500,
 "entry_date": "2026-09-29",
 "peak": 95500,
-"days": 2,
+"days": 3,
 "score": 87.1,
 "grade": "",
 "signal_date": "2026-09-23"
@@ -48,10 +37,43 @@
 "market": "코스닥150",
 "entry": 153900,
 "entry_date": "2026-09-29",
-"peak": 168200,
-"days": 2,
+"peak": 171100,
+"days": 3,
 "score": 67.4,
 "grade": "",
 "signal_date": "2026-09-23"
+},
+"119850": {
+"name": "지엔씨에너지",
+"market": "코스닥150",
+"entry": 55700,
+"entry_date": "2026-10-01",
+"peak": 57000,
+"days": 1,
+"score": 75.4,
+"grade": "",
+"signal_date": "2026-09-30"
+},
+"092870": {
+"name": "엑시콘",
+"market": "코스닥150",
+"entry": 48700,
+"entry_date": "2026-10-01",
+"peak": 51800,
+"days": 1,
+"score": 74.6,
+"grade": "",
+"signal_date": "2026-09-30"
+},
+"023160": {
+"name": "태광",
+"market": "코스닥150",
+"entry": 28600,
+"entry_date": "2026-10-01",
+"peak": 28600,
+"days": 1,
+"score": 63.3,
+"grade": "",
+"signal_date": "2026-09-30"
 }
 }
