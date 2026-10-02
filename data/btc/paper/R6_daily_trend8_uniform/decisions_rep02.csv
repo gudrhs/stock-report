@@ -1,0 +1,2 @@
+close_utc,ts_close,model_month,u0,u1,act_idx,target,forced_hold,reason,decided_at,lag_h
+2026-09-25T00:00:00Z,1790294400,2026-09-01,1.5233047008514404,2.168119192123413,1,1.0,0,,2026-09-25T00:20:00Z,0.33

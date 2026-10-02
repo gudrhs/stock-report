@@ -1,0 +1,15 @@
+# BTC 강화학습 — 다시 만들 수 있는 중간 산출물·개인 모의매매 상태는 올리지 않습니다
+data/btc/cache/
+data/btc/runs/**/*.npz
+data/btc/runs/**/*.tmp.npz
+data/btc/live/
+__pycache__/
+*.pyc
+data/btc/research_runs/**/*.npz
+data/btc/research_runs/**/*.tmp.npz
+btc/research/out/**/*.npz
+btc/research/out/**/*.txt
+# BTC 3단계 모의매매 — 달별 모델 보관본(감사용, 재현 가능)·쓰다 만 파일은 올리지 않음 (state/repNN.pkl 은 올림)
+data/btc/paper/**/models/
+data/btc/paper/**/*.tmp
+data/btc/paper/**/*.tmp.*
