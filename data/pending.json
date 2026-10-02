@@ -1,23 +1,30 @@
 {
 "buy": [
 {
-"code": "183300",
-"name": "코미코",
+"code": "036930",
+"name": "주성엔지니어링",
 "market": "코스닥150",
-"score": 85.2,
-"rank": 1,
-"grade": "",
-"signal_date": "2026-10-01"
-},
-{
-"code": "319660",
-"name": "피에스케이",
-"market": "코스닥150",
-"score": 75.8,
+"score": 83.9,
 "rank": 2,
 "grade": "",
-"signal_date": "2026-10-01"
+"signal_date": "2026-10-02"
+},
+{
+"code": "014680",
+"name": "한솔케미칼",
+"market": "코스피200",
+"score": 81.9,
+"rank": 3,
+"grade": "",
+"signal_date": "2026-10-02"
 }
 ],
-"sell": []
+"sell": [
+{
+"code": "119850",
+"reason": "청선 5.2 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-10-02"
+}
+]
 }
