@@ -1,0 +1,90 @@
+{
+ "now": "2026-09-25T00:20:00Z",
+ "data_end": "2026-09-25T00:00:00Z",
+ "variants": {
+  "R6_daily_trend8_uniform": {
+   "start": "2026-09-25",
+   "reps": 5,
+   "cfg_hash": "ecb73e723384",
+   "code_hash": "711a992210ed",
+   "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+   "registered_at": "2026-09-25T12:41:47Z",
+   "retroactive_decisions": 1,
+   "cash_by_rule": [
+    {},
+    {},
+    {},
+    {},
+    {}
+   ],
+   "since_start": null,
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   },
+   "final_checkpoint": "2027-09-25",
+   "verdict": "pending",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다."
+  },
+  "R3_daily_trend8_log5": {
+   "start": "2026-09-25",
+   "reps": 5,
+   "cfg_hash": "e9e1c7811069",
+   "code_hash": "711a992210ed",
+   "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+   "registered_at": "2026-09-25T12:41:48Z",
+   "retroactive_decisions": 1,
+   "cash_by_rule": [
+    {},
+    {},
+    {},
+    {},
+    {}
+   ],
+   "since_start": null,
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   },
+   "final_checkpoint": "2027-09-25",
+   "verdict": "pending",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다."
+  },
+  "W2_dp_band": {
+   "start": "2026-09-25",
+   "reps": 5,
+   "cfg_hash": "8783efdf5151",
+   "code_hash": "711a992210ed",
+   "commit": "768f6a15c1024e3caed7207894fdd4557e29b719",
+   "registered_at": "2026-09-25T12:41:48Z",
+   "retroactive_decisions": 1,
+   "cash_by_rule": [
+    {},
+    {},
+    {},
+    {},
+    {}
+   ],
+   "since_start": null,
+   "checkpoints": {
+    "2027-03-25": {
+     "status": "not_reached"
+    },
+    "2027-09-25": {
+     "status": "not_reached"
+    }
+   },
+   "final_checkpoint": "2027-09-25",
+   "verdict": "pending",
+   "verdict_rule": "사전 등록 판정 (success_criteria.md 11:06 UTC 추가 조항): 등록 시작일 00:00 UTC부터 마지막 점검일 00:00 UTC 직전에 마감한 판단봉까지, 하루 한 번(00:00 UTC 마감 봉) 판단·다음 4시간봉 시가 체결·편도 0.15%로 계산한 일별 수익에서, 반복들 가운데 ΔSharpe(매수·보유 대비)가 작은 쪽 중앙값인 반복을 헤드라인으로 삼아 헤드라인 샤프 > 매수·보유 샤프 이고 헤드라인 최대낙폭이 매수·보유보다 얕으면 'pass'(앞으로도 유지됨), 아니면 'fail'. 마지막 점검일 전에는 'pending'. 중간 점검(2027-03-25)은 기록만 하고 판정하지 않음. 데이터가 끊기거나 모델을 학습할 수 없어 판단봉 종가 + 2일 안에 판단하지 못한 봉은 현금(목표 0)으로 두고 이유를 기록함. 1년치라 통계적 확증이 아니라 방향성 확인입니다."
+  }
+ }
+}
