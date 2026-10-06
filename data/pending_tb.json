@@ -1,13 +1,22 @@
 {
 "buy": [
 {
-"code": "425420",
-"name": "티에프이",
+"code": "036540",
+"name": "SFA반도체",
 "market": "코스닥150",
-"score": 80.4,
+"score": 86.7,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-10-06"
+},
+{
+"code": "092870",
+"name": "엑시콘",
+"market": "코스닥150",
+"score": 84.4,
 "rank": 2,
 "grade": "홈런",
-"signal_date": "2026-10-02"
+"signal_date": "2026-10-06"
 }
 ],
 "sell": []

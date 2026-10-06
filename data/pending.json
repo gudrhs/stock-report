@@ -1,30 +1,23 @@
 {
 "buy": [
 {
-"code": "036930",
-"name": "주성엔지니어링",
+"code": "253590",
+"name": "네오셈",
 "market": "코스닥150",
-"score": 83.9,
-"rank": 2,
+"score": 88.1,
+"rank": 1,
 "grade": "",
-"signal_date": "2026-10-02"
+"signal_date": "2026-10-06"
 },
 {
-"code": "014680",
-"name": "한솔케미칼",
-"market": "코스피200",
-"score": 81.9,
-"rank": 3,
+"code": "053800",
+"name": "안랩",
+"market": "코스닥150",
+"score": 88.0,
+"rank": 2,
 "grade": "",
-"signal_date": "2026-10-02"
+"signal_date": "2026-10-06"
 }
 ],
-"sell": [
-{
-"code": "119850",
-"reason": "청선 5.2 — 5선 이탈",
-"severity": "청산",
-"signal_date": "2026-10-02"
-}
-]
+"sell": []
 }
