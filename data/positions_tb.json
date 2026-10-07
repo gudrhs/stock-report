@@ -16,7 +16,7 @@
 "entry": 145200,
 "entry_date": "2026-09-17",
 "peak": 161200,
-"days": 10,
+"days": 11,
 "score": 64.2,
 "grade": "홈런",
 "signal_date": "2026-09-16"
@@ -26,8 +26,8 @@
 "market": "코스피200",
 "entry": 324000,
 "entry_date": "2026-09-21",
-"peak": 327000,
-"days": 8,
+"peak": 342500,
+"days": 9,
 "score": 78.3,
 "grade": "홈런",
 "signal_date": "2026-09-18"
@@ -38,7 +38,7 @@
 "entry": 28000,
 "entry_date": "2026-09-29",
 "peak": 31150,
-"days": 5,
+"days": 6,
 "score": 61.1,
 "grade": "홈런",
 "signal_date": "2026-09-23"
@@ -49,7 +49,7 @@
 "entry": 26750,
 "entry_date": "2026-09-29",
 "peak": 33550,
-"days": 5,
+"days": 6,
 "score": 49.8,
 "grade": "홈런",
 "signal_date": "2026-09-23"
@@ -60,7 +60,7 @@
 "entry": 20000,
 "entry_date": "2026-09-30",
 "peak": 20300,
-"days": 4,
+"days": 5,
 "score": 54.8,
 "grade": "홈런",
 "signal_date": "2026-09-29"
@@ -82,9 +82,31 @@
 "entry": 71700,
 "entry_date": "2026-10-06",
 "peak": 71700,
-"days": 1,
+"days": 2,
 "score": 80.4,
 "grade": "홈런",
 "signal_date": "2026-10-02"
+},
+"036540": {
+"name": "SFA반도체",
+"market": "코스닥150",
+"entry": 11620,
+"entry_date": "2026-10-07",
+"peak": 11620,
+"days": 1,
+"score": 86.7,
+"grade": "홈런",
+"signal_date": "2026-10-06"
+},
+"092870": {
+"name": "엑시콘",
+"market": "코스닥150",
+"entry": 53900,
+"entry_date": "2026-10-07",
+"peak": 53900,
+"days": 1,
+"score": 84.4,
+"grade": "홈런",
+"signal_date": "2026-10-06"
 }
 }

@@ -1,23 +1,45 @@
 {
 "buy": [
 {
-"code": "253590",
-"name": "네오셈",
-"market": "코스닥150",
-"score": 88.1,
+"code": "066570",
+"name": "LG전자",
+"market": "코스피200",
+"score": 77.2,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-10-06"
+"signal_date": "2026-10-07"
+},
+{
+"code": "160190",
+"name": "하이젠알앤엠",
+"market": "코스닥150",
+"score": 69.3,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-10-07"
+},
+{
+"code": "033100",
+"name": "제룡전기",
+"market": "코스닥150",
+"score": 66.9,
+"rank": 3,
+"grade": "",
+"signal_date": "2026-10-07"
+}
+],
+"sell": [
+{
+"code": "023160",
+"reason": "청선 5.5 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-10-07"
 },
 {
 "code": "053800",
-"name": "안랩",
-"market": "코스닥150",
-"score": 88.0,
-"rank": 2,
-"grade": "",
-"signal_date": "2026-10-06"
+"reason": "장대음봉 -6.8%",
+"severity": "청산",
+"signal_date": "2026-10-07"
 }
-],
-"sell": []
+]
 }
