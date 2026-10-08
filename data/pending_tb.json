@@ -1,4 +1,30 @@
 {
-"buy": [],
-"sell": []
+"buy": [
+{
+"code": "281820",
+"name": "케이씨텍",
+"market": "코스피200",
+"score": 77.1,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-10-08"
+},
+{
+"code": "160190",
+"name": "하이젠알앤엠",
+"market": "코스닥150",
+"score": 72.4,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-10-08"
+}
+],
+"sell": [
+{
+"code": "000500",
+"reason": "B 59.9 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-10-08"
+}
+]
 }

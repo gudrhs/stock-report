@@ -5,7 +5,7 @@
 "entry": 81500,
 "entry_date": "2026-09-29",
 "peak": 96900,
-"days": 6,
+"days": 7,
 "score": 87.1,
 "grade": "",
 "signal_date": "2026-09-23"
@@ -16,7 +16,7 @@
 "entry": 153900,
 "entry_date": "2026-09-29",
 "peak": 185300,
-"days": 6,
+"days": 7,
 "score": 67.4,
 "grade": "",
 "signal_date": "2026-09-23"
@@ -27,32 +27,10 @@
 "entry": 48700,
 "entry_date": "2026-10-01",
 "peak": 53700,
-"days": 4,
+"days": 5,
 "score": 74.6,
 "grade": "",
 "signal_date": "2026-09-30"
-},
-"023160": {
-"name": "태광",
-"market": "코스닥150",
-"entry": 28600,
-"entry_date": "2026-10-01",
-"peak": 28600,
-"days": 4,
-"score": 63.3,
-"grade": "",
-"signal_date": "2026-09-30"
-},
-"183300": {
-"name": "코미코",
-"market": "코스닥150",
-"entry": 35650,
-"entry_date": "2026-10-02",
-"peak": 35650,
-"days": 3,
-"score": 85.2,
-"grade": "",
-"signal_date": "2026-10-01"
 },
 "036930": {
 "name": "주성엔지니어링",
@@ -60,7 +38,7 @@
 "entry": 245000,
 "entry_date": "2026-10-06",
 "peak": 275500,
-"days": 2,
+"days": 3,
 "score": 83.9,
 "grade": "",
 "signal_date": "2026-10-02"
@@ -71,7 +49,7 @@
 "entry": 276000,
 "entry_date": "2026-10-06",
 "peak": 279500,
-"days": 2,
+"days": 3,
 "score": 81.9,
 "grade": "",
 "signal_date": "2026-10-02"
@@ -82,20 +60,42 @@
 "entry": 16130,
 "entry_date": "2026-10-07",
 "peak": 16200,
-"days": 1,
+"days": 2,
 "score": 88.1,
 "grade": "",
 "signal_date": "2026-10-06"
 },
-"053800": {
-"name": "안랩",
-"market": "코스닥150",
-"entry": 85500,
-"entry_date": "2026-10-07",
-"peak": 85500,
+"066570": {
+"name": "LG전자",
+"market": "코스피200",
+"entry": 208000,
+"entry_date": "2026-10-08",
+"peak": 208000,
 "days": 1,
-"score": 88.0,
+"score": 77.2,
 "grade": "",
-"signal_date": "2026-10-06"
+"signal_date": "2026-10-07"
+},
+"160190": {
+"name": "하이젠알앤엠",
+"market": "코스닥150",
+"entry": 34050,
+"entry_date": "2026-10-08",
+"peak": 34100,
+"days": 1,
+"score": 69.3,
+"grade": "",
+"signal_date": "2026-10-07"
+},
+"033100": {
+"name": "제룡전기",
+"market": "코스닥150",
+"entry": 49350,
+"entry_date": "2026-10-08",
+"peak": 49350,
+"days": 1,
+"score": 66.9,
+"grade": "",
+"signal_date": "2026-10-07"
 }
 }

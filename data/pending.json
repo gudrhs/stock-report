@@ -1,45 +1,33 @@
 {
 "buy": [
 {
-"code": "066570",
-"name": "LG전자",
+"code": "005070",
+"name": "코스모신소재",
 "market": "코스피200",
-"score": 77.2,
+"score": 80.1,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-10-07"
-},
-{
-"code": "160190",
-"name": "하이젠알앤엠",
-"market": "코스닥150",
-"score": 69.3,
-"rank": 2,
-"grade": "",
-"signal_date": "2026-10-07"
-},
-{
-"code": "033100",
-"name": "제룡전기",
-"market": "코스닥150",
-"score": 66.9,
-"rank": 3,
-"grade": "",
-"signal_date": "2026-10-07"
+"signal_date": "2026-10-08"
 }
 ],
 "sell": [
 {
-"code": "023160",
-"reason": "청선 5.5 — 5선 이탈",
+"code": "084370",
+"reason": "청선 6.4 — 5선 이탈",
 "severity": "청산",
-"signal_date": "2026-10-07"
+"signal_date": "2026-10-08"
 },
 {
-"code": "053800",
-"reason": "장대음봉 -6.8%",
+"code": "036930",
+"reason": "청선 13.2 — 8.0선 초과 급이탈",
 "severity": "청산",
-"signal_date": "2026-10-07"
+"signal_date": "2026-10-08"
+},
+{
+"code": "066570",
+"reason": "청선 13.9 — 8.0선 초과 급이탈",
+"severity": "청산",
+"signal_date": "2026-10-08"
 }
 ]
 }
