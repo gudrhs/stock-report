@@ -16,53 +16,9 @@
 "entry": 48700,
 "entry_date": "2026-10-01",
 "peak": 58400,
-"days": 6,
+"days": 7,
 "score": 74.6,
 "grade": "",
 "signal_date": "2026-09-30"
-},
-"014680": {
-"name": "한솔케미칼",
-"market": "코스피200",
-"entry": 276000,
-"entry_date": "2026-10-06",
-"peak": 279500,
-"days": 4,
-"score": 81.9,
-"grade": "",
-"signal_date": "2026-10-02"
-},
-"253590": {
-"name": "네오셈",
-"market": "코스닥150",
-"entry": 16130,
-"entry_date": "2026-10-07",
-"peak": 16330,
-"days": 3,
-"score": 88.1,
-"grade": "",
-"signal_date": "2026-10-06"
-},
-"033100": {
-"name": "제룡전기",
-"market": "코스닥150",
-"entry": 49350,
-"entry_date": "2026-10-08",
-"peak": 49350,
-"days": 2,
-"score": 66.9,
-"grade": "",
-"signal_date": "2026-10-07"
-},
-"005070": {
-"name": "코스모신소재",
-"market": "코스피200",
-"entry": 47400,
-"entry_date": "2026-10-12",
-"peak": 47400,
-"days": 1,
-"score": 80.1,
-"grade": "",
-"signal_date": "2026-10-08"
 }
 }

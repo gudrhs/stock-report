@@ -1,45 +1,27 @@
 {
 "buy": [
 {
-"code": "131970",
-"name": "두산테스나",
+"code": "041960",
+"name": "코미팜",
 "market": "코스닥150",
-"score": 69.4,
-"rank": 3,
+"score": 35.2,
+"rank": 2,
 "grade": "홈런",
-"signal_date": "2026-10-12"
-},
-{
-"code": "253590",
-"name": "네오셈",
-"market": "코스닥150",
-"score": 68.4,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-10-12"
-},
-{
-"code": "020150",
-"name": "롯데에너지머티리얼즈",
-"market": "코스피200",
-"score": 66.7,
-"rank": 5,
-"grade": "홈런",
-"signal_date": "2026-10-12"
+"signal_date": "2026-10-13"
 }
 ],
 "sell": [
 {
-"code": "030530",
-"reason": "B 57.8 < 60 이탈",
+"code": "001820",
+"reason": "B 55.5 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-10-12"
+"signal_date": "2026-10-13"
 },
 {
-"code": "160190",
-"reason": "B 56.7 < 60 이탈",
+"code": "033640",
+"reason": "B 57.0 < 60 이탈",
 "severity": "이탈",
-"signal_date": "2026-10-12"
+"signal_date": "2026-10-13"
 }
 ]
 }

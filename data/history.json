@@ -103035,5 +103035,627 @@
 "last": "2026-10-12"
 }
 }
+},
+"2026-10-13": {
+"date": "2026-10-13",
+"generated": "2026-10-13T02:14:52",
+"universe": {
+"kospi200": 200,
+"kosdaq150": 150,
+"scanned": 349
+},
+"buy": [
+{
+"code": "041960",
+"name": "코미팜",
+"market": "코스닥150",
+"score": 88.2,
+"hold": 15,
+"gs_mean": 0.94,
+"gs_std": 0.94,
+"gbuy": 34.4,
+"gsell": 0.0,
+"slope5": 20.5,
+"t": 34.2,
+"b": 72.3,
+"u": 59.6,
+"red": true,
+"ma30": 9841,
+"spike": false,
+"wick": false,
+"big_down": false,
+"r20": 23.6,
+"close": 11670,
+"chg1": 4.85,
+"chg5": 18.0,
+"chg20": 23.62,
+"amount": 3766399140,
+"vol": 322742,
+"rank": 1
+}
+],
+"buy_total": 1,
+"sell": [
+{
+"code": "092870",
+"name": "엑시콘",
+"market": "코스닥150",
+"entry": 48700,
+"entry_date": "2026-10-01",
+"days": 7,
+"price": 54900,
+"pnl": 12.73,
+"reason": "장대음봉 -4.7%",
+"severity": "청산",
+"grade": "",
+"gsell": 4.9,
+"gbuy": 128.8,
+"gb_slope5": -31.1,
+"t": 58.2,
+"b": 74.8,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [],
+"filled": [
+{
+"kind": "매도",
+"code": "014680",
+"name": "한솔케미칼",
+"price": 255500,
+"pnl": -7.43,
+"days": 4,
+"entry": 276000,
+"entry_date": "2026-10-06",
+"reason": "적선 5일 기울기 -3.4 — 상승탄력 꺾임",
+"severity": "청산",
+"grade": ""
+},
+{
+"kind": "매도",
+"code": "033100",
+"name": "제룡전기",
+"price": 43500,
+"pnl": -11.85,
+"days": 2,
+"entry": 49350,
+"entry_date": "2026-10-08",
+"reason": "30일선 이탈 (종가 47,050 < 47,175)",
+"severity": "청산",
+"grade": ""
+},
+{
+"kind": "매도",
+"code": "253590",
+"name": "네오셈",
+"price": 15000,
+"pnl": -7.01,
+"days": 3,
+"entry": 16130,
+"entry_date": "2026-10-07",
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"grade": ""
+},
+{
+"kind": "매도",
+"code": "005070",
+"name": "코스모신소재",
+"price": 42600,
+"pnl": -10.13,
+"days": 1,
+"entry": 47400,
+"entry_date": "2026-10-12",
+"reason": "장중 손절 (기준 -7.0%) -10.1%",
+"severity": "손절",
+"grade": ""
+}
+],
+"order": {
+"buy": [
+"041960"
+],
+"sell": [
+"092870"
+]
+},
+"tb": {
+"buy": [
+{
+"code": "131970",
+"name": "두산테스나",
+"market": "코스닥150",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 63.3,
+"tb_hold": 5,
+"t": 31.1,
+"b": 67.0,
+"u": 56.2,
+"gsell": 0.0,
+"gbuy": 67.2,
+"red": true,
+"ma30": 91870,
+"above_ma30": true,
+"r20": 48.2,
+"close": 124200,
+"chg1": 0.4,
+"chg5": 13.94,
+"chg20": 48.21,
+"amount": 46864013400,
+"vol": 377327,
+"rank": 1
+},
+{
+"code": "041960",
+"name": "코미팜",
+"market": "코스닥150",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 35.2,
+"tb_hold": 4,
+"t": 34.2,
+"b": 72.3,
+"u": 59.6,
+"gsell": 0.0,
+"gbuy": 34.4,
+"red": true,
+"ma30": 9841,
+"above_ma30": true,
+"r20": 23.6,
+"close": 11670,
+"chg1": 4.85,
+"chg5": 18.0,
+"chg20": 23.62,
+"amount": 3766399140,
+"vol": 322742,
+"rank": 2
+}
+],
+"buy_total": 2,
+"homerun": [
+{
+"code": "131970",
+"name": "두산테스나",
+"market": "코스닥150",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 63.3,
+"tb_hold": 5,
+"t": 31.1,
+"b": 67.0,
+"u": 56.2,
+"gsell": 0.0,
+"gbuy": 67.2,
+"red": true,
+"ma30": 91870,
+"above_ma30": true,
+"r20": 48.2,
+"close": 124200,
+"chg1": 0.4,
+"chg5": 13.94,
+"chg20": 48.21,
+"amount": 46864013400,
+"vol": 377327,
+"rank": 1
+},
+{
+"code": "041960",
+"name": "코미팜",
+"market": "코스닥150",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 35.2,
+"tb_hold": 4,
+"t": 34.2,
+"b": 72.3,
+"u": 59.6,
+"gsell": 0.0,
+"gbuy": 34.4,
+"red": true,
+"ma30": 9841,
+"above_ma30": true,
+"r20": 23.6,
+"close": 11670,
+"chg1": 4.85,
+"chg5": 18.0,
+"chg20": 23.62,
+"amount": 3766399140,
+"vol": 322742,
+"rank": 2
+}
+],
+"homerun_total": 2,
+"sell": [
+{
+"code": "001820",
+"name": "삼화콘덴서",
+"market": "코스피200",
+"entry": 145200,
+"entry_date": "2026-09-17",
+"days": 14,
+"price": 143400,
+"pnl": -1.24,
+"reason": "B 55.5 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런",
+"gsell": 12.0,
+"gbuy": 36.7,
+"gb_slope5": -37.5,
+"t": 28.3,
+"b": 55.5,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "033640",
+"name": "네패스",
+"market": "코스닥150",
+"entry": 26750,
+"entry_date": "2026-09-29",
+"days": 9,
+"price": 29100,
+"pnl": 8.79,
+"reason": "B 57.0 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런",
+"gsell": 13.7,
+"gbuy": 38.2,
+"gb_slope5": -41.8,
+"t": 31.9,
+"b": 57.0,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [
+{
+"code": "092870",
+"name": "엑시콘",
+"market": "코스닥150",
+"entry": 53900,
+"entry_date": "2026-10-07",
+"days": 4,
+"price": 54900,
+"pnl": 1.86,
+"reason": "청선 4.9",
+"severity": "주의",
+"grade": "홈런",
+"gsell": 4.9,
+"gbuy": 128.8,
+"gb_slope5": -31.1,
+"t": 58.2,
+"b": 74.8,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "281820",
+"name": "케이씨텍",
+"market": "코스피200",
+"entry": 118200,
+"entry_date": "2026-10-12",
+"days": 2,
+"price": 113700,
+"pnl": -3.81,
+"reason": "청선 8.4",
+"severity": "주의",
+"grade": "홈런",
+"gsell": 8.4,
+"gbuy": 82.2,
+"gb_slope5": 34.6,
+"t": 39.7,
+"b": 67.8,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "131970",
+"name": "두산테스나",
+"market": "코스닥150",
+"entry": 119600,
+"entry_date": "2026-10-13",
+"days": 1,
+"price": 124200,
+"pnl": 3.85,
+"reason": "T·B 유지",
+"severity": "정상",
+"grade": "홈런",
+"gsell": 0.0,
+"gbuy": 67.2,
+"gb_slope5": 20.5,
+"t": 31.1,
+"b": 67.0,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "253590",
+"name": "네오셈",
+"market": "코스닥150",
+"entry": 15100,
+"entry_date": "2026-10-13",
+"days": 1,
+"price": 15240,
+"pnl": 0.93,
+"reason": "청선 7.5",
+"severity": "주의",
+"grade": "홈런",
+"gsell": 7.5,
+"gbuy": 43.1,
+"gb_slope5": -11.3,
+"t": 35.8,
+"b": 63.1,
+"above_ma30": true,
+"red": true
+}
+],
+"filled": [
+{
+"kind": "매도",
+"code": "030530",
+"name": "원익홀딩스",
+"price": 24950,
+"pnl": -10.89,
+"days": 8,
+"entry": 28000,
+"entry_date": "2026-09-29",
+"reason": "B 57.8 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "160190",
+"name": "하이젠알앤엠",
+"price": 25850,
+"pnl": -14.4,
+"days": 1,
+"entry": 30200,
+"entry_date": "2026-10-12",
+"reason": "B 56.7 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런"
+},
+{
+"kind": "매수",
+"code": "131970",
+"name": "두산테스나",
+"price": 119600,
+"pnl": 0.0,
+"days": 0,
+"entry": 119600,
+"entry_date": "2026-10-13",
+"reason": "2026-10-12 신호 3위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매수",
+"code": "253590",
+"name": "네오셈",
+"price": 15100,
+"pnl": 0.0,
+"days": 0,
+"entry": 15100,
+"entry_date": "2026-10-13",
+"reason": "2026-10-12 신호 4위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매수",
+"code": "020150",
+"name": "롯데에너지머티리얼즈",
+"price": 52200,
+"pnl": 0.0,
+"days": 0,
+"entry": 52200,
+"entry_date": "2026-10-13",
+"reason": "2026-10-12 신호 5위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "077360",
+"name": "덕산하이메탈",
+"price": 12800,
+"pnl": -10.11,
+"days": 4,
+"entry": 14240,
+"entry_date": "2026-09-30",
+"reason": "장중 손절 (기준 -10.0%) -10.1%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "036540",
+"name": "SFA반도체",
+"price": 10400,
+"pnl": -10.5,
+"days": 3,
+"entry": 11620,
+"entry_date": "2026-10-07",
+"reason": "장중 손절 (기준 -10.0%) -10.5%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "020150",
+"name": "롯데에너지머티리얼즈",
+"price": 46980,
+"pnl": -10.0,
+"days": 0,
+"entry": 52200,
+"entry_date": "2026-10-13",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+}
+],
+"order": {
+"buy": [
+"041960"
+],
+"sell": [
+"001820",
+"033640"
+]
+}
+},
+"stats": {
+"buy": 1,
+"sell": 1,
+"hold": 0,
+"filled": 4,
+"open_positions": 2,
+"tb_buy": 2,
+"tb_homerun": 2,
+"tb_sell": 2,
+"tb_filled": 8,
+"tb_positions": 7
+},
+"perf": {
+"trades": 356,
+"homerun": {
+"n": 202,
+"avg": 1.01,
+"win": 29.2,
+"best": 43.6
+},
+"avg": 0.58,
+"winrate": 29.5,
+"best": 43.6,
+"worst": -20.9,
+"cum": 18.11,
+"avg_days": 3.6,
+"by_reason": {
+"손절": {
+"n": 160,
+"avg": -9.45,
+"win": 0.0
+},
+"익절": {
+"n": 60,
+"avg": 30.89,
+"win": 100.0
+},
+"이탈": {
+"n": 46,
+"avg": -1.41,
+"win": 28.0
+},
+"청선": {
+"n": 32,
+"avg": -2.44,
+"win": 31.0
+},
+"장대음봉": {
+"n": 30,
+"avg": -0.08,
+"win": 33.0
+},
+"적선": {
+"n": 26,
+"avg": 0.99,
+"win": 46.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-13"
+},
+"perf_by": {
+"legacy": {
+"trades": 154,
+"homerun": null,
+"avg": 0.0,
+"winrate": 29.9,
+"best": 34.2,
+"worst": -11.8,
+"cum": -0.95,
+"avg_days": 2.8,
+"by_reason": {
+"손절": {
+"n": 50,
+"avg": -7.19,
+"win": 0.0
+},
+"청선": {
+"n": 32,
+"avg": -2.44,
+"win": 31.0
+},
+"장대음봉": {
+"n": 30,
+"avg": -0.08,
+"win": 33.0
+},
+"적선": {
+"n": 26,
+"avg": 0.99,
+"win": 46.0
+},
+"익절": {
+"n": 14,
+"avg": 30.81,
+"win": 100.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-13"
+},
+"tb": {
+"trades": 202,
+"homerun": {
+"n": 202,
+"avg": 1.01,
+"win": 29.2,
+"best": 43.6
+},
+"avg": 1.01,
+"winrate": 29.2,
+"best": 43.6,
+"worst": -20.9,
+"cum": 19.24,
+"avg_days": 4.3,
+"by_reason": {
+"손절": {
+"n": 110,
+"avg": -10.48,
+"win": 0.0
+},
+"익절": {
+"n": 46,
+"avg": 30.92,
+"win": 100.0
+},
+"이탈": {
+"n": 46,
+"avg": -1.41,
+"win": 28.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-13"
+}
+}
 }
 }
