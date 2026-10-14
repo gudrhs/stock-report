@@ -1,27 +1,41 @@
 {
 "buy": [
 {
-"code": "041960",
-"name": "코미팜",
+"code": "080580",
+"name": "오킨스전자",
 "market": "코스닥150",
-"score": 35.2,
-"rank": 2,
+"score": 76.9,
+"rank": 1,
 "grade": "홈런",
-"signal_date": "2026-10-13"
-}
-],
-"sell": [
-{
-"code": "001820",
-"reason": "B 55.5 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-10-13"
+"signal_date": "2026-10-14"
 },
 {
-"code": "033640",
-"reason": "B 57.0 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-10-13"
+"code": "417200",
+"name": "LS머트리얼즈",
+"market": "코스닥150",
+"score": 60.5,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-10-14"
+},
+{
+"code": "059090",
+"name": "미코",
+"market": "코스닥150",
+"score": 47.6,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-10-14"
+},
+{
+"code": "078600",
+"name": "대주전자재료",
+"market": "코스닥150",
+"score": 46.6,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-10-14"
 }
-]
+],
+"sell": []
 }

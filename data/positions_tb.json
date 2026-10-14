@@ -10,35 +10,13 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"001820": {
-"name": "삼화콘덴서",
-"market": "코스피200",
-"entry": 145200,
-"entry_date": "2026-09-17",
-"peak": 161200,
-"days": 14,
-"score": 64.2,
-"grade": "홈런",
-"signal_date": "2026-09-16"
-},
-"033640": {
-"name": "네패스",
-"market": "코스닥150",
-"entry": 26750,
-"entry_date": "2026-09-29",
-"peak": 33550,
-"days": 9,
-"score": 49.8,
-"grade": "홈런",
-"signal_date": "2026-09-23"
-},
 "092870": {
 "name": "엑시콘",
 "market": "코스닥150",
 "entry": 53900,
 "entry_date": "2026-10-07",
 "peak": 58400,
-"days": 4,
+"days": 5,
 "score": 84.4,
 "grade": "홈런",
 "signal_date": "2026-10-06"
@@ -49,7 +27,7 @@
 "entry": 118200,
 "entry_date": "2026-10-12",
 "peak": 119500,
-"days": 2,
+"days": 3,
 "score": 77.1,
 "grade": "홈런",
 "signal_date": "2026-10-08"
@@ -59,8 +37,8 @@
 "market": "코스닥150",
 "entry": 119600,
 "entry_date": "2026-10-13",
-"peak": 124200,
-"days": 1,
+"peak": 128200,
+"days": 2,
 "score": 69.4,
 "grade": "홈런",
 "signal_date": "2026-10-12"
@@ -70,10 +48,21 @@
 "market": "코스닥150",
 "entry": 15100,
 "entry_date": "2026-10-13",
-"peak": 15240,
-"days": 1,
+"peak": 16180,
+"days": 2,
 "score": 68.4,
 "grade": "홈런",
 "signal_date": "2026-10-12"
+},
+"041960": {
+"name": "코미팜",
+"market": "코스닥150",
+"entry": 11550,
+"entry_date": "2026-10-14",
+"peak": 11670,
+"days": 1,
+"score": 35.2,
+"grade": "홈런",
+"signal_date": "2026-10-13"
 }
 }

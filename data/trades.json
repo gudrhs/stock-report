@@ -5694,5 +5694,53 @@
 "reason": "장중 손절 (기준 -7.0%) -7.0%",
 "severity": "손절",
 "cum": -0.95
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "001820",
+"name": "삼화콘덴서",
+"market": "코스피200",
+"entry_date": "2026-09-17",
+"exit_date": "2026-10-14",
+"entry": 145200,
+"exit": 143500,
+"pnl": -1.17,
+"days": 14,
+"reason": "B 55.5 < 60 이탈",
+"severity": "이탈",
+"cum": 19.1
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "033640",
+"name": "네패스",
+"market": "코스닥150",
+"entry_date": "2026-09-29",
+"exit_date": "2026-10-14",
+"entry": 26750,
+"exit": 30050,
+"pnl": 12.34,
+"days": 9,
+"reason": "B 57.0 < 60 이탈",
+"severity": "이탈",
+"cum": 20.57
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "092870",
+"name": "엑시콘",
+"market": "코스닥150",
+"entry_date": "2026-10-01",
+"exit_date": "2026-10-14",
+"entry": 48700,
+"exit": 57400,
+"pnl": 17.86,
+"days": 7,
+"reason": "장대음봉 -4.7%",
+"severity": "청산",
+"cum": 0.82
 }
 ]
