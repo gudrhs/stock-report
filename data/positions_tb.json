@@ -10,59 +10,26 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"092870": {
-"name": "엑시콘",
-"market": "코스닥150",
-"entry": 53900,
-"entry_date": "2026-10-07",
-"peak": 58400,
-"days": 5,
-"score": 84.4,
-"grade": "홈런",
-"signal_date": "2026-10-06"
-},
-"281820": {
-"name": "케이씨텍",
-"market": "코스피200",
-"entry": 118200,
-"entry_date": "2026-10-12",
-"peak": 119500,
-"days": 3,
-"score": 77.1,
-"grade": "홈런",
-"signal_date": "2026-10-08"
-},
 "131970": {
 "name": "두산테스나",
 "market": "코스닥150",
 "entry": 119600,
 "entry_date": "2026-10-13",
 "peak": 128200,
-"days": 2,
+"days": 3,
 "score": 69.4,
 "grade": "홈런",
 "signal_date": "2026-10-12"
 },
-"253590": {
-"name": "네오셈",
+"078600": {
+"name": "대주전자재료",
 "market": "코스닥150",
-"entry": 15100,
-"entry_date": "2026-10-13",
-"peak": 16180,
-"days": 2,
-"score": 68.4,
-"grade": "홈런",
-"signal_date": "2026-10-12"
-},
-"041960": {
-"name": "코미팜",
-"market": "코스닥150",
-"entry": 11550,
-"entry_date": "2026-10-14",
-"peak": 11670,
+"entry": 111200,
+"entry_date": "2026-10-15",
+"peak": 111200,
 "days": 1,
-"score": 35.2,
+"score": 46.6,
 "grade": "홈런",
-"signal_date": "2026-10-13"
+"signal_date": "2026-10-14"
 }
 }

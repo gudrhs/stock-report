@@ -104529,5 +104529,407 @@
 "last": "2026-10-14"
 }
 }
+},
+"2026-10-15": {
+"date": "2026-10-15",
+"generated": "2026-10-15T23:15:58",
+"universe": {
+"kospi200": 200,
+"kosdaq150": 150,
+"scanned": 349
+},
+"buy": [],
+"buy_total": 0,
+"sell": [
+{
+"code": "028670",
+"name": "팬오션",
+"market": "코스피200",
+"entry": 7000,
+"entry_date": "2026-10-15",
+"days": 1,
+"price": 6730,
+"pnl": -3.86,
+"reason": "장대음봉 -6.9%",
+"severity": "청산",
+"grade": "",
+"gsell": 7.4,
+"gbuy": 22.1,
+"gb_slope5": 9.6,
+"t": 21.8,
+"b": 60.4,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [],
+"filled": [
+{
+"kind": "매수",
+"code": "028670",
+"name": "팬오션",
+"price": 7000,
+"pnl": 0.0,
+"days": 0,
+"entry": 7000,
+"entry_date": "2026-10-15",
+"reason": "2026-10-14 신호 1위",
+"severity": "진입",
+"grade": ""
+},
+{
+"kind": "매도",
+"code": "126340",
+"name": "비나텍",
+"price": 75795,
+"pnl": -7.0,
+"days": 7,
+"entry": 81500,
+"entry_date": "2026-09-29",
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"grade": ""
+},
+{
+"kind": "매도",
+"code": "041960",
+"name": "코미팜",
+"price": 10741,
+"pnl": -7.0,
+"days": 1,
+"entry": 11550,
+"entry_date": "2026-10-14",
+"reason": "장중 손절 (기준 -7.0%) -7.0%",
+"severity": "손절",
+"grade": ""
+}
+],
+"order": {
+"buy": [],
+"sell": [
+"028670"
+]
+},
+"tb": {
+"buy": [],
+"buy_total": 0,
+"homerun": [],
+"homerun_total": 0,
+"sell": [
+{
+"code": "131970",
+"name": "두산테스나",
+"market": "코스닥150",
+"entry": 119600,
+"entry_date": "2026-10-13",
+"days": 3,
+"price": 116000,
+"pnl": -3.01,
+"reason": "B 58.4 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런",
+"gsell": 15.9,
+"gbuy": 56.1,
+"gb_slope5": 8.3,
+"t": 29.4,
+"b": 58.4,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "078600",
+"name": "대주전자재료",
+"market": "코스닥150",
+"entry": 111200,
+"entry_date": "2026-10-15",
+"days": 1,
+"price": 107700,
+"pnl": -3.15,
+"reason": "B 58.3 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런",
+"gsell": 8.4,
+"gbuy": 31.5,
+"gb_slope5": -4.3,
+"t": 27.9,
+"b": 58.3,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [],
+"filled": [
+{
+"kind": "매수",
+"code": "417200",
+"name": "LS머트리얼즈",
+"price": 15300,
+"pnl": 0.0,
+"days": 0,
+"entry": 15300,
+"entry_date": "2026-10-15",
+"reason": "2026-10-14 신호 2위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매수",
+"code": "059090",
+"name": "미코",
+"price": 22250,
+"pnl": 0.0,
+"days": 0,
+"entry": 22250,
+"entry_date": "2026-10-15",
+"reason": "2026-10-14 신호 3위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매수",
+"code": "078600",
+"name": "대주전자재료",
+"price": 111200,
+"pnl": 0.0,
+"days": 0,
+"entry": 111200,
+"entry_date": "2026-10-15",
+"reason": "2026-10-14 신호 4위",
+"severity": "홈런",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "092870",
+"name": "엑시콘",
+"price": 46900,
+"pnl": -12.99,
+"days": 5,
+"entry": 53900,
+"entry_date": "2026-10-07",
+"reason": "장중 손절 (기준 -10.0%) -13.0%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "281820",
+"name": "케이씨텍",
+"price": 106000,
+"pnl": -10.32,
+"days": 3,
+"entry": 118200,
+"entry_date": "2026-10-12",
+"reason": "장중 손절 (기준 -10.0%) -10.3%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "253590",
+"name": "네오셈",
+"price": 13590,
+"pnl": -10.0,
+"days": 2,
+"entry": 15100,
+"entry_date": "2026-10-13",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "041960",
+"name": "코미팜",
+"price": 10395,
+"pnl": -10.0,
+"days": 1,
+"entry": 11550,
+"entry_date": "2026-10-14",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "417200",
+"name": "LS머트리얼즈",
+"price": 13770,
+"pnl": -10.0,
+"days": 0,
+"entry": 15300,
+"entry_date": "2026-10-15",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "059090",
+"name": "미코",
+"price": 20025,
+"pnl": -10.0,
+"days": 0,
+"entry": 22250,
+"entry_date": "2026-10-15",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+}
+],
+"order": {
+"buy": [],
+"sell": [
+"131970",
+"078600"
+]
+}
+},
+"stats": {
+"buy": 0,
+"sell": 1,
+"hold": 0,
+"filled": 3,
+"open_positions": 1,
+"tb_buy": 0,
+"tb_homerun": 0,
+"tb_sell": 2,
+"tb_filled": 9,
+"tb_positions": 3
+},
+"perf": {
+"trades": 367,
+"homerun": {
+"n": 210,
+"avg": 0.73,
+"win": 28.6,
+"best": 43.6
+},
+"avg": 0.43,
+"winrate": 29.2,
+"best": 43.6,
+"worst": -20.9,
+"cum": 12.47,
+"avg_days": 3.6,
+"by_reason": {
+"손절": {
+"n": 168,
+"avg": -9.46,
+"win": 0.0
+},
+"익절": {
+"n": 60,
+"avg": 30.89,
+"win": 100.0
+},
+"이탈": {
+"n": 48,
+"avg": -1.12,
+"win": 29.0
+},
+"청선": {
+"n": 32,
+"avg": -2.44,
+"win": 31.0
+},
+"장대음봉": {
+"n": 31,
+"avg": 0.5,
+"win": 35.0
+},
+"적선": {
+"n": 26,
+"avg": 0.99,
+"win": 46.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-15"
+},
+"perf_by": {
+"legacy": {
+"trades": 157,
+"homerun": null,
+"avg": 0.03,
+"winrate": 29.9,
+"best": 34.2,
+"worst": -11.8,
+"cum": -0.59,
+"avg_days": 2.8,
+"by_reason": {
+"손절": {
+"n": 52,
+"avg": -7.18,
+"win": 0.0
+},
+"청선": {
+"n": 32,
+"avg": -2.44,
+"win": 31.0
+},
+"장대음봉": {
+"n": 31,
+"avg": 0.5,
+"win": 35.0
+},
+"적선": {
+"n": 26,
+"avg": 0.99,
+"win": 46.0
+},
+"익절": {
+"n": 14,
+"avg": 30.81,
+"win": 100.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-15"
+},
+"tb": {
+"trades": 210,
+"homerun": {
+"n": 210,
+"avg": 0.73,
+"win": 28.6,
+"best": 43.6
+},
+"avg": 0.73,
+"winrate": 28.6,
+"best": 43.6,
+"worst": -20.9,
+"cum": 13.14,
+"avg_days": 4.3,
+"by_reason": {
+"손절": {
+"n": 116,
+"avg": -10.48,
+"win": 0.0
+},
+"이탈": {
+"n": 48,
+"avg": -1.12,
+"win": 29.0
+},
+"익절": {
+"n": 46,
+"avg": 30.92,
+"win": 100.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-15"
+}
+}
 }
 }

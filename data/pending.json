@@ -1,14 +1,11 @@
 {
-"buy": [
+"buy": [],
+"sell": [
 {
 "code": "028670",
-"name": "팬오션",
-"market": "코스피200",
-"score": 69.9,
-"rank": 1,
-"grade": "",
-"signal_date": "2026-10-14"
+"reason": "장대음봉 -6.9%",
+"severity": "청산",
+"signal_date": "2026-10-15"
 }
-],
-"sell": []
+]
 }

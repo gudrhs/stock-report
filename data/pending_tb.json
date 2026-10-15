@@ -1,41 +1,17 @@
 {
-"buy": [
+"buy": [],
+"sell": [
 {
-"code": "080580",
-"name": "오킨스전자",
-"market": "코스닥150",
-"score": 76.9,
-"rank": 1,
-"grade": "홈런",
-"signal_date": "2026-10-14"
-},
-{
-"code": "417200",
-"name": "LS머트리얼즈",
-"market": "코스닥150",
-"score": 60.5,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-10-14"
-},
-{
-"code": "059090",
-"name": "미코",
-"market": "코스닥150",
-"score": 47.6,
-"rank": 3,
-"grade": "홈런",
-"signal_date": "2026-10-14"
+"code": "131970",
+"reason": "B 58.4 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-10-15"
 },
 {
 "code": "078600",
-"name": "대주전자재료",
-"market": "코스닥150",
-"score": 46.6,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-10-14"
+"reason": "B 58.3 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-10-15"
 }
-],
-"sell": []
+]
 }

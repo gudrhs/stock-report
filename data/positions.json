@@ -1,24 +1,13 @@
 {
-"126340": {
-"name": "비나텍",
-"market": "코스닥150",
-"entry": 81500,
-"entry_date": "2026-09-29",
-"peak": 96900,
-"days": 7,
-"score": 87.1,
-"grade": "",
-"signal_date": "2026-09-23"
-},
-"041960": {
-"name": "코미팜",
-"market": "코스닥150",
-"entry": 11550,
-"entry_date": "2026-10-14",
-"peak": 11670,
+"028670": {
+"name": "팬오션",
+"market": "코스피200",
+"entry": 7000,
+"entry_date": "2026-10-15",
+"peak": 7000,
 "days": 1,
-"score": 88.2,
+"score": 69.9,
 "grade": "",
-"signal_date": "2026-10-13"
+"signal_date": "2026-10-14"
 }
 }
