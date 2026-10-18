@@ -9,27 +9,5 @@
 "score": 59.0,
 "grade": "홈런",
 "signal_date": "2026-09-02"
-},
-"131970": {
-"name": "두산테스나",
-"market": "코스닥150",
-"entry": 119600,
-"entry_date": "2026-10-13",
-"peak": 128200,
-"days": 3,
-"score": 69.4,
-"grade": "홈런",
-"signal_date": "2026-10-12"
-},
-"078600": {
-"name": "대주전자재료",
-"market": "코스닥150",
-"entry": 111200,
-"entry_date": "2026-10-15",
-"peak": 111200,
-"days": 1,
-"score": 46.6,
-"grade": "홈런",
-"signal_date": "2026-10-14"
 }
 }

@@ -5870,5 +5870,53 @@
 "reason": "장중 손절 (기준 -10.0%) -10.0%",
 "severity": "손절",
 "cum": 13.14
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "028670",
+"name": "팬오션",
+"market": "코스피200",
+"entry_date": "2026-10-15",
+"exit_date": "2026-10-16",
+"entry": 7000,
+"exit": 6760,
+"pnl": -3.43,
+"days": 1,
+"reason": "장대음봉 -6.9%",
+"severity": "청산",
+"cum": -0.93
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "078600",
+"name": "대주전자재료",
+"market": "코스닥150",
+"entry_date": "2026-10-15",
+"exit_date": "2026-10-16",
+"entry": 111200,
+"exit": 113000,
+"pnl": 1.62,
+"days": 1,
+"reason": "B 58.3 < 60 이탈",
+"severity": "이탈",
+"cum": 13.32
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "131970",
+"name": "두산테스나",
+"market": "코스닥150",
+"entry_date": "2026-10-13",
+"exit_date": "2026-10-16",
+"entry": 119600,
+"exit": 124100,
+"pnl": 3.76,
+"days": 3,
+"reason": "B 58.4 < 60 이탈",
+"severity": "이탈",
+"cum": 13.75
 }
 ]
