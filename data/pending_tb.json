@@ -1,4 +1,32 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "457190",
+"name": "이수스페셜티케미컬",
+"market": "코스피200",
+"score": 55.3,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-10-19"
+},
+{
+"code": "086450",
+"name": "동국제약",
+"market": "코스닥150",
+"score": 32.2,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-10-19"
+},
+{
+"code": "018670",
+"name": "SK가스",
+"market": "코스피200",
+"score": 27.9,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-10-19"
+}
+],
 "sell": []
 }
