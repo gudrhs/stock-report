@@ -1,0 +1,24 @@
+{"hash": "3b231648a66e", "train_hash": "414ac2c3bb61", "name": "budget2000_s0", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.3760053941800234, "slope": 0.09427979280495666}
+{"hash": "3b231648a66e", "train_hash": "414ac2c3bb61", "name": "budget2000_s1", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.371920277996156, "slope": 0.09098103977897906}
+{"hash": "3b231648a66e", "train_hash": "414ac2c3bb61", "name": "budget2000_s2", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.3836115949105932, "slope": 0.07725373213763316}
+{"hash": "281769bdbc84", "train_hash": "6001729fc439", "name": "budget4000_s0", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.39986217758094056, "slope": 0.06772565629595194}
+{"hash": "281769bdbc84", "train_hash": "6001729fc439", "name": "budget4000_s1", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.3953534229272406, "slope": 0.08382454465083117}
+{"hash": "281769bdbc84", "train_hash": "6001729fc439", "name": "budget4000_s2", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.4037790623027771, "slope": 0.06521105819114596}
+{"hash": "6b5b87740a7e", "train_hash": "d7380023db55", "name": "budget8000_s0", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.4201126527879211, "slope": 0.08939467886613751}
+{"hash": "6b5b87740a7e", "train_hash": "d7380023db55", "name": "budget8000_s1", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.40914272164743876, "slope": 0.10086775636652529}
+{"hash": "6b5b87740a7e", "train_hash": "d7380023db55", "name": "budget8000_s2", "kind": "budget", "time": "2026-09-25T06:53:03Z", "val": 0.41507647502907763, "slope": 0.06260957800765393}
+{"hash": "ee02a726ce31", "train_hash": "3f328163b48c", "name": "g0_full22_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "46f3a2b7816c", "train_hash": "3f328163b48c", "name": "g0_full22_m2", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "639b24d9e385", "train_hash": "98ac89c83eeb", "name": "g0_min8_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "1cdab9aa5a30", "train_hash": "98ac89c83eeb", "name": "g0_min8_m2", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "df6497ef90a4", "train_hash": "602611addc4d", "name": "g0.9_full22_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "c2a750fb0d1c", "train_hash": "602611addc4d", "name": "g0.9_full22_m2", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "149665e58480", "train_hash": "9b791bb6ddf0", "name": "g0.9_min8_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "6b37e3a270c5", "train_hash": "9b791bb6ddf0", "name": "g0.9_min8_m2", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "5720769a5b7c", "train_hash": "414ac2c3bb61", "name": "g0.97_full22_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "17e05cd8a74a", "train_hash": "332185b88c49", "name": "g0.97_min8_m1", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "b3d840f49ac9", "train_hash": "332185b88c49", "name": "g0.97_min8_m2", "kind": "grid", "time": "2026-09-25T07:11:35Z"}
+{"hash": "49bd340a69af", "train_hash": "4e9e407b3265", "name": "X1", "kind": "ablation", "time": "2026-09-25T07:11:35Z"}
+{"hash": "bd8dd3fe8161", "train_hash": "4df00943da48", "name": "X2", "kind": "ablation", "time": "2026-09-25T07:11:35Z"}
+{"hash": "ca379fe982c9", "train_hash": "d0420f00a682", "name": "X3", "kind": "ablation", "time": "2026-09-25T07:11:35Z"}
+{"hash": "3b231648a66e", "train_hash": "414ac2c3bb61", "name": "g0.97_full22_m2", "kind": "grid", "time": "2026-09-25T07:12:04Z"}

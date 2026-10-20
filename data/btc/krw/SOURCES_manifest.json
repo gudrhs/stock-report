@@ -1,0 +1,105 @@
+{
+ "generated": "2026-09-28",
+ "note": "Provenance for files in this dir. raw URLs fetched via raw.githubusercontent.com; git-history files via git clone over the session git proxy. No license stated = none found in repo.",
+ "files": {
+  "fx_fred_datasets_exchange-rates_daily.csv": {
+   "url": "https://raw.githubusercontent.com/datasets/exchange-rates/main/data/daily.csv",
+   "commit": "bb1c4ff5cd24",
+   "origin": "FRED DEXKOUS (Fed H.10 noon buying rate NY, KRW per USD)",
+   "license": "ODC-PDDL (repo); H.10 is public domain",
+   "coverage": "1981-04-13..2026-09-18 business days",
+   "tz": "NY noon"
+  },
+  "fx_openexchangerates_KwangYeol_exchange-now_KRW.csv": {
+   "url": "https://raw.githubusercontent.com/KwangYeol/exchange-now/main/rates/YYYYMM.csv (KRW rows extracted)",
+   "commit": "75f39ce6a18e",
+   "origin": "openexchangerates.org latest.json snapshot by GitHub Action cron 00:04 UTC",
+   "license": "none stated; openexchangerates ToS apply",
+   "coverage": "2020-01-01..2026-09-27 calendar days"
+  },
+  "upbit_d_prodong04_ViT_for_finance.csv": {
+   "url": "https://raw.githubusercontent.com/prodong04/ViT_for_finance/main/utils/KRW-BTC.csv",
+   "commit": "c4d414ae709b",
+   "origin": "pyupbit get_ohlcv day (Upbit API)",
+   "coverage": "2017-09-25..2024-08-29 (last row partial)",
+   "tz": "index 09:00 KST = 00:00 UTC day start"
+  },
+  "upbit_d_JS0208_MM.csv": {
+   "url": "https://raw.githubusercontent.com/JS0208/MM/main/KRW-BTC_2018-01-01_to_2025-07-01.csv",
+   "commit": "420f1999626f",
+   "origin": "pyupbit (Upbit API)",
+   "coverage": "2018-01-01..2025-06-30"
+  },
+  "upbit_bitableau_versions/*.json": {
+   "url": "https://github.com/BItableau/Auto-crawling-Test (git history of bitcoin_180days.json)",
+   "commit": "0511af437953 (HEAD) + 12 historical commits",
+   "origin": "raw Upbit /v1/candles/days?market=KRW-BTC&count=180, daily GitHub Action ~18:00-21:00 UTC",
+   "coverage": "2021-04-25..2026-09-26 complete candles (13 snapshots)",
+   "tz": "candle_date_time_utc"
+  },
+  "upbit_d_yoon627_yearly.json": {
+   "url": "https://github.com/yoon627/coin-trading-bot bot/src/test/resources/backtest/yearly/KRW-BTC.json",
+   "commit": "1fbf65ea0e96",
+   "origin": "Upbit API",
+   "coverage": "2025-09-03..2026-09-02"
+  },
+  "upbit_4h_yoon627_yearly.json": {
+   "url": "same repo, backtest/intraday240/yearly/KRW-BTC.json",
+   "commit": "1fbf65ea0e96",
+   "coverage": "2025-09-03..2026-09-02 4h"
+  },
+  "kimp_btc_yoon627.json": {
+   "url": "same repo, backtest/external/kimp_btc.json",
+   "commit": "1fbf65ea0e96",
+   "origin": "Upbit close / (Binance BTCUSDT close x ECB USDKRW) - 1, %",
+   "coverage": "2019-10-01..2026-09-09"
+  },
+  "upbit_4h_WomkaLabs_Stream.csv": {
+   "url": "https://raw.githubusercontent.com/WomkaLabs/Stream/main/data/upbit-btc-240-chart.csv",
+   "commit": "2fb685ce099e",
+   "origin": "Upbit minutes/240",
+   "coverage": "2020-07-01T00:00..2026-03-15T20:00 UTC (repo stopped 2026-03-16)",
+   "tz": "UTC (bin/data/pad.py says UTC)"
+  },
+  "bithumb_d_investing_gwon9906.csv": {
+   "url": "https://raw.githubusercontent.com/gwon9906/search-trend-bitcoin-model/main/data/BTC_KRW%20%EB%B9%97%EC%8D%B8%20%EA%B3%BC%EA%B1%B0%20%EB%8D%B0%EC%9D%B4%ED%84%B0.csv",
+   "commit": "98227bf48ba8",
+   "origin": "investing.com BTC/KRW Bithumb historical export (Korean)",
+   "license": "investing.com ToS",
+   "coverage": "2017-05-23..2024-11-24, 2 missing days",
+   "tz": "behaves like UTC day (matches Upbit close within 0.16% mean abs)"
+  },
+  "bithumb_d_cryptodatadownload_HugoLy.csv": {
+   "url": "https://raw.githubusercontent.com/HugoLy200328/CryptoPredictionProject/master/Data/Bithumb_BTCKRW_d.csv",
+   "commit": "8be913dd9f34",
+   "origin": "CryptoDataDownload Bithumb daily",
+   "coverage": "2017-05-22..2020-11-20, 12 missing",
+   "quality": "UNRELIABLE: ~50% of days differ from investing, up to 39% (2018-12)"
+  },
+  "korbitKRW.csv.gz": {
+   "url": "https://raw.githubusercontent.com/philipperemy/bitcoin-market-data/master/bitcoin_market_data/korbitKRW/korbitKRW.csv.gz00",
+   "commit": "a3222c8f286d",
+   "origin": "bitcoincharts.com api/v1/csv/korbitKRW.csv.gz mirror (unix_ts, price KRW, amount BTC)",
+   "license": "none stated",
+   "coverage": "2013-09-03..2018-01-20 23:04 UTC tick trades"
+  },
+  "bm_market_history.csv / bm_kimchi_snapshots.json": {
+   "url": "https://raw.githubusercontent.com/ceciliamyeong/bm/main/out/history/...",
+   "commit": "d47ada25ede2",
+   "origin": "Upbit/Binance/Yahoo FX snapshots",
+   "coverage": "kimchi_pct 2026-01-25..2026-09-28; snapshots 2026-08-31.."
+  },
+  "upbit_binance_ratio_BaeJaeSung.csv": {
+   "url": "https://raw.githubusercontent.com/BaeJaeSung/crypto_history_kaist/main/data/upbit_divide_binance_ratio.csv",
+   "commit": "dad9a13168c2",
+   "coverage": "2017-09-26..2024-05-20",
+   "note": "Upbit KRW / Binance USDT ratio (not used)"
+  }
+ },
+ "outputs": {
+  "out/upbit_krwbtc_daily_merged.csv": "Upbit KRW-BTC daily OHLCV 2017-09-25..2026-09-26, UTC-day candles (09:00 KST boundary), no missing days; src column = bitableau>yoon627>JS0208>prodong04>womka4h priority",
+  "out/bithumb_krwbtc_daily_investing.csv": "Bithumb daily OHLC 2017-05-23..2024-11-24",
+  "out/korbit_krwbtc_daily_utc_from_ticks.csv": "Korbit daily OHLCV from ticks, UTC days, 2013-09-03..2018-01-20",
+  "out/krw_daily_panel.csv": "2014-01-01..2026-09-25 panel: Bitstamp open/close/00:30/15:00, FX variants, Upbit/Bithumb/Korbit prices, premiums"
+ }
+}
