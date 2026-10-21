@@ -1,23 +1,11 @@
 {
-"buy": [
+"buy": [],
+"sell": [
 {
-"code": "053800",
-"name": "안랩",
-"market": "코스닥150",
-"score": 62.1,
-"rank": 1,
-"grade": "홈런",
-"signal_date": "2026-10-20"
-},
-{
-"code": "033780",
-"name": "KT&G",
-"market": "코스피200",
-"score": 19.3,
-"rank": 3,
-"grade": "홈런",
-"signal_date": "2026-10-20"
+"code": "457190",
+"reason": "B 58.1 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-10-21"
 }
-],
-"sell": []
+]
 }
