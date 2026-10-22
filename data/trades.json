@@ -5918,5 +5918,21 @@
 "reason": "B 58.4 < 60 이탈",
 "severity": "이탈",
 "cum": 13.75
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "457190",
+"name": "이수스페셜티케미컬",
+"market": "코스피200",
+"entry_date": "2026-10-20",
+"exit_date": "2026-10-22",
+"entry": 90400,
+"exit": 82700,
+"pnl": -8.52,
+"days": 2,
+"reason": "B 58.1 < 60 이탈",
+"severity": "이탈",
+"cum": 12.78
 }
 ]
