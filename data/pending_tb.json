@@ -1,17 +1,4 @@
 {
 "buy": [],
-"sell": [
-{
-"code": "086450",
-"reason": "B 56.2 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-10-22"
-},
-{
-"code": "018670",
-"reason": "B 57.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-10-22"
-}
-]
+"sell": []
 }

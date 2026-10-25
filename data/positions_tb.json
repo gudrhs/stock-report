@@ -10,46 +10,13 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"086450": {
-"name": "동국제약",
-"market": "코스닥150",
-"entry": 25500,
-"entry_date": "2026-10-20",
-"peak": 26000,
-"days": 3,
-"score": 32.2,
-"grade": "홈런",
-"signal_date": "2026-10-19"
-},
-"018670": {
-"name": "SK가스",
-"market": "코스피200",
-"entry": 280000,
-"entry_date": "2026-10-20",
-"peak": 280000,
-"days": 3,
-"score": 27.9,
-"grade": "홈런",
-"signal_date": "2026-10-19"
-},
-"053800": {
-"name": "안랩",
-"market": "코스닥150",
-"entry": 89900,
-"entry_date": "2026-10-21",
-"peak": 89900,
-"days": 2,
-"score": 62.1,
-"grade": "홈런",
-"signal_date": "2026-10-20"
-},
 "033780": {
 "name": "KT&G",
 "market": "코스피200",
 "entry": 193800,
 "entry_date": "2026-10-21",
 "peak": 194500,
-"days": 2,
+"days": 3,
 "score": 19.3,
 "grade": "홈런",
 "signal_date": "2026-10-20"

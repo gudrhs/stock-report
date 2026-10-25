@@ -5934,5 +5934,53 @@
 "reason": "B 58.1 < 60 이탈",
 "severity": "이탈",
 "cum": 12.78
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "018670",
+"name": "SK가스",
+"market": "코스피200",
+"entry_date": "2026-10-20",
+"exit_date": "2026-10-23",
+"entry": 280000,
+"exit": 267500,
+"pnl": -4.46,
+"days": 3,
+"reason": "B 57.9 < 60 이탈",
+"severity": "이탈",
+"cum": 12.27
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "053800",
+"name": "안랩",
+"market": "코스닥150",
+"entry_date": "2026-10-21",
+"exit_date": "2026-10-23",
+"entry": 89900,
+"exit": 80910,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"cum": 11.15
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "086450",
+"name": "동국제약",
+"market": "코스닥150",
+"entry_date": "2026-10-20",
+"exit_date": "2026-10-23",
+"entry": 25500,
+"exit": 23600,
+"pnl": -7.45,
+"days": 3,
+"reason": "B 56.2 < 60 이탈",
+"severity": "이탈",
+"cum": 10.32
 }
 ]
