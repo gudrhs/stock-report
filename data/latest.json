@@ -1,71 +1,77 @@
 {
-"date": "2026-10-23",
-"generated": "2026-10-25T22:48:01",
+"date": "2026-10-27",
+"generated": "2026-10-27T00:05:15",
 "universe": {
 "kospi200": 200,
 "kosdaq150": 150,
 "scanned": 348
 },
-"buy": [
-{
-"code": "089890",
-"name": "코세스",
-"market": "코스닥150",
-"score": 66.7,
-"hold": 3,
-"gs_mean": 1.33,
-"gs_std": 1.88,
-"gbuy": 77.9,
-"gsell": 0.0,
-"slope5": 37.1,
-"t": 20.2,
-"b": 65.4,
-"u": 56.9,
-"red": true,
-"ma30": 30528,
-"spike": true,
-"wick": false,
-"big_down": false,
-"r20": 42.6,
-"close": 39500,
-"chg1": 2.46,
-"chg5": 32.33,
-"chg20": 42.6,
-"amount": 32030471000,
-"vol": 810898,
-"rank": 1
-}
-],
-"buy_total": 1,
-"sell": [],
-"hold": [
+"buy": [],
+"buy_total": 0,
+"sell": [
 {
 "code": "253450",
 "name": "스튜디오드래곤",
 "market": "코스닥150",
 "entry": 23100,
 "entry_date": "2026-10-19",
-"days": 5,
-"price": 23300,
-"pnl": 0.87,
-"reason": "위꼬리 999.0",
-"severity": "주의",
+"days": 6,
+"price": 23100,
+"pnl": 0.0,
+"reason": "적선 5일 기울기 -3.5 — 상승탄력 꺾임",
+"severity": "청산",
 "grade": "",
-"gsell": 2.1,
-"gbuy": 15.1,
-"gb_slope5": -1.7,
-"t": 20.6,
-"b": 60.6,
+"gsell": 3.0,
+"gbuy": 14.1,
+"gb_slope5": -3.5,
+"t": 17.9,
+"b": 57.5,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "089890",
+"name": "코세스",
+"market": "코스닥150",
+"entry": 33750,
+"entry_date": "2026-10-27",
+"days": 1,
+"price": 35950,
+"pnl": 6.52,
+"reason": "청선 9.9 — 8.0선 초과 급이탈",
+"severity": "청산",
+"grade": "",
+"gsell": 9.9,
+"gbuy": 59.8,
+"gb_slope5": 10.0,
+"t": 16.7,
+"b": 57.3,
 "above_ma30": true,
 "red": true
 }
 ],
-"filled": [],
-"order": {
-"buy": [
-"089890"
+"hold": [],
+"filled": [
+{
+"kind": "매수",
+"code": "089890",
+"name": "코세스",
+"price": 33750,
+"pnl": 0.0,
+"days": 0,
+"entry": 33750,
+"entry_date": "2026-10-27",
+"reason": "2026-10-23 신호 1위",
+"severity": "진입",
+"grade": ""
+}
 ],
-"sell": []
+"order": {
+"buy": [],
+"sell": [
+"253450",
+"089890"
+]
 },
 "tb": {
 "buy": [],
@@ -80,77 +86,37 @@
 "market": "코스피200",
 "entry": 193800,
 "entry_date": "2026-10-21",
-"days": 3,
-"price": 189400,
-"pnl": -2.27,
-"reason": "B 62.0 기준선 근접 · 청선 2.9",
+"days": 4,
+"price": 188800,
+"pnl": -2.58,
+"reason": "B 60.6 기준선 근접 · 청선 3.2",
 "severity": "주의",
 "grade": "홈런",
-"gsell": 2.9,
-"gbuy": 12.5,
-"gb_slope5": -1.2,
-"t": 36.0,
-"b": 62.0,
+"gsell": 3.2,
+"gbuy": 12.1,
+"gb_slope5": -3.6,
+"t": 32.0,
+"b": 60.6,
 "above_ma30": true,
 "red": true
 }
 ],
-"filled": [
-{
-"kind": "매도",
-"code": "086450",
-"name": "동국제약",
-"price": 23600,
-"pnl": -7.45,
-"days": 3,
-"entry": 25500,
-"entry_date": "2026-10-20",
-"reason": "B 56.2 < 60 이탈",
-"severity": "이탈",
-"grade": "홈런"
-},
-{
-"kind": "매도",
-"code": "018670",
-"name": "SK가스",
-"price": 267500,
-"pnl": -4.46,
-"days": 3,
-"entry": 280000,
-"entry_date": "2026-10-20",
-"reason": "B 57.9 < 60 이탈",
-"severity": "이탈",
-"grade": "홈런"
-},
-{
-"kind": "매도",
-"code": "053800",
-"name": "안랩",
-"price": 80910,
-"pnl": -10.0,
-"days": 2,
-"entry": 89900,
-"entry_date": "2026-10-21",
-"reason": "장중 손절 (기준 -10.0%) -10.0%",
-"severity": "손절",
-"grade": "홈런"
-}
-],
+"filled": [],
 "order": {
 "buy": [],
 "sell": []
 }
 },
 "stats": {
-"buy": 1,
-"sell": 0,
-"hold": 1,
-"filled": 0,
-"open_positions": 1,
+"buy": 0,
+"sell": 2,
+"hold": 0,
+"filled": 1,
+"open_positions": 2,
 "tb_buy": 0,
 "tb_homerun": 0,
 "tb_sell": 0,
-"tb_filled": 3,
+"tb_filled": 0,
 "tb_positions": 2
 },
 "perf": {
