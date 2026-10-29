@@ -6014,5 +6014,21 @@
 "reason": "적선 5일 기울기 -3.5 — 상승탄력 꺾임",
 "severity": "청산",
 "cum": -0.15
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "033780",
+"name": "KT&G",
+"market": "코스피200",
+"entry_date": "2026-10-21",
+"exit_date": "2026-10-29",
+"entry": 193800,
+"exit": 190900,
+"pnl": -1.5,
+"days": 5,
+"reason": "B 57.2 < 60 이탈",
+"severity": "이탈",
+"cum": 10.16
 }
 ]

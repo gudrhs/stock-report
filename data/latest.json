@@ -1,201 +1,191 @@
 {
-"date": "2026-10-28",
-"rule": "주봉·일봉 청선≤5·적선≥25 매수(일봉G 35) / 주봉 청선>22 매도 / 손절-12% / 익절없음",
-"breadth": 0.155,
-"breadth_min": 0.55,
-"gate": false,
-"generated": "2026-10-28T11:04:31",
+"date": "2026-10-29",
+"generated": "2026-10-29T00:21:42",
 "universe": {
-"kospi200": 164,
-"kosdaq150": 36,
-"scanned": 200
+"kospi200": 200,
+"kosdaq150": 150,
+"scanned": 348
 },
 "buy": [],
 "buy_total": 0,
-"sell": [
-{
-"code": "033780",
-"name": "KT&G",
-"market": "코스피200",
-"entry": 179600,
-"entry_date": "2026-10-08",
-"days": 6,
-"price": 190000,
-"pnl": 5.79,
-"reason": "적선 5일 기울기 -4.7 — 상승탄력 꺾임",
-"severity": "청산",
-"grade": "",
-"gsell": 5.0,
-"gbuy": 24.2,
-"gb_slope5": -4.7,
-"wgsell": 2.1,
-"wgbuy": 24.8,
-"t": 28.7,
-"b": 60.8,
-"above_ma30": true,
-"red": true
-}
-],
+"sell": [],
 "hold": [],
 "filled": [],
 "order": {
 "buy": [],
-"sell": [
-"033780"
-]
+"sell": []
 },
 "tb": {
 "buy": [],
 "buy_total": 0,
 "homerun": [],
 "homerun_total": 0,
-"sell": [
+"sell": [],
+"hold": [],
+"filled": [
 {
-"code": "008930",
-"name": "한미사이언스",
-"market": "코스피200",
-"entry": 43350,
-"entry_date": "2026-08-21",
-"days": 28,
-"price": 42900,
-"pnl": -1.04,
-"reason": "주봉 청선 59.9 — 22선 이탈",
+"kind": "매도",
+"code": "033780",
+"name": "KT&G",
+"price": 190900,
+"pnl": -1.5,
+"days": 5,
+"entry": 193800,
+"entry_date": "2026-10-21",
+"reason": "B 57.2 < 60 이탈",
 "severity": "이탈",
-"grade": "매수 대상",
-"gsell": 89.5,
-"gbuy": 9.3,
-"gb_slope5": 8.6,
-"wgsell": 59.9,
-"wgbuy": 93.2,
-"t": -13.6,
-"b": 44.2,
-"above_ma30": false,
-"red": false
+"grade": "홈런"
 }
 ],
-"hold": [],
-"filled": [],
 "order": {
 "buy": [],
-"sell": [
-"008930"
-]
+"sell": []
 }
 },
 "stats": {
 "buy": 0,
-"sell": 1,
+"sell": 0,
 "hold": 0,
 "filled": 0,
-"open_positions": 1,
+"open_positions": 0,
 "tb_buy": 0,
 "tb_homerun": 0,
-"tb_sell": 1,
-"tb_filled": 0,
+"tb_sell": 0,
+"tb_filled": 1,
 "tb_positions": 1
 },
 "perf": {
-"trades": 154,
+"trades": 377,
 "homerun": {
-"n": 67,
-"avg": -0.84,
-"win": 17.9,
-"best": 192.3
+"n": 217,
+"avg": 0.58,
+"win": 28.6,
+"best": 43.6
 },
-"avg": 0.49,
-"winrate": 28.6,
-"best": 192.3,
-"worst": -15.1,
-"cum": 4.5,
-"avg_days": 6.0,
+"avg": 0.36,
+"winrate": 29.2,
+"best": 43.6,
+"worst": -20.9,
+"cum": 9.99,
+"avg_days": 3.6,
 "by_reason": {
-"청선": {
-"n": 72,
-"avg": 5.95,
-"win": 44.0
-},
 "손절": {
-"n": 65,
-"avg": -9.75,
+"n": 169,
+"avg": -9.46,
 "win": 0.0
 },
+"익절": {
+"n": 60,
+"avg": 30.89,
+"win": 100.0
+},
+"이탈": {
+"n": 54,
+"avg": -1.3,
+"win": 30.0
+},
+"청선": {
+"n": 33,
+"avg": -2.05,
+"win": 33.0
+},
+"장대음봉": {
+"n": 32,
+"avg": 0.37,
+"win": 34.0
+},
 "적선": {
-"n": 9,
-"avg": 2.02,
+"n": 27,
+"avg": 0.86,
 "win": 44.0
 },
-"익절": {
-"n": 8,
-"avg": 32.93,
-"win": 100.0
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
 }
 },
-"first": "2026-02-20",
-"last": "2026-10-13"
+"first": "2026-02-23",
+"last": "2026-10-29"
 },
 "perf_by": {
 "legacy": {
-"trades": 87,
+"trades": 160,
 "homerun": null,
-"avg": 1.53,
-"winrate": 36.8,
-"best": 43.6,
-"worst": -15.1,
-"cum": 13.51,
-"avg_days": 2.6,
+"avg": 0.05,
+"winrate": 30.0,
+"best": 34.2,
+"worst": -11.8,
+"cum": -0.15,
+"avg_days": 2.8,
 "by_reason": {
-"청선": {
-"n": 51,
-"avg": -0.14,
-"win": 39.0
-},
 "손절": {
-"n": 19,
-"avg": -7.44,
+"n": 52,
+"avg": -7.18,
 "win": 0.0
 },
+"청선": {
+"n": 33,
+"avg": -2.05,
+"win": 33.0
+},
+"장대음봉": {
+"n": 32,
+"avg": 0.37,
+"win": 34.0
+},
 "적선": {
-"n": 9,
-"avg": 2.02,
+"n": 27,
+"avg": 0.86,
 "win": 44.0
 },
 "익절": {
-"n": 8,
-"avg": 32.93,
+"n": 14,
+"avg": 30.81,
+"win": 100.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-10-28"
+},
+"tb": {
+"trades": 217,
+"homerun": {
+"n": 217,
+"avg": 0.58,
+"win": 28.6,
+"best": 43.6
+},
+"avg": 0.58,
+"winrate": 28.6,
+"best": 43.6,
+"worst": -20.9,
+"cum": 10.16,
+"avg_days": 4.2,
+"by_reason": {
+"손절": {
+"n": 117,
+"avg": -10.48,
+"win": 0.0
+},
+"이탈": {
+"n": 54,
+"avg": -1.3,
+"win": 30.0
+},
+"익절": {
+"n": 46,
+"avg": 30.92,
 "win": 100.0
 }
 },
 "first": "2026-02-23",
-"last": "2026-10-12"
-},
-"tb": {
-"trades": 67,
-"homerun": {
-"n": 67,
-"avg": -0.84,
-"win": 17.9,
-"best": 192.3
-},
-"avg": -0.84,
-"winrate": 17.9,
-"best": 192.3,
-"worst": -15.1,
-"cum": -7.94,
-"avg_days": 10.4,
-"by_reason": {
-"손절": {
-"n": 46,
-"avg": -10.71,
-"win": 0.0
-},
-"청선": {
-"n": 21,
-"avg": 20.76,
-"win": 57.0
-}
-},
-"first": "2026-02-20",
-"last": "2026-10-13"
+"last": "2026-10-29"
 }
 }
 }

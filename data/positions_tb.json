@@ -9,16 +9,5 @@
 "score": 59.0,
 "grade": "홈런",
 "signal_date": "2026-09-02"
-},
-"033780": {
-"name": "KT&G",
-"market": "코스피200",
-"entry": 193800,
-"entry_date": "2026-10-21",
-"peak": 194500,
-"days": 5,
-"score": 19.3,
-"grade": "홈런",
-"signal_date": "2026-10-20"
 }
 }
