@@ -1,4 +1,23 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "053800",
+"name": "안랩",
+"market": "코스닥150",
+"score": 63.1,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-10-30"
+},
+{
+"code": "328130",
+"name": "루닛",
+"market": "코스닥150",
+"score": 58.0,
+"rank": 2,
+"grade": "홈런",
+"signal_date": "2026-10-30"
+}
+],
 "sell": []
 }
