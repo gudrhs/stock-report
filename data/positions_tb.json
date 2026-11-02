@@ -9,5 +9,27 @@
 "score": 59.0,
 "grade": "홈런",
 "signal_date": "2026-09-02"
+},
+"053800": {
+"name": "안랩",
+"market": "코스닥150",
+"entry": 120800,
+"entry_date": "2026-11-02",
+"peak": 120800,
+"days": 1,
+"score": 63.1,
+"grade": "홈런",
+"signal_date": "2026-10-30"
+},
+"328130": {
+"name": "루닛",
+"market": "코스닥150",
+"entry": 15270,
+"entry_date": "2026-11-02",
+"peak": 15540,
+"days": 1,
+"score": 58.0,
+"grade": "홈런",
+"signal_date": "2026-10-30"
 }
 }
