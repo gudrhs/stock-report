@@ -1,13 +1,31 @@
 {
 "buy": [
 {
-"code": "035760",
-"name": "CJ ENM",
-"market": "코스닥150",
-"score": 25.1,
+"code": "028050",
+"name": "삼성E&A",
+"market": "코스피200",
+"score": 51.7,
 "rank": 2,
 "grade": "홈런",
-"signal_date": "2026-11-02"
+"signal_date": "2026-11-03"
+},
+{
+"code": "293490",
+"name": "카카오게임즈",
+"market": "코스닥150",
+"score": 37.1,
+"rank": 3,
+"grade": "홈런",
+"signal_date": "2026-11-03"
+},
+{
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"score": 32.6,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-11-03"
 }
 ],
 "sell": []

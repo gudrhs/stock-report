@@ -1,4 +1,23 @@
 {
-"buy": [],
+"buy": [
+{
+"code": "006280",
+"name": "녹십자",
+"market": "코스피200",
+"score": 73.1,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-11-03"
+},
+{
+"code": "089860",
+"name": "롯데렌탈",
+"market": "코스피200",
+"score": 66.2,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-11-03"
+}
+],
 "sell": []
 }
