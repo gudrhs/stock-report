@@ -10,24 +10,13 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"053800": {
-"name": "안랩",
-"market": "코스닥150",
-"entry": 120800,
-"entry_date": "2026-11-02",
-"peak": 122600,
-"days": 2,
-"score": 63.1,
-"grade": "홈런",
-"signal_date": "2026-10-30"
-},
 "328130": {
 "name": "루닛",
 "market": "코스닥150",
 "entry": 15270,
 "entry_date": "2026-11-02",
 "peak": 15540,
-"days": 2,
+"days": 3,
 "score": 58.0,
 "grade": "홈런",
 "signal_date": "2026-10-30"
@@ -38,9 +27,42 @@
 "entry": 42200,
 "entry_date": "2026-11-03",
 "peak": 43800,
-"days": 1,
+"days": 2,
 "score": 25.1,
 "grade": "홈런",
 "signal_date": "2026-11-02"
+},
+"028050": {
+"name": "삼성E&A",
+"market": "코스피200",
+"entry": 62500,
+"entry_date": "2026-11-04",
+"peak": 65000,
+"days": 1,
+"score": 51.7,
+"grade": "홈런",
+"signal_date": "2026-11-03"
+},
+"293490": {
+"name": "카카오게임즈",
+"market": "코스닥150",
+"entry": 12010,
+"entry_date": "2026-11-04",
+"peak": 12010,
+"days": 1,
+"score": 37.1,
+"grade": "홈런",
+"signal_date": "2026-11-03"
+},
+"012750": {
+"name": "에스원",
+"market": "코스피200",
+"entry": 96400,
+"entry_date": "2026-11-04",
+"peak": 98000,
+"days": 1,
+"score": 32.6,
+"grade": "홈런",
+"signal_date": "2026-11-03"
 }
 }
