@@ -1,30 +1,14 @@
 {
 "buy": [
 {
-"code": "093320",
-"name": "케이아이엔엑스",
+"code": "293490",
+"name": "카카오게임즈",
 "market": "코스닥150",
-"score": 49.7,
+"score": 45.0,
 "rank": 2,
 "grade": "홈런",
-"signal_date": "2026-11-04"
-},
-{
-"code": "033780",
-"name": "KT&G",
-"market": "코스피200",
-"score": 17.4,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-11-04"
+"signal_date": "2026-11-05"
 }
 ],
-"sell": [
-{
-"code": "293490",
-"reason": "B 58.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-04"
-}
-]
+"sell": []
 }

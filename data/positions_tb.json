@@ -16,7 +16,7 @@
 "entry": 15270,
 "entry_date": "2026-11-02",
 "peak": 15540,
-"days": 3,
+"days": 4,
 "score": 58.0,
 "grade": "홈런",
 "signal_date": "2026-10-30"
@@ -26,8 +26,8 @@
 "market": "코스닥150",
 "entry": 42200,
 "entry_date": "2026-11-03",
-"peak": 43800,
-"days": 2,
+"peak": 43900,
+"days": 3,
 "score": 25.1,
 "grade": "홈런",
 "signal_date": "2026-11-02"
@@ -37,20 +37,9 @@
 "market": "코스피200",
 "entry": 62500,
 "entry_date": "2026-11-04",
-"peak": 65000,
-"days": 1,
+"peak": 65400,
+"days": 2,
 "score": 51.7,
-"grade": "홈런",
-"signal_date": "2026-11-03"
-},
-"293490": {
-"name": "카카오게임즈",
-"market": "코스닥150",
-"entry": 12010,
-"entry_date": "2026-11-04",
-"peak": 12010,
-"days": 1,
-"score": 37.1,
 "grade": "홈런",
 "signal_date": "2026-11-03"
 },
@@ -59,10 +48,32 @@
 "market": "코스피200",
 "entry": 96400,
 "entry_date": "2026-11-04",
-"peak": 98000,
-"days": 1,
+"peak": 99300,
+"days": 2,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
+},
+"093320": {
+"name": "케이아이엔엑스",
+"market": "코스닥150",
+"entry": 175900,
+"entry_date": "2026-11-05",
+"peak": 177300,
+"days": 1,
+"score": 49.7,
+"grade": "홈런",
+"signal_date": "2026-11-04"
+},
+"033780": {
+"name": "KT&G",
+"market": "코스피200",
+"entry": 195800,
+"entry_date": "2026-11-05",
+"peak": 198400,
+"days": 1,
+"score": 17.4,
+"grade": "홈런",
+"signal_date": "2026-11-04"
 }
 }

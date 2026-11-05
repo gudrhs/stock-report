@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 136100,
 "entry_date": "2026-11-04",
-"peak": 137000,
-"days": 1,
+"peak": 141300,
+"days": 2,
 "score": 73.1,
 "grade": "",
 "signal_date": "2026-11-03"
@@ -15,8 +15,8 @@
 "market": "코스피200",
 "entry": 52400,
 "entry_date": "2026-11-04",
-"peak": 52700,
-"days": 1,
+"peak": 53600,
+"days": 2,
 "score": 66.2,
 "grade": "",
 "signal_date": "2026-11-03"
