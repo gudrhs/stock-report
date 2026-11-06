@@ -10,24 +10,13 @@
 "grade": "홈런",
 "signal_date": "2026-09-02"
 },
-"328130": {
-"name": "루닛",
-"market": "코스닥150",
-"entry": 15270,
-"entry_date": "2026-11-02",
-"peak": 15540,
-"days": 4,
-"score": 58.0,
-"grade": "홈런",
-"signal_date": "2026-10-30"
-},
 "035760": {
 "name": "CJ ENM",
 "market": "코스닥150",
 "entry": 42200,
 "entry_date": "2026-11-03",
-"peak": 43900,
-"days": 3,
+"peak": 44850,
+"days": 4,
 "score": 25.1,
 "grade": "홈런",
 "signal_date": "2026-11-02"
@@ -38,7 +27,7 @@
 "entry": 62500,
 "entry_date": "2026-11-04",
 "peak": 65400,
-"days": 2,
+"days": 3,
 "score": 51.7,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -49,7 +38,7 @@
 "entry": 96400,
 "entry_date": "2026-11-04",
 "peak": 99300,
-"days": 2,
+"days": 3,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -60,7 +49,7 @@
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 1,
+"days": 2,
 "score": 49.7,
 "grade": "홈런",
 "signal_date": "2026-11-04"
@@ -71,9 +60,20 @@
 "entry": 195800,
 "entry_date": "2026-11-05",
 "peak": 198400,
-"days": 1,
+"days": 2,
 "score": 17.4,
 "grade": "홈런",
 "signal_date": "2026-11-04"
+},
+"293490": {
+"name": "카카오게임즈",
+"market": "코스닥150",
+"entry": 12110,
+"entry_date": "2026-11-06",
+"peak": 12110,
+"days": 1,
+"score": 45.0,
+"grade": "홈런",
+"signal_date": "2026-11-05"
 }
 }

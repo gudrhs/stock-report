@@ -6062,5 +6062,21 @@
 "reason": "B 58.9 < 60 이탈",
 "severity": "이탈",
 "cum": 9.04
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "328130",
+"name": "루닛",
+"market": "코스닥150",
+"entry_date": "2026-11-02",
+"exit_date": "2026-11-06",
+"entry": 15270,
+"exit": 13280,
+"pnl": -13.03,
+"days": 4,
+"reason": "장중 손절 (기준 -10.0%) -13.0%",
+"severity": "손절",
+"cum": 7.62
 }
 ]
