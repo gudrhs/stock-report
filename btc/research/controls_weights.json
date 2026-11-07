@@ -1,0 +1,248 @@
+{
+ "W2_dp_band": {
+  "positive": [
+   {
+    "seed": 1,
+    "d_sharpe": 6.02154481366336,
+    "p": 0.0,
+    "exposure": 0.473990417522245
+   }
+  ],
+  "positive_pass": true,
+  "neg_mean_d": -0.3412603252098543,
+  "neg_se": 0.06762743390792164,
+  "neg_dsr": [
+   0.002442429392280427,
+   0.27483968552051385,
+   0.4574106059256121,
+   0.11943886535724355,
+   0.2980703301216522,
+   0.03902005189131651
+  ],
+  "neg_exposure": [
+   0.25667351129363447,
+   0.7488021902806297,
+   0.6598220396988365,
+   0.8381245722108145,
+   0.4921286789869952,
+   0.6190965092402464
+  ],
+  "negative_pass": true,
+  "runs": [
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 1,
+    "planted": null,
+    "d_sharpe": -0.5643628978247637,
+    "p": 0.947,
+    "sharpe": -0.5414036853773876,
+    "bh_sharpe": 0.022959212447376073,
+    "exposure": 0.25667351129363447,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 2,
+    "planted": null,
+    "d_sharpe": -0.3903423791452567,
+    "p": 0.9525,
+    "sharpe": 0.246636084155888,
+    "bh_sharpe": 0.6369784633011447,
+    "exposure": 0.7488021902806297,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 0,
+    "planted": null,
+    "d_sharpe": -0.11602058991914038,
+    "p": 0.71675,
+    "sharpe": 0.4202091062496091,
+    "bh_sharpe": 0.5362296961687495,
+    "exposure": 0.6598220396988365,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "regime",
+    "seed": 1,
+    "planted": "ret_42",
+    "d_sharpe": 6.02154481366336,
+    "p": 0.0,
+    "sharpe": 5.511712751468416,
+    "bh_sharpe": -0.5098320621949449,
+    "exposure": 0.473990417522245,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 4,
+    "planted": null,
+    "d_sharpe": -0.24911135943196908,
+    "p": 0.967,
+    "sharpe": 0.041666142635166305,
+    "bh_sharpe": 0.2907775020671354,
+    "exposure": 0.8381245722108145,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 3,
+    "planted": null,
+    "d_sharpe": -0.47515974374750863,
+    "p": 0.97275,
+    "sharpe": 0.27111169212625313,
+    "bh_sharpe": 0.7462714358737618,
+    "exposure": 0.4921286789869952,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "W2_dp_band",
+    "kind": "garch",
+    "seed": 5,
+    "planted": null,
+    "d_sharpe": -0.252564981190487,
+    "p": 0.855,
+    "sharpe": -0.16442239165924225,
+    "bh_sharpe": 0.08814258953124474,
+    "exposure": 0.6190965092402464,
+    "rejected_gates": 0,
+    "lam_mean": null
+   }
+  ]
+ },
+ "A1_actor_critic": {
+  "positive": [
+   {
+    "seed": 1,
+    "d_sharpe": 6.159588512473298,
+    "p": 0.0,
+    "exposure": 0.5014502822776752
+   }
+  ],
+  "positive_pass": true,
+  "neg_mean_d": -0.02558055906049929,
+  "neg_se": 0.014325771456806717,
+  "neg_dsr": [
+   0.669380170667948,
+   0.7112115524654519,
+   0.18008102549895905,
+   0.8471847536198264,
+   0.20916501179025115,
+   0.34898526368348515
+  ],
+  "neg_exposure": [
+   0.750200401814183,
+   0.7500085789755434,
+   0.3741331406729249,
+   0.562822315906065,
+   0.5915598072805476,
+   0.7104492028396154
+  ],
+  "negative_pass": true,
+  "runs": [
+   {
+    "name": "A1_actor_critic",
+    "kind": "regime",
+    "seed": 1,
+    "planted": "ret_42",
+    "d_sharpe": 6.159588512473298,
+    "p": 0.0,
+    "sharpe": 5.649756450278353,
+    "bh_sharpe": -0.5098320621949449,
+    "exposure": 0.5014502822776752,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 0,
+    "planted": null,
+    "d_sharpe": -0.014925250082939878,
+    "p": 0.61575,
+    "sharpe": 0.5213044460858096,
+    "bh_sharpe": 0.5362296961687495,
+    "exposure": 0.750200401814183,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 2,
+    "planted": null,
+    "d_sharpe": -0.07313761909815997,
+    "p": 0.89925,
+    "sharpe": 0.5638408442029847,
+    "bh_sharpe": 0.6369784633011447,
+    "exposure": 0.7500085789755434,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 1,
+    "planted": null,
+    "d_sharpe": 0.02068070284954713,
+    "p": 0.42375,
+    "sharpe": 0.0436399152969232,
+    "bh_sharpe": 0.022959212447376073,
+    "exposure": 0.3741331406729249,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 3,
+    "planted": null,
+    "d_sharpe": -0.01778212773714305,
+    "p": 0.593,
+    "sharpe": 0.7284893081366187,
+    "bh_sharpe": 0.7462714358737618,
+    "exposure": 0.562822315906065,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 5,
+    "planted": null,
+    "d_sharpe": -0.007387297407605936,
+    "p": 0.546,
+    "sharpe": 0.0807552921236388,
+    "bh_sharpe": 0.08814258953124474,
+    "exposure": 0.5915598072805476,
+    "rejected_gates": 0,
+    "lam_mean": null
+   },
+   {
+    "name": "A1_actor_critic",
+    "kind": "garch",
+    "seed": 4,
+    "planted": null,
+    "d_sharpe": -0.060931762886694024,
+    "p": 0.79675,
+    "sharpe": 0.22984573918044135,
+    "bh_sharpe": 0.2907775020671354,
+    "exposure": 0.7104492028396154,
+    "rejected_gates": 0,
+    "lam_mean": null
+   }
+  ]
+ }
+}
