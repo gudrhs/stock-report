@@ -1,36 +1,14 @@
 {
-"280360": {
-"name": "롯데웰푸드",
-"market": "코스피200",
-"entry": 148500,
-"entry_date": "2026-09-03",
-"peak": 148500,
-"days": 3,
-"score": 59.0,
-"grade": "홈런",
-"signal_date": "2026-09-02"
-},
 "035760": {
 "name": "CJ ENM",
 "market": "코스닥150",
 "entry": 42200,
 "entry_date": "2026-11-03",
-"peak": 44850,
-"days": 4,
+"peak": 46150,
+"days": 5,
 "score": 25.1,
 "grade": "홈런",
 "signal_date": "2026-11-02"
-},
-"028050": {
-"name": "삼성E&A",
-"market": "코스피200",
-"entry": 62500,
-"entry_date": "2026-11-04",
-"peak": 65400,
-"days": 3,
-"score": 51.7,
-"grade": "홈런",
-"signal_date": "2026-11-03"
 },
 "012750": {
 "name": "에스원",
@@ -38,7 +16,7 @@
 "entry": 96400,
 "entry_date": "2026-11-04",
 "peak": 99300,
-"days": 3,
+"days": 4,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -49,19 +27,8 @@
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 2,
+"days": 3,
 "score": 49.7,
-"grade": "홈런",
-"signal_date": "2026-11-04"
-},
-"033780": {
-"name": "KT&G",
-"market": "코스피200",
-"entry": 195800,
-"entry_date": "2026-11-05",
-"peak": 198400,
-"days": 2,
-"score": 17.4,
 "grade": "홈런",
 "signal_date": "2026-11-04"
 },
@@ -71,7 +38,7 @@
 "entry": 12110,
 "entry_date": "2026-11-06",
 "peak": 12110,
-"days": 1,
+"days": 2,
 "score": 45.0,
 "grade": "홈런",
 "signal_date": "2026-11-05"

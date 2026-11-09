@@ -6078,5 +6078,53 @@
 "reason": "장중 손절 (기준 -10.0%) -13.0%",
 "severity": "손절",
 "cum": 7.62
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "028050",
+"name": "삼성E&A",
+"market": "코스피200",
+"entry_date": "2026-11-04",
+"exit_date": "2026-11-09",
+"entry": 62500,
+"exit": 60000,
+"pnl": -4.0,
+"days": 3,
+"reason": "B 56.4 < 60 이탈",
+"severity": "이탈",
+"cum": 7.18
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "033780",
+"name": "KT&G",
+"market": "코스피200",
+"entry_date": "2026-11-05",
+"exit_date": "2026-11-09",
+"entry": 195800,
+"exit": 191700,
+"pnl": -2.09,
+"days": 2,
+"reason": "B 59.9 < 60 이탈",
+"severity": "이탈",
+"cum": 6.96
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "280360",
+"name": "롯데웰푸드",
+"market": "코스피200",
+"entry_date": "2026-09-03",
+"exit_date": "2026-11-09",
+"entry": 148500,
+"exit": 122400,
+"pnl": -17.58,
+"days": 3,
+"reason": "장중 손절 (기준 -10.0%) -17.6%",
+"severity": "손절",
+"cum": 5.08
 }
 ]

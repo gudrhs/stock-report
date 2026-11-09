@@ -1,17 +1,14 @@
 {
-"buy": [],
-"sell": [
+"buy": [
 {
-"code": "028050",
-"reason": "B 56.4 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-06"
-},
-{
-"code": "033780",
-"reason": "B 59.9 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-06"
+"code": "180640",
+"name": "한진칼",
+"market": "코스피200",
+"score": 71.2,
+"rank": 1,
+"grade": "홈런",
+"signal_date": "2026-11-09"
 }
-]
+],
+"sell": []
 }
