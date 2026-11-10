@@ -5,7 +5,7 @@
 "entry": 136100,
 "entry_date": "2026-11-04",
 "peak": 141300,
-"days": 4,
+"days": 5,
 "score": 73.1,
 "grade": "",
 "signal_date": "2026-11-03"
@@ -16,7 +16,7 @@
 "entry": 52400,
 "entry_date": "2026-11-04",
 "peak": 58500,
-"days": 4,
+"days": 5,
 "score": 66.2,
 "grade": "",
 "signal_date": "2026-11-03"
@@ -27,9 +27,20 @@
 "entry": 180200,
 "entry_date": "2026-11-06",
 "peak": 183100,
-"days": 2,
+"days": 3,
 "score": 57.2,
 "grade": "",
 "signal_date": "2026-11-05"
+},
+"302440": {
+"name": "SK바이오사이언스",
+"market": "코스피200",
+"entry": 39950,
+"entry_date": "2026-11-10",
+"peak": 39950,
+"days": 1,
+"score": 65.4,
+"grade": "",
+"signal_date": "2026-11-09"
 }
 }
