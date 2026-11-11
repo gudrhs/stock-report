@@ -1,22 +1,11 @@
 {
-"035760": {
-"name": "CJ ENM",
-"market": "코스닥150",
-"entry": 42200,
-"entry_date": "2026-11-03",
-"peak": 46150,
-"days": 6,
-"score": 25.1,
-"grade": "홈런",
-"signal_date": "2026-11-02"
-},
 "012750": {
 "name": "에스원",
 "market": "코스피200",
 "entry": 96400,
 "entry_date": "2026-11-04",
 "peak": 99300,
-"days": 5,
+"days": 6,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -27,7 +16,7 @@
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 4,
+"days": 5,
 "score": 49.7,
 "grade": "홈런",
 "signal_date": "2026-11-04"
@@ -37,8 +26,8 @@
 "market": "코스닥150",
 "entry": 12110,
 "entry_date": "2026-11-06",
-"peak": 12150,
-"days": 3,
+"peak": 12190,
+"days": 4,
 "score": 45.0,
 "grade": "홈런",
 "signal_date": "2026-11-05"
@@ -49,9 +38,20 @@
 "entry": 214000,
 "entry_date": "2026-11-10",
 "peak": 240000,
-"days": 1,
+"days": 2,
 "score": 71.2,
 "grade": "홈런",
 "signal_date": "2026-11-09"
+},
+"328130": {
+"name": "루닛",
+"market": "코스닥150",
+"entry": 16810,
+"entry_date": "2026-11-11",
+"peak": 16810,
+"days": 1,
+"score": 61.5,
+"grade": "홈런",
+"signal_date": "2026-11-10"
 }
 }

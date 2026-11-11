@@ -1,21 +1,4 @@
 {
-"buy": [
-{
-"code": "328130",
-"name": "루닛",
-"market": "코스닥150",
-"score": 61.5,
-"rank": 2,
-"grade": "홈런",
-"signal_date": "2026-11-10"
-}
-],
-"sell": [
-{
-"code": "035760",
-"reason": "B 55.2 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-10"
-}
-]
+"buy": [],
+"sell": []
 }
