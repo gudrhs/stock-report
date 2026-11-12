@@ -1,4 +1,17 @@
 {
 "buy": [],
-"sell": []
+"sell": [
+{
+"code": "006280",
+"reason": "청선 5.4 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-11-12"
+},
+{
+"code": "009970",
+"reason": "청선 5.9 — 5선 이탈",
+"severity": "청산",
+"signal_date": "2026-11-12"
+}
+]
 }

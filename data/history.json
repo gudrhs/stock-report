@@ -112317,5 +112317,446 @@
 "last": "2026-11-11"
 }
 }
+},
+"2026-11-12": {
+"date": "2026-11-12",
+"generated": "2026-11-12T02:01:29",
+"universe": {
+"kospi200": 200,
+"kosdaq150": 150,
+"scanned": 348
+},
+"buy": [],
+"buy_total": 0,
+"sell": [
+{
+"code": "006280",
+"name": "녹십자",
+"market": "코스피200",
+"entry": 136100,
+"entry_date": "2026-11-04",
+"days": 7,
+"price": 135000,
+"pnl": -0.81,
+"reason": "청선 5.4 — 5선 이탈",
+"severity": "청산",
+"grade": "",
+"gsell": 5.4,
+"gbuy": 10.1,
+"gb_slope5": -6.4,
+"t": 17.3,
+"b": 53.9,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "009970",
+"name": "영원무역홀딩스",
+"market": "코스피200",
+"entry": 180200,
+"entry_date": "2026-11-06",
+"days": 5,
+"price": 178900,
+"pnl": -0.72,
+"reason": "청선 5.9 — 5선 이탈",
+"severity": "청산",
+"grade": "",
+"gsell": 5.9,
+"gbuy": 10.6,
+"gb_slope5": -3.6,
+"t": 13.2,
+"b": 54.1,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [
+{
+"code": "089860",
+"name": "롯데렌탈",
+"market": "코스피200",
+"entry": 52400,
+"entry_date": "2026-11-04",
+"days": 7,
+"price": 58450,
+"pnl": 11.55,
+"reason": "위꼬리 1.0",
+"severity": "주의",
+"grade": "",
+"gsell": 0.1,
+"gbuy": 18.3,
+"gb_slope5": 8.7,
+"t": 39.1,
+"b": 72.7,
+"above_ma30": true,
+"red": true
+}
+],
+"filled": [],
+"order": {
+"buy": [],
+"sell": [
+"006280",
+"009970"
+]
+},
+"tb": {
+"buy": [
+{
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"grade": "홈런",
+"homerun": true,
+"timely": false,
+"score": 30.0,
+"tb_hold": 22,
+"t": 32.2,
+"b": 63.9,
+"u": 57.3,
+"gsell": 0.9,
+"gbuy": 20.0,
+"red": true,
+"ma30": 93803,
+"above_ma30": true,
+"r20": 0.0,
+"close": 98500,
+"chg1": 0.31,
+"chg5": -0.81,
+"chg20": 0.0,
+"amount": 1292320000,
+"vol": 13120,
+"rank": 1
+},
+{
+"code": "089860",
+"name": "롯데렌탈",
+"market": "코스피200",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 23.5,
+"tb_hold": 5,
+"t": 39.1,
+"b": 72.7,
+"u": 76.1,
+"gsell": 0.1,
+"gbuy": 18.3,
+"red": true,
+"ma30": 52198,
+"above_ma30": true,
+"r20": 17.3,
+"close": 58450,
+"chg1": -0.09,
+"chg5": 10.08,
+"chg20": 17.25,
+"amount": 1545944050,
+"vol": 26449,
+"rank": 2
+}
+],
+"buy_total": 2,
+"homerun": [
+{
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"grade": "홈런",
+"homerun": true,
+"timely": false,
+"score": 30.0,
+"tb_hold": 22,
+"t": 32.2,
+"b": 63.9,
+"u": 57.3,
+"gsell": 0.9,
+"gbuy": 20.0,
+"red": true,
+"ma30": 93803,
+"above_ma30": true,
+"r20": 0.0,
+"close": 98500,
+"chg1": 0.31,
+"chg5": -0.81,
+"chg20": 0.0,
+"amount": 1292320000,
+"vol": 13120,
+"rank": 1
+},
+{
+"code": "089860",
+"name": "롯데렌탈",
+"market": "코스피200",
+"grade": "홈런",
+"homerun": true,
+"timely": true,
+"score": 23.5,
+"tb_hold": 5,
+"t": 39.1,
+"b": 72.7,
+"u": 76.1,
+"gsell": 0.1,
+"gbuy": 18.3,
+"red": true,
+"ma30": 52198,
+"above_ma30": true,
+"r20": 17.3,
+"close": 58450,
+"chg1": -0.09,
+"chg5": 10.08,
+"chg20": 17.25,
+"amount": 1545944050,
+"vol": 26449,
+"rank": 2
+}
+],
+"homerun_total": 2,
+"sell": [
+{
+"code": "293490",
+"name": "카카오게임즈",
+"market": "코스닥150",
+"entry": 12110,
+"entry_date": "2026-11-06",
+"days": 5,
+"price": 11820,
+"pnl": -2.39,
+"reason": "B 58.8 < 60 이탈",
+"severity": "이탈",
+"grade": "홈런",
+"gsell": 6.6,
+"gbuy": 27.2,
+"gb_slope5": -14.0,
+"t": 23.6,
+"b": 58.8,
+"above_ma30": true,
+"red": true
+}
+],
+"hold": [
+{
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"entry": 96400,
+"entry_date": "2026-11-04",
+"days": 7,
+"price": 98500,
+"pnl": 2.18,
+"reason": "T·B 유지",
+"severity": "정상",
+"grade": "홈런",
+"gsell": 0.9,
+"gbuy": 20.0,
+"gb_slope5": -1.0,
+"t": 32.2,
+"b": 63.9,
+"above_ma30": true,
+"red": true
+},
+{
+"code": "093320",
+"name": "케이아이엔엑스",
+"market": "코스닥150",
+"entry": 175900,
+"entry_date": "2026-11-05",
+"days": 6,
+"price": 174200,
+"pnl": -0.97,
+"reason": "청선 1.2",
+"severity": "주의",
+"grade": "홈런",
+"gsell": 1.2,
+"gbuy": 44.7,
+"gb_slope5": -0.8,
+"t": 35.8,
+"b": 67.2,
+"above_ma30": true,
+"red": true
+}
+],
+"filled": [
+{
+"kind": "매도",
+"code": "180640",
+"name": "한진칼",
+"price": 192600,
+"pnl": -10.0,
+"days": 2,
+"entry": 214000,
+"entry_date": "2026-11-10",
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"grade": "홈런"
+},
+{
+"kind": "매도",
+"code": "328130",
+"name": "루닛",
+"price": 13400,
+"pnl": -20.29,
+"days": 1,
+"entry": 16810,
+"entry_date": "2026-11-11",
+"reason": "장중 손절 (기준 -10.0%) -20.3%",
+"severity": "손절",
+"grade": "홈런"
+}
+],
+"order": {
+"buy": [
+"089860"
+],
+"sell": [
+"293490"
+]
+}
+},
+"stats": {
+"buy": 0,
+"sell": 2,
+"hold": 1,
+"filled": 0,
+"open_positions": 3,
+"tb_buy": 2,
+"tb_homerun": 2,
+"tb_sell": 1,
+"tb_filled": 2,
+"tb_positions": 3
+},
+"perf": {
+"trades": 387,
+"homerun": {
+"n": 226,
+"avg": 0.19,
+"win": 27.9,
+"best": 43.6
+},
+"avg": 0.13,
+"winrate": 28.7,
+"best": 43.6,
+"worst": -20.9,
+"cum": 1.03,
+"avg_days": 3.6,
+"by_reason": {
+"손절": {
+"n": 174,
+"avg": -9.6,
+"win": 0.0
+},
+"익절": {
+"n": 60,
+"avg": 30.89,
+"win": 100.0
+},
+"이탈": {
+"n": 58,
+"avg": -1.42,
+"win": 29.0
+},
+"장대음봉": {
+"n": 33,
+"avg": 0.35,
+"win": 33.0
+},
+"청선": {
+"n": 33,
+"avg": -2.05,
+"win": 33.0
+},
+"적선": {
+"n": 27,
+"avg": 0.86,
+"win": 44.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-11-12"
+},
+"perf_by": {
+"legacy": {
+"trades": 161,
+"homerun": null,
+"avg": 0.05,
+"winrate": 29.8,
+"best": 34.2,
+"worst": -11.8,
+"cum": -0.19,
+"avg_days": 2.8,
+"by_reason": {
+"손절": {
+"n": 52,
+"avg": -7.18,
+"win": 0.0
+},
+"장대음봉": {
+"n": 33,
+"avg": 0.35,
+"win": 33.0
+},
+"청선": {
+"n": 33,
+"avg": -2.05,
+"win": 33.0
+},
+"적선": {
+"n": 27,
+"avg": 0.86,
+"win": 44.0
+},
+"익절": {
+"n": 14,
+"avg": 30.81,
+"win": 100.0
+},
+"30일선": {
+"n": 2,
+"avg": -8.36,
+"win": 0.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-11-11"
+},
+"tb": {
+"trades": 226,
+"homerun": {
+"n": 226,
+"avg": 0.19,
+"win": 27.9,
+"best": 43.6
+},
+"avg": 0.19,
+"winrate": 27.9,
+"best": 43.6,
+"worst": -20.9,
+"cum": 1.22,
+"avg_days": 4.2,
+"by_reason": {
+"손절": {
+"n": 122,
+"avg": -10.64,
+"win": 0.0
+},
+"이탈": {
+"n": 58,
+"avg": -1.42,
+"win": 29.0
+},
+"익절": {
+"n": 46,
+"avg": 30.92,
+"win": 100.0
+}
+},
+"first": "2026-02-23",
+"last": "2026-11-12"
+}
+}
 }
 }
