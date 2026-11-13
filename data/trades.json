@@ -6190,5 +6190,53 @@
 "reason": "장중 손절 (기준 -10.0%) -20.3%",
 "severity": "손절",
 "cum": 1.22
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "006280",
+"name": "녹십자",
+"market": "코스피200",
+"entry_date": "2026-11-04",
+"exit_date": "2026-11-13",
+"entry": 136100,
+"exit": 136400,
+"pnl": 0.22,
+"days": 7,
+"reason": "청선 5.4 — 5선 이탈",
+"severity": "청산",
+"cum": -0.17
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "009970",
+"name": "영원무역홀딩스",
+"market": "코스피200",
+"entry_date": "2026-11-06",
+"exit_date": "2026-11-13",
+"entry": 180200,
+"exit": 177800,
+"pnl": -1.33,
+"days": 5,
+"reason": "청선 5.9 — 5선 이탈",
+"severity": "청산",
+"cum": -0.3
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "293490",
+"name": "카카오게임즈",
+"market": "코스닥150",
+"entry_date": "2026-11-06",
+"exit_date": "2026-11-13",
+"entry": 12110,
+"exit": 11860,
+"pnl": -2.06,
+"days": 5,
+"reason": "B 58.8 < 60 이탈",
+"severity": "이탈",
+"cum": 1.01
 }
 ]

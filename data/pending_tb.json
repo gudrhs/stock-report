@@ -1,21 +1,14 @@
 {
 "buy": [
 {
-"code": "089860",
-"name": "롯데렌탈",
+"code": "028050",
+"name": "삼성E&A",
 "market": "코스피200",
-"score": 23.5,
-"rank": 2,
+"score": 67.1,
+"rank": 1,
 "grade": "홈런",
-"signal_date": "2026-11-12"
+"signal_date": "2026-11-13"
 }
 ],
-"sell": [
-{
-"code": "293490",
-"reason": "B 58.8 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-12"
-}
-]
+"sell": []
 }
