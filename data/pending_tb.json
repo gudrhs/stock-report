@@ -1,13 +1,13 @@
 {
 "buy": [
 {
-"code": "028050",
-"name": "삼성E&A",
+"code": "068270",
+"name": "셀트리온",
 "market": "코스피200",
-"score": 67.1,
-"rank": 1,
+"score": 20.0,
+"rank": 2,
 "grade": "홈런",
-"signal_date": "2026-11-13"
+"signal_date": "2026-11-16"
 }
 ],
 "sell": []
