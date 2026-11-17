@@ -4,10 +4,21 @@
 "market": "코스피200",
 "entry": 52400,
 "entry_date": "2026-11-04",
-"peak": 58500,
-"days": 9,
+"peak": 58600,
+"days": 10,
 "score": 66.2,
 "grade": "",
 "signal_date": "2026-11-03"
+},
+"036460": {
+"name": "한국가스공사",
+"market": "코스피200",
+"entry": 37850,
+"entry_date": "2026-11-17",
+"peak": 38300,
+"days": 1,
+"score": 67.5,
+"grade": "",
+"signal_date": "2026-11-16"
 }
 }

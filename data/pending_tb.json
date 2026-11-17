@@ -1,13 +1,13 @@
 {
 "buy": [
 {
-"code": "068270",
-"name": "셀트리온",
+"code": "326030",
+"name": "SK바이오팜",
 "market": "코스피200",
-"score": 20.0,
-"rank": 2,
+"score": 36.1,
+"rank": 4,
 "grade": "홈런",
-"signal_date": "2026-11-16"
+"signal_date": "2026-11-17"
 }
 ],
 "sell": []

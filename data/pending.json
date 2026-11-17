@@ -1,13 +1,13 @@
 {
 "buy": [
 {
-"code": "036460",
-"name": "한국가스공사",
+"code": "012750",
+"name": "에스원",
 "market": "코스피200",
-"score": 67.5,
+"score": 71.3,
 "rank": 1,
 "grade": "",
-"signal_date": "2026-11-16"
+"signal_date": "2026-11-17"
 }
 ],
 "sell": []

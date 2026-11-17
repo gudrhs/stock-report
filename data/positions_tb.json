@@ -4,8 +4,8 @@
 "market": "코스피200",
 "entry": 96400,
 "entry_date": "2026-11-04",
-"peak": 101200,
-"days": 9,
+"peak": 102500,
+"days": 10,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -16,7 +16,7 @@
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 8,
+"days": 9,
 "score": 49.7,
 "grade": "홈런",
 "signal_date": "2026-11-04"
@@ -26,8 +26,8 @@
 "market": "코스피200",
 "entry": 58400,
 "entry_date": "2026-11-13",
-"peak": 58450,
-"days": 2,
+"peak": 58600,
+"days": 3,
 "score": 23.5,
 "grade": "홈런",
 "signal_date": "2026-11-12"
@@ -37,10 +37,21 @@
 "market": "코스피200",
 "entry": 68900,
 "entry_date": "2026-11-16",
-"peak": 69000,
-"days": 1,
+"peak": 69300,
+"days": 2,
 "score": 67.1,
 "grade": "홈런",
 "signal_date": "2026-11-13"
+},
+"068270": {
+"name": "셀트리온",
+"market": "코스피200",
+"entry": 214000,
+"entry_date": "2026-11-17",
+"peak": 214000,
+"days": 1,
+"score": 20.0,
+"grade": "홈런",
+"signal_date": "2026-11-16"
 }
 }
