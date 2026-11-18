@@ -6238,5 +6238,21 @@
 "reason": "B 58.8 < 60 이탈",
 "severity": "이탈",
 "cum": 1.01
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "028050",
+"name": "삼성E&A",
+"market": "코스피200",
+"entry_date": "2026-11-16",
+"exit_date": "2026-11-18",
+"entry": 68900,
+"exit": 62010,
+"pnl": -10.0,
+"days": 2,
+"reason": "장중 손절 (기준 -10.0%) -10.0%",
+"severity": "손절",
+"cum": 0.0
 }
 ]

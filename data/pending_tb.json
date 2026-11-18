@@ -1,14 +1,11 @@
 {
-"buy": [
+"buy": [],
+"sell": [
 {
 "code": "326030",
-"name": "SK바이오팜",
-"market": "코스피200",
-"score": 36.1,
-"rank": 4,
-"grade": "홈런",
-"signal_date": "2026-11-17"
+"reason": "B 58.0 < 60 이탈",
+"severity": "이탈",
+"signal_date": "2026-11-18"
 }
-],
-"sell": []
+]
 }

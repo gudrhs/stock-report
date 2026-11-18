@@ -5,7 +5,7 @@
 "entry": 52400,
 "entry_date": "2026-11-04",
 "peak": 58600,
-"days": 10,
+"days": 11,
 "score": 66.2,
 "grade": "",
 "signal_date": "2026-11-03"
@@ -15,10 +15,21 @@
 "market": "코스피200",
 "entry": 37850,
 "entry_date": "2026-11-17",
-"peak": 38300,
-"days": 1,
+"peak": 38350,
+"days": 2,
 "score": 67.5,
 "grade": "",
 "signal_date": "2026-11-16"
+},
+"012750": {
+"name": "에스원",
+"market": "코스피200",
+"entry": 101200,
+"entry_date": "2026-11-18",
+"peak": 102400,
+"days": 1,
+"score": 71.3,
+"grade": "",
+"signal_date": "2026-11-17"
 }
 }
