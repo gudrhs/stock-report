@@ -6254,5 +6254,21 @@
 "reason": "장중 손절 (기준 -10.0%) -10.0%",
 "severity": "손절",
 "cum": 0.0
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "326030",
+"name": "SK바이오팜",
+"market": "코스피200",
+"entry_date": "2026-11-18",
+"exit_date": "2026-11-19",
+"entry": 87900,
+"exit": 85800,
+"pnl": -2.39,
+"days": 1,
+"reason": "B 58.0 < 60 이탈",
+"severity": "이탈",
+"cum": -0.24
 }
 ]
