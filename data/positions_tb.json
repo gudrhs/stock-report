@@ -5,7 +5,7 @@
 "entry": 96400,
 "entry_date": "2026-11-04",
 "peak": 107300,
-"days": 12,
+"days": 13,
 "score": 32.6,
 "grade": "홈런",
 "signal_date": "2026-11-03"
@@ -16,7 +16,7 @@
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 11,
+"days": 12,
 "score": 49.7,
 "grade": "홈런",
 "signal_date": "2026-11-04"
@@ -26,8 +26,8 @@
 "market": "코스피200",
 "entry": 58400,
 "entry_date": "2026-11-13",
-"peak": 58600,
-"days": 5,
+"peak": 58700,
+"days": 6,
 "score": 23.5,
 "grade": "홈런",
 "signal_date": "2026-11-12"
@@ -37,8 +37,8 @@
 "market": "코스피200",
 "entry": 214000,
 "entry_date": "2026-11-17",
-"peak": 214000,
-"days": 3,
+"peak": 215000,
+"days": 4,
 "score": 20.0,
 "grade": "홈런",
 "signal_date": "2026-11-16"
