@@ -6302,5 +6302,53 @@
 "reason": "장중 손절 (기준 -7.0%) -7.7%",
 "severity": "손절",
 "cum": -1.79
+},
+{
+"strategy": "기존",
+"grade": "",
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"entry_date": "2026-11-18",
+"exit_date": "2026-11-25",
+"entry": 101200,
+"exit": 101900,
+"pnl": 0.69,
+"days": 4,
+"reason": "적선 5일 기울기 -4.4 — 상승탄력 꺾임",
+"severity": "청산",
+"cum": -1.72
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "012750",
+"name": "에스원",
+"market": "코스피200",
+"entry_date": "2026-11-04",
+"exit_date": "2026-11-25",
+"entry": 96400,
+"exit": 101900,
+"pnl": 5.71,
+"days": 14,
+"reason": "B 59.4 < 60 이탈",
+"severity": "이탈",
+"cum": 0.33
+},
+{
+"strategy": "TB",
+"grade": "홈런",
+"code": "068270",
+"name": "셀트리온",
+"market": "코스피200",
+"entry_date": "2026-11-17",
+"exit_date": "2026-11-25",
+"entry": 214000,
+"exit": 212000,
+"pnl": -0.93,
+"days": 5,
+"reason": "T 19.2 < 20 · B 56.3 < 60 이탈",
+"severity": "이탈",
+"cum": 0.24
 }
 ]

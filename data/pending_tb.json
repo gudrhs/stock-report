@@ -1,27 +1,32 @@
 {
 "buy": [
 {
-"code": "253450",
-"name": "스튜디오드래곤",
-"market": "코스닥150",
-"score": 61.9,
-"rank": 1,
+"code": "009420",
+"name": "한올바이오파마",
+"market": "코스피200",
+"score": 55.6,
+"rank": 3,
 "grade": "홈런",
-"signal_date": "2026-11-24"
-}
-],
-"sell": [
-{
-"code": "012750",
-"reason": "B 59.4 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-24"
+"signal_date": "2026-11-25"
 },
 {
-"code": "068270",
-"reason": "T 19.2 < 20 · B 56.3 < 60 이탈",
-"severity": "이탈",
-"signal_date": "2026-11-24"
+"code": "035760",
+"name": "CJ ENM",
+"market": "코스닥150",
+"score": 46.1,
+"rank": 4,
+"grade": "홈런",
+"signal_date": "2026-11-25"
+},
+{
+"code": "293490",
+"name": "카카오게임즈",
+"market": "코스닥150",
+"score": 33.7,
+"rank": 5,
+"grade": "홈런",
+"signal_date": "2026-11-25"
 }
-]
+],
+"sell": []
 }

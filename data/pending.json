@@ -1,11 +1,32 @@
 {
-"buy": [],
-"sell": [
+"buy": [
 {
-"code": "012750",
-"reason": "적선 5일 기울기 -4.4 — 상승탄력 꺾임",
-"severity": "청산",
-"signal_date": "2026-11-24"
+"code": "241710",
+"name": "코스메카코리아",
+"market": "코스닥150",
+"score": 74.5,
+"rank": 1,
+"grade": "",
+"signal_date": "2026-11-25"
+},
+{
+"code": "323410",
+"name": "카카오뱅크",
+"market": "코스피200",
+"score": 70.3,
+"rank": 2,
+"grade": "",
+"signal_date": "2026-11-25"
+},
+{
+"code": "090430",
+"name": "아모레퍼시픽",
+"market": "코스피200",
+"score": 68.9,
+"rank": 3,
+"grade": "",
+"signal_date": "2026-11-25"
 }
-]
+],
+"sell": []
 }

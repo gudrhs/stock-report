@@ -1,22 +1,11 @@
 {
-"012750": {
-"name": "에스원",
-"market": "코스피200",
-"entry": 96400,
-"entry_date": "2026-11-04",
-"peak": 107300,
-"days": 14,
-"score": 32.6,
-"grade": "홈런",
-"signal_date": "2026-11-03"
-},
 "093320": {
 "name": "케이아이엔엑스",
 "market": "코스닥150",
 "entry": 175900,
 "entry_date": "2026-11-05",
 "peak": 177300,
-"days": 13,
+"days": 14,
 "score": 49.7,
 "grade": "홈런",
 "signal_date": "2026-11-04"
@@ -27,31 +16,31 @@
 "entry": 58400,
 "entry_date": "2026-11-13",
 "peak": 58700,
-"days": 7,
+"days": 8,
 "score": 23.5,
 "grade": "홈런",
 "signal_date": "2026-11-12"
-},
-"068270": {
-"name": "셀트리온",
-"market": "코스피200",
-"entry": 214000,
-"entry_date": "2026-11-17",
-"peak": 215000,
-"days": 5,
-"score": 20.0,
-"grade": "홈런",
-"signal_date": "2026-11-16"
 },
 "180640": {
 "name": "한진칼",
 "market": "코스피200",
 "entry": 214500,
 "entry_date": "2026-11-24",
-"peak": 227000,
-"days": 1,
+"peak": 243000,
+"days": 2,
 "score": 85.8,
 "grade": "홈런",
 "signal_date": "2026-11-20"
+},
+"253450": {
+"name": "스튜디오드래곤",
+"market": "코스닥150",
+"entry": 32500,
+"entry_date": "2026-11-25",
+"peak": 33400,
+"days": 1,
+"score": 61.9,
+"grade": "홈런",
+"signal_date": "2026-11-24"
 }
 }
