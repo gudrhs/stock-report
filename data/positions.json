@@ -5,29 +5,18 @@
 "entry": 52400,
 "entry_date": "2026-11-04",
 "peak": 58700,
-"days": 16,
+"days": 17,
 "score": 66.2,
 "grade": "",
 "signal_date": "2026-11-03"
-},
-"241710": {
-"name": "코스메카코리아",
-"market": "코스닥150",
-"entry": 127500,
-"entry_date": "2026-11-26",
-"peak": 129200,
-"days": 1,
-"score": 74.5,
-"grade": "",
-"signal_date": "2026-11-25"
 },
 "323410": {
 "name": "카카오뱅크",
 "market": "코스피200",
 "entry": 21850,
 "entry_date": "2026-11-26",
-"peak": 22000,
-"days": 1,
+"peak": 22450,
+"days": 2,
 "score": 70.3,
 "grade": "",
 "signal_date": "2026-11-25"
@@ -38,7 +27,7 @@
 "entry": 147600,
 "entry_date": "2026-11-26",
 "peak": 147600,
-"days": 1,
+"days": 2,
 "score": 68.9,
 "grade": "",
 "signal_date": "2026-11-25"
